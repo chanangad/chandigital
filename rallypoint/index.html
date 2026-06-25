@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>RallyPoint | Badminton Scoring for Garmin</title>
-  <meta name="description" content="RallyPoint is the Garmin watch app for badminton — real-time serve tracking, one-gesture scoring, singles &amp; doubles support, match history, and Garmin Connect activity recording. Try 3 sessions free, then a one-time $2.99 unlock.">
+  <meta name="description" content="RallyPoint is the Garmin watch app for badminton — real-time serve tracking, one-gesture scoring, singles &amp; doubles support, match history, and Garmin Connect activity recording. Try 2 sessions free, then a one-time $3.49 unlock.">
   <meta name="keywords" content="badminton Garmin app, badminton scoring watch, Garmin Connect IQ badminton, badminton serve tracker, badminton score keeper, Garmin Fenix badminton, Garmin Forerunner badminton, badminton smartwatch app, RallyPoint, badminton match tracker, badminton wearable">
   <meta name="author" content="Chan Digital">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -37,7 +37,7 @@
     "offers": [
       {
         "@type": "Offer",
-        "price": "2.99",
+        "price": "3.49",
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock"
       },
@@ -349,7 +349,7 @@
     "image": "https://chandigital.in/assets/rallypoint-garmin.jpg",
     "description": "Badminton scoring app for Garmin watches with visual court serve indicators, one-gesture scoring, singles and doubles support, match timer, and activity recording.",
     "offers": [
-      { "@type": "Offer", "price": "2.99", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
+      { "@type": "Offer", "price": "3.49", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
     ],
     "featureList": [
       "Visual serve indicator on court diagram",
@@ -414,7 +414,7 @@
         <span>Garmin devices</span>
       </div>
       <div id="stat-price-intl">
-        <strong>$2.99</strong>
+        <strong>$3.49</strong>
         <span>One-time purchase</span>
       </div>
       <div id="stat-price-inr" style="display:none">
@@ -467,9 +467,9 @@
 
             <div id="intl-pay-group" class="rp-pay-group">
               <div class="rp-pay-buttons">
-                <button type="button" id="razorpay-intl-button" class="rp-pay-btn">Card or Wallet</button>
+                <button type="button" id="razorpay-intl-button" class="rp-pay-btn rp-pay-btn--primary">Card or Wallet</button>
                 <button type="button" id="dodo-button" class="rp-pay-btn">Other Payment Methods</button>
-                <button type="submit" form="unlock-form" class="rp-pay-btn rp-pay-btn--primary">Pay with PayPal</button>
+                <button type="submit" form="unlock-form" class="rp-pay-btn">Pay with PayPal</button>
               </div>
             </div>
 
@@ -511,7 +511,7 @@
           <div>
             <p class="eyebrow" style="margin-bottom:12px">Pricing</p>
             <div id="price-intl" class="rp-price-row">
-              <span class="rp-price-amount">$2.99</span>
+              <span class="rp-price-amount">$3.49</span>
             </div>
             <div id="price-inr" class="rp-price-row">
               <span class="rp-price-amount">₹149</span>
@@ -662,7 +662,7 @@
         } else if (provider === "dodo") {
           setPanelStatus(unlockStatus, "Creating checkout…");
           var data = await postJson("/api/dodo/create-checkout", {claimCode, email, name});
-          if (data && data.paymentUrl) { window.location.href = data.paymentUrl; return; }
+          if (data && (data.checkoutUrl || data.paymentUrl)) { window.location.href = data.checkoutUrl || data.paymentUrl; return; }
         } else {
           setPanelStatus(unlockStatus, "Creating Razorpay checkout…");
           var data = await postJson("/api/razorpay/create-link", {claimCode, email, name, currency: currency || "INR"});
@@ -674,7 +674,7 @@
       }
     }
 
-    // Geo-lock: India sees ₹149 + Razorpay only; international sees $2.99 + PayPal/Dodo only
+    // Geo-lock: India sees ₹149 + Razorpay only; international sees $3.49 + PayPal/Dodo only
     var isIndia = (function() {
       try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone; return tz === "Asia/Kolkata" || tz === "Asia/Calcutta"; }
       catch(e) { return false; }
