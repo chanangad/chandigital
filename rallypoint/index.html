@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>RallyPoint | Badminton Scoring for Garmin</title>
+  <meta name="description" content="RallyPoint is a Garmin app for badminton players — visual serve indicators, one-gesture scoring, singles &amp; doubles support, match timer, and activity recording.">
+  <meta name="keywords" content="badminton, badminton Garmin, badminton scoring app, badminton watch app, Garmin Connect IQ, RallyPoint, badminton activity">
+  <meta name="author" content="Chan Digital">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="canonical" href="https://chandigital.in/rallypoint/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Chan Digital">
+  <meta property="og:title" content="RallyPoint for Garmin">
+  <meta property="og:description" content="Badminton scoring for Garmin — visual serve indicators, one-gesture scoring, singles &amp; doubles. One-time purchase.">
+  <meta property="og:url" content="https://chandigital.in/rallypoint/">
+  <meta property="og:image" content="https://chandigital.in/assets/rallypoint-garmin.jpg">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RallyPoint for Garmin">
+  <meta name="twitter:description" content="Badminton scoring for Garmin — visual serve indicators, one-gesture scoring, singles &amp; doubles.">
+  <meta name="twitter:image" content="https://chandigital.in/assets/rallypoint-garmin.jpg">
+
+  <link rel="icon" href="../assets/favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    /* Override the full-viewport-height hero from chandigital's shared CSS */
+    .hero {
+      min-height: unset;
+      padding: 48px 0 48px;
+    }
+
+    /* RallyPoint-specific additions — unlock form, feature grid, tabs */
+    .rp-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--line);
+      margin-bottom: 96px;
+    }
+    .rp-feature {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 28px 28px 30px;
+      background: var(--paper);
+    }
+    .rp-feature strong {
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .rp-feature span {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Unlock panel */
+    .rp-unlock {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 96px;
+    }
+    .rp-unlock-card {
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--paper);
+    }
+    .rp-unlock-card h3 {
+      margin-bottom: 6px;
+    }
+    .rp-unlock-card .eyebrow {
+      margin-bottom: 16px;
+    }
+    .rp-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .rp-tab {
+      flex: 1;
+      padding: 9px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-pill);
+      background: var(--paper);
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 150ms, color 150ms, background 150ms;
+    }
+    .rp-tab--active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .rp-panel { display: none; }
+    .rp-panel--active { display: block; }
+    .rp-field {
+      margin-bottom: 16px;
+    }
+    .rp-field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .rp-prefix-wrap {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: border-color 150ms;
+    }
+    .rp-prefix-wrap:focus-within {
+      border-color: var(--ink);
+    }
+    .rp-prefix {
+      padding: 0 10px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-right: 1.5px solid var(--line);
+      line-height: 44px;
+      user-select: none;
+    }
+    .rp-field input {
+      flex: 1;
+      min-width: 0;
+      height: 44px;
+      padding: 0 12px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      outline: none;
+    }
+    .rp-field input:not(.rp-prefix-wrap input) {
+      height: 44px;
+      padding: 0 12px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      transition: border-color 150ms;
+    }
+    .rp-field input:not(.rp-prefix-wrap input):focus {
+      border-color: var(--ink);
+      outline: none;
+    }
+    .rp-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .rp-pay-group {
+      margin-top: 20px;
+    }
+    .rp-pay-label {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .rp-pay-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rp-pay-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 46px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-pill);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 150ms, background 150ms, transform 150ms, box-shadow 150ms;
+    }
+    .rp-pay-btn:hover {
+      border-color: var(--ink);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+    .rp-pay-btn--primary {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .rp-pay-btn--primary:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    .rp-status {
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      min-height: 20px;
+    }
+    .rp-status--warn { color: #c0392b; }
+    .rp-status--ok   { color: #1a7a3c; }
+    .rp-guarantee {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .rp-guarantee a { font-weight: 700; text-decoration: underline; }
+
+    /* Pricing info card */
+    .rp-price-card {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+    .rp-price-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .rp-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .rp-price-amount {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .rp-price-region {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .rp-cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media (max-width: 980px) {
+      .rp-features { grid-template-columns: repeat(2, 1fr); }
+      .rp-unlock { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .rp-features { grid-template-columns: 1fr; margin-bottom: 64px; }
+      .rp-unlock { margin-bottom: 64px; }
+      .rp-field-row { grid-template-columns: 1fr; }
+      .rp-unlock-card { padding: 24px 20px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "RallyPoint",
+    "applicationCategory": "SportsApplication",
+    "operatingSystem": "Garmin Connect IQ",
+    "url": "https://chandigital.in/rallypoint/",
+    "downloadUrl": "https://apps.garmin.com/apps/58a3a8cc-b48d-431e-8575-3e06cc450cb6",
+    "image": "https://chandigital.in/assets/rallypoint-garmin.jpg",
+    "description": "Badminton scoring app for Garmin watches with visual court serve indicators, one-gesture scoring, singles and doubles support, match timer, and activity recording.",
+    "offers": [
+      { "@type": "Offer", "price": "2.99", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
+    ],
+    "featureList": [
+      "Visual serve indicator on court diagram",
+      "One-gesture scoring",
+      "Singles and doubles mode",
+      "Match timer and activity timer",
+      "Heart rate tracking",
+      "Undo last point",
+      "Activity recording to Garmin Connect"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Chan Digital home">
+      <img class="brand-logo" src="../assets/logo.png" alt="" width="36" height="36">
+      <span>Chan Digital</span>
+    </a>
+    <nav class="site-nav" aria-label="Page navigation">
+      <a href="#features">Features</a>
+      <a href="#unlock">Unlock</a>
+      <a href="./faq/">FAQ</a>
+      <div class="lang-picker" data-lang-picker></div>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <!-- Hero -->
+    <section class="hero section">
+      <div class="hero-copy">
+        <p class="eyebrow">Badminton activity</p>
+        <h1>RallyPoint</h1>
+        <p class="hero-lede">
+          A Garmin app for badminton players — visual serve indicators on a live court diagram,
+          one-gesture scoring, singles &amp; doubles support, and full activity recording saved
+          to Garmin Connect.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#unlock">Unlock full access</a>
+          <a class="button button-secondary" href="https://apps.garmin.com/apps/58a3a8cc-b48d-431e-8575-3e06cc450cb6" target="_blank" rel="noreferrer">View on Connect IQ</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" style="grid-template-columns: 1fr; max-width: 320px; justify-self: center;">
+        <div class="preview">
+          <img src="../assets/rallypoint-garmin.jpg" alt="RallyPoint badminton scoring app on a Garmin watch" width="900" height="900">
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats strip -->
+    <div class="trust-strip section" style="margin-top: 0; margin-bottom: 96px;">
+      <div>
+        <strong>21+</strong>
+        <span>Languages supported</span>
+      </div>
+      <div>
+        <strong>98</strong>
+        <span>Garmin devices</span>
+      </div>
+      <div id="stat-price-intl">
+        <strong>$2.99</strong>
+        <span>One-time purchase</span>
+      </div>
+      <div id="stat-price-inr" style="display:none">
+        <strong>₹149</strong>
+        <span>One-time purchase</span>
+      </div>
+    </div>
+
+    <!-- Unlock -->
+    <section class="section" id="unlock">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">License</p>
+          <h2>First session free, then one-time unlock</h2>
+        </div>
+      </div>
+
+      <div class="rp-unlock">
+
+        <div class="rp-unlock-card">
+          <p class="eyebrow">Purchase &amp; restore</p>
+          <h3>License Management</h3>
+
+          <div class="rp-tabs" role="tablist">
+            <button class="rp-tab rp-tab--active" id="tab-unlock" data-tab="unlock" role="tab" aria-selected="true">Purchase</button>
+            <button class="rp-tab" id="tab-restore" data-tab="restore" role="tab" aria-selected="false">Restore</button>
+          </div>
+
+          <!-- Purchase panel -->
+          <div class="rp-panel rp-panel--active" id="panel-unlock" role="tabpanel" aria-labelledby="tab-unlock">
+            <form id="unlock-form">
+              <div class="rp-field">
+                <label for="claim-code-input">Claim code from watch</label>
+                <div class="rp-prefix-wrap">
+                  <span class="rp-prefix" aria-hidden="true">RP-</span>
+                  <input id="claim-code-input" name="claim-code" type="text" required placeholder="12345678" autocomplete="off" spellcheck="false">
+                </div>
+              </div>
+              <div class="rp-field-row">
+                <div class="rp-field">
+                  <label for="unlock-name">Name</label>
+                  <input id="unlock-name" name="name" type="text" required placeholder="Jane Player" autocomplete="name">
+                </div>
+                <div class="rp-field">
+                  <label for="unlock-email">Email</label>
+                  <input id="unlock-email" name="email" type="email" required placeholder="you@example.com">
+                </div>
+              </div>
+            </form>
+
+            <div id="intl-pay-group" class="rp-pay-group">
+              <div class="rp-pay-buttons">
+                <button type="button" id="razorpay-intl-button" class="rp-pay-btn">Card or Wallet</button>
+                <button type="button" id="dodo-button" class="rp-pay-btn">Other Payment Methods</button>
+                <button type="submit" form="unlock-form" class="rp-pay-btn rp-pay-btn--primary">Pay with PayPal</button>
+              </div>
+            </div>
+
+            <div id="india-pay-group" class="rp-pay-group">
+              <div class="rp-pay-buttons">
+                <button type="button" id="razorpay-button" class="rp-pay-btn rp-pay-btn--primary">Pay with Razorpay</button>
+              </div>
+            </div>
+
+<p id="unlock-status" class="rp-status"></p>
+          </div>
+
+          <!-- Restore panel -->
+          <div class="rp-panel" id="panel-restore" role="tabpanel" aria-labelledby="tab-restore" hidden>
+            <form id="restore-form">
+              <div class="rp-field">
+                <label for="restore-claim-code-input">Claim code from watch</label>
+                <div class="rp-prefix-wrap">
+                  <span class="rp-prefix" aria-hidden="true">RP-</span>
+                  <input id="restore-claim-code-input" name="restore-claim-code" type="text" required placeholder="12345678" autocomplete="off" spellcheck="false">
+                </div>
+              </div>
+              <div class="rp-field">
+                <label for="restore-email">Email used at purchase</label>
+                <input id="restore-email" name="email" type="email" required placeholder="original-email@example.com">
+              </div>
+              <div class="rp-pay-group">
+                <div class="rp-pay-buttons">
+                  <button type="submit" form="restore-form" class="rp-pay-btn rp-pay-btn--primary">Restore Previous License</button>
+                </div>
+              </div>
+            </form>
+            <p id="restore-status" class="rp-status">After restore, return to the watch app and choose Refresh License.</p>
+          </div>
+        </div>
+
+        <!-- Pricing info -->
+        <div class="rp-price-card">
+          <div>
+            <p class="eyebrow" style="margin-bottom:12px">Pricing</p>
+            <div id="price-intl" class="rp-price-row">
+              <span class="rp-price-amount">$2.99</span>
+            </div>
+            <div id="price-inr" class="rp-price-row">
+              <span class="rp-price-amount">₹149</span>
+            </div>
+          </div>
+          <p>One-time purchase. No subscription, no hidden fees. The app is yours permanently on your Garmin device.</p>
+          <p>Your first launch is free — no account needed to try it.</p>
+          <div class="rp-cta-group">
+            <a class="button button-primary" href="https://apps.garmin.com/apps/58a3a8cc-b48d-431e-8575-3e06cc450cb6" target="_blank" rel="noreferrer">View on Garmin Connect IQ</a>
+            <a class="button button-secondary" href="./faq/">FAQ</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Features</p>
+          <h2>Everything you need on the court</h2>
+        </div>
+      </div>
+
+      <div class="rp-features">
+        <div class="rp-feature">
+          <strong>Visual serve indicator</strong>
+          <span>A live court diagram highlights the correct service box for every point.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>One-gesture scoring</strong>
+          <span>Swipe down for your point, swipe up for opponent. Works with buttons too.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Singles &amp; doubles</strong>
+          <span>Full doubles support with position tracking and shuttle icon for the server.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Undo last point</strong>
+          <span>Pressed the wrong button? Back steps through the full score history.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Match timer</strong>
+          <span>Switch the bottom stat between wall clock and elapsed match timer.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Activity recording</strong>
+          <span>Heart rate, calories, and match data saved to Garmin Connect as an activity.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact band -->
+    <div class="contact-band section">
+      <div>
+        <p class="eyebrow">Support</p>
+        <h2>Questions or issues?</h2>
+      </div>
+      <a class="button button-dark" href="mailto:support@chandigital.in">Email Chan Digital</a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Chan Digital. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="../">Chan Digital</a>
+      <a href="./faq/">FAQ</a>
+      <a href="./privacy/">Privacy</a>
+      <a href="https://apps.garmin.com/apps/58a3a8cc-b48d-431e-8575-3e06cc450cb6" target="_blank" rel="noreferrer">Garmin Connect IQ</a>
+    </div>
+    <p class="legal-note">Garmin and Connect IQ are trademarks of Garmin Ltd. RallyPoint is an independent app not affiliated with or endorsed by Garmin.</p>
+  </footer>
+
+  <script src="./app.js"></script>
+  <script src="./i18n.js"></script>
+  <script>
+    const tabButtons = Array.from(document.querySelectorAll(".rp-tab"));
+    const unlockStatus = document.getElementById("unlock-status");
+    const restoreStatus = document.getElementById("restore-status");
+    const claimCodeInput = document.getElementById("claim-code-input");
+    const restoreClaimCodeInput = document.getElementById("restore-claim-code-input");
+    const rawCode = query("code").trim().toUpperCase();
+    const initialClaimCode = rawCode.startsWith("RP-") ? rawCode.slice(3) : rawCode;
+    const initialTab = query("tab") === "restore" ? "restore" : "unlock";
+
+    claimCodeInput.value = initialClaimCode;
+    restoreClaimCodeInput.value = initialClaimCode;
+    activateTab(initialTab, false);
+
+    function setPanelStatus(node, message, kind) {
+      node.textContent = message;
+      node.className = "rp-status" + (kind ? " rp-status--" + kind : "");
+    }
+
+    function syncClaimCode(value) {
+      var suffix = value.trim().toUpperCase();
+      if (suffix.startsWith("RP-")) { suffix = suffix.slice(3); }
+      claimCodeInput.value = suffix;
+      restoreClaimCodeInput.value = suffix;
+      const params = new URLSearchParams(window.location.search);
+      if (suffix) { params.set("code", "RP-" + suffix); } else { params.delete("code"); }
+      if (!params.get("tab")) { params.set("tab", initialTab); }
+      window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
+    }
+
+    function activateTab(name, pushState) {
+      tabButtons.forEach(function(btn) {
+        var active = btn.dataset.tab === name;
+        btn.classList.toggle("rp-tab--active", active);
+        btn.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      ["unlock", "restore"].forEach(function(id) {
+        var panel = document.getElementById("panel-" + id);
+        var active = id === name;
+        panel.classList.toggle("rp-panel--active", active);
+        panel.hidden = !active;
+      });
+      if (pushState !== false) {
+        var params = new URLSearchParams(window.location.search);
+        params.set("tab", name);
+        var s = claimCodeInput.value.trim().toUpperCase();
+        if (s) { params.set("code", "RP-" + s); } else { params.delete("code"); }
+        window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
+      }
+    }
+
+    tabButtons.forEach(function(btn) {
+      btn.addEventListener("click", function() { activateTab(btn.dataset.tab); });
+    });
+    claimCodeInput.addEventListener("input", function() { syncClaimCode(claimCodeInput.value); });
+    restoreClaimCodeInput.addEventListener("input", function() { syncClaimCode(restoreClaimCodeInput.value); });
+
+    async function beginCheckout(provider, currency) {
+      var suffix = claimCodeInput.value.trim().toUpperCase();
+      var claimCode = suffix ? "RP-" + suffix : "";
+      var name = document.getElementById("unlock-name").value.trim();
+      var email = document.getElementById("unlock-email").value.trim();
+      if (!claimCode) { setPanelStatus(unlockStatus, "Enter the claim code shown on your watch.", "warn"); return; }
+      if (!name) { setPanelStatus(unlockStatus, "Enter your name first.", "warn"); return; }
+      if (!email) { setPanelStatus(unlockStatus, "Enter your email first.", "warn"); return; }
+      try {
+        if (provider === "paypal") {
+          setPanelStatus(unlockStatus, "Creating PayPal checkout…");
+          var data = await postJson("/api/paypal/create-order", {claimCode, email, name});
+          if (data && data.approveUrl) { window.location.href = data.approveUrl; return; }
+        } else if (provider === "dodo") {
+          setPanelStatus(unlockStatus, "Creating checkout…");
+          var data = await postJson("/api/dodo/create-checkout", {claimCode, email, name});
+          if (data && data.paymentUrl) { window.location.href = data.paymentUrl; return; }
+        } else {
+          setPanelStatus(unlockStatus, "Creating Razorpay checkout…");
+          var data = await postJson("/api/razorpay/create-link", {claimCode, email, name, currency: currency || "INR"});
+          if (data && data.shortUrl) { window.location.href = data.shortUrl; return; }
+        }
+        setPanelStatus(unlockStatus, "Checkout link was not returned by the server.", "warn");
+      } catch (err) {
+        setPanelStatus(unlockStatus, err.message, "warn");
+      }
+    }
+
+    // Geo-lock: India sees ₹149 + Razorpay only; international sees $2.99 + PayPal/Dodo only
+    var isIndia = (function() {
+      try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone; return tz === "Asia/Kolkata" || tz === "Asia/Calcutta"; }
+      catch(e) { return false; }
+    })();
+    if (!isIndia) {
+      document.getElementById("india-pay-group").style.display = "none";
+      document.getElementById("price-inr").style.display = "none";
+      document.getElementById("stat-price-inr").style.display = "none";
+    } else {
+      document.getElementById("intl-pay-group").style.display = "none";
+      document.getElementById("price-intl").style.display = "none";
+      document.getElementById("stat-price-intl").style.display = "none";
+      document.getElementById("stat-price-inr").style.display = "";
+    }
+
+    document.getElementById("unlock-form").addEventListener("submit", async function(e) { e.preventDefault(); await beginCheckout("paypal"); });
+    document.getElementById("dodo-button").addEventListener("click", async function() { await beginCheckout("dodo"); });
+    document.getElementById("razorpay-button").addEventListener("click", async function() { await beginCheckout("razorpay", "INR"); });
+    document.getElementById("razorpay-intl-button").addEventListener("click", async function() { await beginCheckout("razorpay", "USD"); });
+
+    document.getElementById("restore-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      var email = document.getElementById("restore-email").value.trim();
+      var s = restoreClaimCodeInput.value.trim().toUpperCase();
+      var claimCode = s ? "RP-" + s : "";
+      if (!claimCode) { setPanelStatus(restoreStatus, "Missing claim code.", "warn"); return; }
+      setPanelStatus(restoreStatus, "Checking your purchase…");
+      try {
+        var req = await postJson("/api/restore/request", {claimCode, email});
+        if (!req.canRestore) { setPanelStatus(restoreStatus, "No paid purchase found for that email.", "warn"); return; }
+        var data = await postJson("/api/restore/complete", {claimCode, email});
+        setPanelStatus(restoreStatus, data.message || "Purchase restored. Refresh the watch app now.", "ok");
+      } catch (err) {
+        setPanelStatus(restoreStatus, err.message, "warn");
+      }
+    });
+  </script>
+</body>
+</html>

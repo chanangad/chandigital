@@ -704,3 +704,129 @@ h3 {
     padding: 16px 40px;
   }
 }
+
+/* ── Language picker (RallyPoint) ──────────────────── */
+.lang-picker { position: relative; display: inline-flex; }
+.lang-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+.lang-button:hover,
+.lang-picker--open .lang-button {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.lang-button__icon { flex-shrink: 0; opacity: 0.85; }
+.lang-button__label {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lang-button__chevron {
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: transform 200ms ease;
+}
+.lang-picker--open .lang-button__chevron { transform: rotate(180deg); }
+
+.lang-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 50;
+  width: 264px;
+  padding: 8px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  transform-origin: top right;
+  animation: langPanelIn 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes langPanelIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.lang-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.lang-search:focus-within { border-color: var(--ink); color: var(--ink); }
+.lang-search svg { flex-shrink: 0; opacity: 0.7; }
+.lang-search__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+.lang-search__input::placeholder { color: var(--muted); }
+
+.lang-list {
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.lang-list::-webkit-scrollbar { width: 8px; }
+.lang-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: color 130ms ease, background 130ms ease;
+}
+.lang-option:hover,
+.lang-option:focus-visible { color: var(--ink); background: var(--surface); outline: none; }
+.lang-option--active { color: var(--ink); font-weight: 700; }
+.lang-option__check { flex-shrink: 0; opacity: 0; color: var(--ink); transition: opacity 130ms ease; }
+.lang-option--active .lang-option__check { opacity: 1; }
+.lang-option[hidden] { display: none; }
+
+/* Hide the Google Translate banner/branding it injects */
+.goog-te-banner-frame, .skiptranslate { display: none !important; }
+body { top: 0 !important; }
+#google_translate_element { display: none; }
+
+@media (max-width: 720px) {
+  .lang-button__label { max-width: 84px; }
+  .lang-panel { width: min(264px, calc(100vw - 32px)); }
+}

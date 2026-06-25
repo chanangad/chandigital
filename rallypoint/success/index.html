@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>RallyPoint Purchase Complete</title>
+  <link rel="canonical" href="https://chandigital.in/rallypoint/">
+  <link rel="icon" href="../../assets/favicon.ico" sizes="any">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    .success-shell {
+      min-height: calc(100vh - 60px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 20px;
+    }
+    .success-card {
+      width: 100%;
+      max-width: 480px;
+      padding: 40px 36px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--paper);
+    }
+    .success-card .eyebrow { margin-bottom: 10px; }
+    .success-card h1 { margin: 0 0 14px; font-size: 1.6rem; }
+    .success-card p { color: var(--muted); margin: 0 0 24px; line-height: 1.6; font-size: 0.95rem; }
+    .success-status {
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .success-status--ok   { border-color: #b7e0c5; background: #f0faf4; color: #1a7a3c; }
+    .success-status--warn { border-color: #f5c0bc; background: #fdf4f3; color: #c0392b; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="../../" aria-label="Chan Digital home">
+      <img class="brand-logo" src="../../assets/logo.png" alt="" width="36" height="36">
+      <span>Chan Digital</span>
+    </a>
+    <nav class="site-nav" aria-label="Page navigation">
+      <a href="../">RallyPoint</a>
+      <div class="lang-picker" data-lang-picker></div>
+    </nav>
+  </header>
+
+  <main class="success-shell">
+    <div class="success-card">
+      <p class="eyebrow" id="success-eyebrow">Payment</p>
+      <h1 id="success-title">Finalizing payment…</h1>
+      <p id="success-copy">Confirming your payment with our servers. Please keep this page open for a moment.</p>
+      <div id="success-status" class="success-status">Finalizing checkout…</div>
+      <a class="button button-primary" href="../" style="display:inline-flex;">Back to RallyPoint</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Chan Digital. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="../../">Chan Digital</a>
+      <a href="../">RallyPoint</a>
+      <a href="../faq/">FAQ</a>
+    </div>
+  </footer>
+
+  <script src="../app.js"></script>
+  <script src="../i18n.js"></script>
+  <script>
+    const titleEl  = document.getElementById("success-title");
+    const copyEl   = document.getElementById("success-copy");
+    const statusEl = document.getElementById("success-status");
+    const eyebrowEl = document.getElementById("success-eyebrow");
+
+    const params = new URLSearchParams(window.location.search);
+    const provider   = (params.get("provider") || "").trim().toLowerCase();
+    const payStatus  = (params.get("status") || "").trim().toLowerCase();
+    const paypalToken = (params.get("token") || "").trim();
+    const dodoCode   = (params.get("code") || "").trim().toUpperCase();
+    const rpCode     = (params.get("razorpay_payment_link_reference_id") || "").trim().toUpperCase();
+    const claimCode  = dodoCode || rpCode;
+
+    function setMessage(eyebrow, title, copy, status, kind) {
+      if (eyebrow) eyebrowEl.textContent = eyebrow;
+      titleEl.textContent = title;
+      copyEl.innerHTML = copy;
+      statusEl.textContent = status;
+      statusEl.className = "success-status" + (kind ? " success-status--" + kind : "");
+    }
+
+    const PAID_COPY = "Return to the watch app and choose <strong>Refresh License</strong> to activate RallyPoint.";
+    const NOT_CHARGED_COPY = "We couldn't complete your payment — <strong>you have not been charged</strong>. Return to the store to try again, or email <a href=\"mailto:support@chandigital.in\">support@chandigital.in</a>.";
+
+    async function pollPaid(code) {
+      for (let i = 0; i < 10; i++) {
+        try {
+          const r = await fetch(`${API_BASE}/api/license/status?code=${encodeURIComponent(code)}`);
+          if (r.ok) { const d = await r.json(); if (d && d.licenseState === "paid") return true; }
+        } catch (_) {}
+        await new Promise(r => setTimeout(r, 2000));
+      }
+      return false;
+    }
+
+    async function run() {
+      if (provider === "paypal" && payStatus) {
+        if (payStatus === "paid") {
+          setMessage("Payment complete", "You're all set!", PAID_COPY, "PayPal payment captured.", "ok");
+        } else {
+          setMessage("Payment not completed", "No charge was made", NOT_CHARGED_COPY,
+            payStatus === "failed" ? "Payment was not captured." : "No valid reference found.", "warn");
+        }
+        return;
+      }
+      if (paypalToken) {
+        try {
+          await postJson("/api/paypal/capture-order", { orderId: paypalToken });
+          setMessage("Payment complete", "You're all set!", PAID_COPY, "PayPal payment captured.", "ok");
+        } catch (e) {
+          setMessage("Payment not completed", "No charge was made", NOT_CHARGED_COPY, e.message, "warn");
+        }
+        return;
+      }
+      if (claimCode) {
+        setMessage("Confirming", "Almost there…", "Waiting for payment confirmation…", "Checking with our servers…");
+        const paid = await pollPaid(claimCode);
+        if (paid) {
+          setMessage("Payment complete", "You're all set!", PAID_COPY, "Payment confirmed.", "ok");
+        } else {
+          setMessage("Almost there…", "Finalizing in background",
+            "Your payment was received but our servers are still processing it. Return to the watch app and try <strong>Refresh License</strong> in a minute.",
+            "Still finalizing — may take a few extra seconds.", "warn");
+        }
+        return;
+      }
+      setMessage("Status unknown", "Nothing to confirm here",
+        "This page works best when opened after a checkout redirect. Visit the <a href=\"../\">RallyPoint store</a> to purchase.",
+        "No payment reference found in the URL.", "warn");
+    }
+
+    run();
+  </script>
+</body>
+</html>
