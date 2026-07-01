@@ -1,4 +1,4 @@
-const API_BASE = "https://picklepoint-unlock-worker.roxzone.workers.dev";
+const API_BASE = "https://pickleball-unlock-worker.roxzone.workers.dev";
 
 function query(name) {
   const params = new URLSearchParams(window.location.search);
