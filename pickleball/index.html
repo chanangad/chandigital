@@ -82,7 +82,23 @@
       min-height: unset;
       padding: 48px 0 48px;
     }
+    .hero-visual {
+      max-width: 380px;
+      width: 100%;
+    }
 
+    .hero-visual .preview {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      overflow: visible;
+    }
+
+    .hero-visual .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    } 
     /* Pickleball Go-specific additions — unlock form, feature grid, tabs */
     .rp-features {
       display: grid;
