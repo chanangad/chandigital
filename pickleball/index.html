@@ -613,7 +613,7 @@
     const claimCodeInput = document.getElementById("claim-code-input");
     const restoreClaimCodeInput = document.getElementById("restore-claim-code-input");
     const rawCode = query("code").trim().toUpperCase();
-    const initialClaimCode = rawCode.startsWith("RP-") ? rawCode.slice(3) : rawCode;
+    const initialClaimCode = (rawCode.startsWith("PB-") ? rawCode.slice(3) : rawCode).replace(/[^0-9]/g,"");
     const initialTab = query("tab") === "restore" ? "restore" : "unlock";
 
     claimCodeInput.value = initialClaimCode;
@@ -627,7 +627,8 @@
 
     function syncClaimCode(value) {
       var suffix = value.trim().toUpperCase();
-      if (suffix.startsWith("RP-")) { suffix = suffix.slice(3); }
+      if (suffix.startsWith("PB-")) { suffix = suffix.slice(3); }
+      suffix = suffix.replace(/[^0-9]/g,"");
       claimCodeInput.value = suffix;
       restoreClaimCodeInput.value = suffix;
       const params = new URLSearchParams(window.location.search);
