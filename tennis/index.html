@@ -466,7 +466,7 @@
               <div class="rp-field">
                 <label for="claim-code-input">Claim code from watch</label>
                 <div class="rp-prefix-wrap">
-                  <span class="rp-prefix" aria-hidden="true">RP-</span>
+                  <span class="rp-prefix" aria-hidden="true">TN-</span>
                   <input id="claim-code-input" name="claim-code" type="text" required placeholder="12345678" autocomplete="off" spellcheck="false">
                 </div>
               </div>
@@ -505,7 +505,7 @@
               <div class="rp-field">
                 <label for="restore-claim-code-input">Claim code from watch</label>
                 <div class="rp-prefix-wrap">
-                  <span class="rp-prefix" aria-hidden="true">RP-</span>
+                  <span class="rp-prefix" aria-hidden="true">TN-</span>
                   <input id="restore-claim-code-input" name="restore-claim-code" type="text" required placeholder="12345678" autocomplete="off" spellcheck="false">
                 </div>
               </div>
@@ -631,7 +631,7 @@
       claimCodeInput.value = suffix;
       restoreClaimCodeInput.value = suffix;
       const params = new URLSearchParams(window.location.search);
-      if (suffix) { params.set("code", "RP-" + suffix); } else { params.delete("code"); }
+      if (suffix) { params.set("code", "TN-" + suffix); } else { params.delete("code"); }
       if (!params.get("tab")) { params.set("tab", initialTab); }
       window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
     }
@@ -652,7 +652,7 @@
         var params = new URLSearchParams(window.location.search);
         params.set("tab", name);
         var s = claimCodeInput.value.trim().toUpperCase();
-        if (s) { params.set("code", "RP-" + s); } else { params.delete("code"); }
+        if (s) { params.set("code", "TN-" + s); } else { params.delete("code"); }
         window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
       }
     }
@@ -665,7 +665,7 @@
 
     async function beginCheckout(provider, currency) {
       var suffix = claimCodeInput.value.trim().toUpperCase();
-      var claimCode = suffix ? "RP-" + suffix : "";
+      var claimCode = suffix ? "TN-" + suffix : "";
       var name = document.getElementById("unlock-name").value.trim();
       var email = document.getElementById("unlock-email").value.trim();
       if (!claimCode) { setPanelStatus(unlockStatus, "Enter the claim code shown on your watch.", "warn"); return; }
@@ -720,7 +720,7 @@
       e.preventDefault();
       var email = document.getElementById("restore-email").value.trim();
       var s = restoreClaimCodeInput.value.trim().toUpperCase();
-      var claimCode = s ? "RP-" + s : "";
+      var claimCode = s ? "TN-" + s : "";
       if (!claimCode) { setPanelStatus(restoreStatus, "Missing claim code.", "warn"); return; }
       setPanelStatus(restoreStatus, "Checking your purchase…");
       try {
