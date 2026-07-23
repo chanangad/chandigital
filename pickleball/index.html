@@ -484,9 +484,7 @@
 
             <div id="intl-pay-group" class="rp-pay-group">
               <div class="rp-pay-buttons">
-                <button type="button" id="razorpay-intl-button" class="rp-pay-btn rp-pay-btn--primary">Card or Wallet</button>
-                <button type="button" id="dodo-button" class="rp-pay-btn">Other Payment Methods</button>
-                <button type="submit" form="unlock-form" class="rp-pay-btn">Pay with PayPal</button>
+                <button type="button" id="dodo-button" class="rp-pay-btn rp-pay-btn--primary">Card or Wallet</button>
               </div>
             </div>
 
@@ -711,10 +709,9 @@
       document.getElementById("stat-price-inr").style.display = "";
     }
 
-    document.getElementById("unlock-form").addEventListener("submit", async function(e) { e.preventDefault(); await beginCheckout("paypal"); });
+    document.getElementById("unlock-form").addEventListener("submit", async function(e) { e.preventDefault(); if (isIndia) { await beginCheckout("razorpay", "INR"); } else { await beginCheckout("dodo"); } });
     document.getElementById("dodo-button").addEventListener("click", async function() { await beginCheckout("dodo"); });
     document.getElementById("razorpay-button").addEventListener("click", async function() { await beginCheckout("razorpay", "INR"); });
-    document.getElementById("razorpay-intl-button").addEventListener("click", async function() { await beginCheckout("razorpay", "USD"); });
 
     document.getElementById("restore-form").addEventListener("submit", async function(e) {
       e.preventDefault();
