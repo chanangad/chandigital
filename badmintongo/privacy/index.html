@@ -123,7 +123,7 @@
       <p>Payments are processed by Razorpay (India) and PayPal or Dodo (international). Each processor's own privacy policy governs how payment data is handled. We receive only a transaction confirmation and the claim code you submitted.</p>
 
       <h2>6. License data storage</h2>
-      <p>Activated licenses are stored on a Cloudflare Workers KV store. The record contains your claim code, email (hashed), and license status. We do not store full email addresses in the license record.</p>
+      <p>Activated licenses are stored on a Cloudflare Workers KV store. The record contains your claim code, your full email address, and license status. We keep the full address (rather than a hash) so we can look up your license by email for restores and support.</p>
 
       <h2>7. Cookies and analytics</h2>
       <p>chandigital.in does not use analytics cookies or third-party tracking scripts. No cookie consent banner is shown because no tracking cookies are set.</p>
