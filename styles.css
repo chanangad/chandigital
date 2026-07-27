@@ -5,12 +5,6 @@
   --paper: #ffffff;
   --surface: #fafafa;
   --line: #e5e5e5;
-  /* Vibrant purple accent. Used for links, hover and focus states, and small
-     details. Primary buttons stay black so the accent keeps its emphasis. */
-  --accent: #7c3aed;
-  --accent-strong: #6d28d9;
-  --accent-soft: rgba(124, 58, 237, 0.09);
-  --accent-line: rgba(124, 58, 237, 0.32);
   --shadow: 0 28px 80px rgba(0, 0, 0, 0.08);
   --radius-sm: 12px;
   --radius-md: 20px;
@@ -197,95 +191,17 @@ h3 {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--accent);
+  color: var(--ink);
   font: inherit;
   font-weight: 700;
   text-decoration: underline;
-  text-decoration-color: var(--accent-line);
   text-underline-offset: 2px;
   cursor: pointer;
 }
 
 .copy-email-inline:hover,
 .copy-email-inline:focus-visible {
-  color: var(--accent-strong);
-  text-decoration-color: var(--accent);
-}
-
-/* ── Purple accent ─────────────────────────────────── */
-.eyebrow {
-  color: var(--accent);
-}
-
-.site-nav a:hover,
-.site-nav a:focus-visible {
-  color: var(--accent);
-}
-
-.site-nav a::after {
-  background: var(--accent);
-}
-
-.prose a,
-.legal-note a,
-.footer-links a:hover,
-.footer-links a:focus-visible {
-  color: var(--accent);
-  text-decoration-color: var(--accent-line);
-}
-
-.prose a:hover,
-.prose a:focus-visible {
-  color: var(--accent-strong);
-  text-decoration-color: var(--accent);
-}
-
-.rp-guarantee a {
-  color: var(--accent);
-  text-decoration-color: var(--accent-line);
-}
-
-.rp-sibling:hover,
-.rp-sibling:focus-visible {
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px var(--accent-soft);
-}
-
-.rp-sibling:hover strong {
-  color: var(--accent);
-}
-
-.product-card:hover .product-card-link,
-.product-card-link:hover,
-.product-card-link:focus-visible {
-  color: var(--accent);
-}
-
-.rp-tab--active {
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
-.rp-price-amount {
-  color: var(--accent);
-}
-
-.rp-feature strong::before {
-  content: "";
-  display: block;
-  width: 22px;
-  height: 2px;
-  margin-bottom: 10px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-
-.buy-bar {
-  border-color: var(--accent);
-}
-
-.rp-status--ok {
-  color: var(--accent-strong);
+  color: var(--muted);
 }
 
 /* Consistent, visible keyboard focus everywhere */
@@ -293,7 +209,7 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -1068,8 +984,7 @@ input:focus-visible,
 
 .nav-toggle:hover,
 .nav-toggle[aria-expanded="true"] {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--ink);
 }
 
 .nav-drawer {
@@ -1105,8 +1020,7 @@ input:focus-visible,
 
 .nav-drawer a:hover,
 .nav-drawer a:focus-visible {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--surface);
 }
 
 /* ── Language picker (RallyPoint) ──────────────────── */
