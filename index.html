@@ -118,7 +118,7 @@
       }
     </script>
   </head>
-  <body>
+  <body class="home">
     <header class="site-header">
     <button class="nav-toggle" id="nav-toggle" type="button"
             aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
@@ -145,6 +145,7 @@
 
     <main id="top">
       <section class="hero section">
+        <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
         <div class="hero-copy">
           <img class="hero-logo" src="assets/logo.png" alt="Chan Digital logo" width="72" height="72">
           <p class="eyebrow">Independent device software studio</p>
@@ -152,9 +153,6 @@
           <p class="hero-lede">
             Garmin apps and watch faces built for a single job, done properly - race pacing for HYROX athletes,
             glucose at a glance, and racket-sport scoring that knows the rules of your game.
-          </p>
-          <p class="hero-meta">
-            Six products on Garmin Connect IQ · Scoring apps in 21+ languages, one-time purchase
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button button-primary" href="#products">View products</a>
@@ -424,6 +422,132 @@
 
       window.addEventListener("resize", function () {
         if (window.innerWidth > 720 && !drawer.hidden) { setOpen(false); }
+      });
+    })();
+  </script>
+  <script>
+    // Interactive dot-matrix behind the hero. Dots brighten and drift away
+    // from the cursor, echoing the pixel grid of a watch display. Renders a
+    // static grid on touch devices and for reduced-motion users. The loop
+    // only runs while dots are settling, so idle CPU cost is zero.
+    (function () {
+      var canvas = document.getElementById("hero-canvas");
+      if (!canvas || !canvas.getContext) { return; }
+
+      var ctx = canvas.getContext("2d");
+      var SPACING = 28;
+      var INFLUENCE = 150;
+      var TAU = Math.PI * 2;
+      var isStatic =
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        window.matchMedia("(pointer: coarse)").matches;
+
+      var dots = [];
+      var rect = null;
+      var mouse = { x: -9999, y: -9999 };
+      var raf = null;
+      var w = 0;
+      var h = 0;
+
+      function build() {
+        var dpr = window.devicePixelRatio || 1;
+        rect = canvas.getBoundingClientRect();
+        w = rect.width;
+        h = rect.height;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        dots = [];
+        for (var y = SPACING / 2; y < h; y += SPACING) {
+          for (var x = SPACING / 2; x < w; x += SPACING) {
+            dots.push({ x: x, y: y, s: 0 });
+          }
+        }
+        draw();
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        var settling = false;
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          var dx = d.x - mouse.x;
+          var dy = d.y - mouse.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var target = dist < INFLUENCE ? 1 - dist / INFLUENCE : 0;
+          d.s += (target - d.s) * 0.14;
+          if (Math.abs(target - d.s) > 0.003) { settling = true; }
+          var push = d.s * 7;
+          var px = dist > 1 ? d.x + (dx / dist) * push : d.x;
+          var py = dist > 1 ? d.y + (dy / dist) * push : d.y;
+          ctx.beginPath();
+          ctx.arc(px, py, 1 + d.s * 1.7, 0, TAU);
+          // Dots shift from faint ink to lavender as the cursor approaches.
+          ctx.fillStyle = "rgba(" +
+            Math.round(10 + 159 * d.s) + ", " +
+            Math.round(10 + 145 * d.s) + ", " +
+            Math.round(10 + 206 * d.s) + ", " +
+            (0.08 + d.s * 0.5).toFixed(3) + ")";
+          ctx.fill();
+        }
+        return settling;
+      }
+
+      function tick() {
+        raf = draw() ? requestAnimationFrame(tick) : null;
+      }
+
+      function wake() {
+        if (!raf) { raf = requestAnimationFrame(tick); }
+      }
+
+      build();
+      if (isStatic) { return; }
+
+      document.addEventListener("mousemove", function (e) {
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+        wake();
+      }, { passive: true });
+
+      document.documentElement.addEventListener("mouseleave", function () {
+        mouse.x = -9999;
+        mouse.y = -9999;
+        wake();
+      });
+
+      window.addEventListener("scroll", function () {
+        rect = canvas.getBoundingClientRect();
+      }, { passive: true });
+
+      var resizeTimer = null;
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(build, 150);
+      });
+    })();
+  </script>
+  <script>
+    // Editorial scroll reveal: sections and cards fade up as they enter the
+    // viewport. Classes are added by JS, so nothing is hidden when scripts
+    // are unavailable. Skipped entirely for reduced-motion users.
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { return; }
+      if (!("IntersectionObserver" in window)) { return; }
+      var targets = document.querySelectorAll(
+        ".hero-visual .preview, .section-heading, .product-card, .studio-grid, .contact-band"
+      );
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal--in");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: "0px 0px -8% 0px" });
+      targets.forEach(function (el) {
+        el.classList.add("reveal");
+        observer.observe(el);
       });
     })();
   </script>
