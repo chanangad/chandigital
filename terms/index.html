@@ -35,7 +35,7 @@
 
   <style>
     .prose {
-      width: min(720px, calc(100% - 40px));
+      max-width: 720px;
       margin: 0 auto 96px;
     }
     .prose h2 {
@@ -66,10 +66,6 @@
 <body>
 
   <header class="site-header">
-    <button class="nav-toggle" id="nav-toggle" type="button"
-            aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
-    </button>
     <a class="brand" href="../" aria-label="Chan Digital home">
       <img class="brand-logo" src="../assets/logo.png" alt="" width="36" height="36">
       <span>Chan Digital</span>
@@ -77,14 +73,8 @@
     <nav class="site-nav" aria-label="Page navigation">
       <a href="../">Home</a>
       <a href="../#products">Products</a>
-      <div class="lang-picker" data-lang-picker></div>
-      </nav>
-  </header>
-
-    <nav class="nav-drawer" id="nav-drawer" hidden aria-label="Menu">
-      <a href="../">Chan Digital</a>
-      <a href="../#products">Products</a>
     </nav>
+  </header>
 
   <main>
 
@@ -106,10 +96,10 @@
       <p>Our apps are Garmin Connect IQ apps distributed through the Connect IQ Store. Each app is free to install, and a one-time purchase unlocks the full version for that specific app on the Garmin account and device it was activated on.</p>
 
       <h2>3. License grant</h2>
-      <p>When you purchase an unlock, we grant you a personal, non-exclusive, non-transferable license to use the paid features of that app. This is a license, not a sale of the underlying software - Chan Digital retains all ownership and intellectual property rights in the app.</p>
+      <p>When you purchase an unlock, we grant you a personal, non-exclusive, non-transferable license to use the paid features of that app. This is a license, not a sale of the underlying software — Chan Digital retains all ownership and intellectual property rights in the app.</p>
 
       <h2>4. Account and claim codes</h2>
-      <p>Unlocks are tied to a device-generated claim code and the email address you provide at purchase. Reinstalling the app or resetting your device generates a new claim code - you're responsible for keeping your purchase email accessible, as it's all that's required to restore your license to the new claim code.</p>
+      <p>Unlocks are tied to a device-generated claim code and the email address you provide at purchase. Reinstalling the app or resetting your device generates a new claim code — you're responsible for keeping your purchase email accessible, as it's all that's required to restore your license to the new claim code.</p>
 
       <h2>5. Acceptable use</h2>
       <ul>
@@ -119,7 +109,7 @@
       </ul>
 
       <h2>6. Payments and pricing</h2>
-      <p>Prices are shown at checkout in your local currency where supported. Payments are processed by Razorpay (India) or Dodo Payments (international) - we do not store your card or payment credentials. See our <a href="../refund/">Refund Policy</a> for details on refund eligibility.</p>
+      <p>Prices are shown at checkout in your local currency where supported. Payments are processed by Razorpay (India) or Dodo Payments (international) — we do not store your card or payment credentials. See our <a href="../refund/">Refund Policy</a> for details on refund eligibility.</p>
 
       <h2>7. Third-party services</h2>
       <p>Our apps run on Garmin devices and rely on Garmin's Connect IQ platform and Garmin Connect for activity syncing. Garmin's own terms and privacy policy govern that part of the experience. We are not affiliated with or endorsed by Garmin Ltd.</p>
@@ -134,7 +124,7 @@
       <p>We may update these terms from time to time. The date at the top of this page reflects the most recent revision. Continued use of our apps or websites after changes constitutes acceptance of the updated terms.</p>
 
       <h2>11. Contact</h2>
-      <p>Questions about these terms? Email <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button>.</p>
+      <p>Questions about these terms? Email <a href="mailto:contact@chandigital.in">contact@chandigital.in</a>.</p>
     </div>
 
   </main>
@@ -143,85 +133,11 @@
     <p>&copy; 2026 Chan Digital. All rights reserved.</p>
     <div class="footer-links">
       <a href="../">Chan Digital</a>
-      <a href="../privacy/">Privacy</a>
-      <a href="../terms/">Terms</a>
-      <a href="../refund/">Refund</a>
+      <a href="../privacy/">Privacy Policy</a>
+      <a href="./">Terms of Service</a>
+      <a href="../refund/">Refund Policy</a>
     </div>
   </footer>
 
-  <script src="../badmintongo/i18n.js"></script>
-  <script>
-    // Mobile menu drawer. Desktop hides the button and drawer via CSS.
-    (function () {
-      var toggle = document.getElementById("nav-toggle");
-      var drawer = document.getElementById("nav-drawer");
-      if (!toggle || !drawer) { return; }
-
-      function setOpen(open) {
-        drawer.hidden = !open;
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-      }
-
-      toggle.addEventListener("click", function (event) {
-        event.stopPropagation();
-        setOpen(drawer.hidden);
-      });
-
-      drawer.addEventListener("click", function (event) {
-        if (event.target.tagName === "A") { setOpen(false); }
-      });
-
-      document.addEventListener("click", function (event) {
-        if (drawer.hidden) { return; }
-        if (!drawer.contains(event.target) && !toggle.contains(event.target)) { setOpen(false); }
-      });
-
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape" && !drawer.hidden) { setOpen(false); toggle.focus(); }
-      });
-
-      window.addEventListener("resize", function () {
-        if (window.innerWidth > 720 && !drawer.hidden) { setOpen(false); }
-      });
-    })();
-  </script>
-  <script>
-    // Email is always copied to the clipboard, never handed to a mail app,
-    // so the behaviour is identical everywhere it appears.
-    (function () {
-      var nodes = document.querySelectorAll(".copy-email-btn");
-      if (!nodes.length) { return; }
-      nodes.forEach(function (btn) {
-        var resetTimer = null;
-        btn.addEventListener("click", function () {
-          var email = btn.getAttribute("data-email");
-          var label = btn.getAttribute("data-label") || btn.textContent;
-          var show = function (text) {
-            clearTimeout(resetTimer);
-            btn.textContent = text;
-            resetTimer = setTimeout(function () { btn.textContent = label; }, 1800);
-          };
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(email).then(
-              function () { show("Copied " + email); },
-              function () { show("Copy failed - " + email); }
-            );
-          } else {
-            var temp = document.createElement("textarea");
-            temp.value = email;
-            temp.setAttribute("readonly", "");
-            temp.style.position = "absolute";
-            temp.style.left = "-9999px";
-            document.body.appendChild(temp);
-            temp.select();
-            try { document.execCommand("copy"); show("Copied " + email); }
-            catch (e) { show("Copy failed - " + email); }
-            document.body.removeChild(temp);
-          }
-        });
-      });
-    })();
-  </script>
 </body>
 </html>
