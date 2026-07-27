@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../../styles.css">
   <style>
     .prose {
-      max-width: 720px;
+      width: min(720px, calc(100% - 40px));
       margin: 0 auto 96px;
     }
     .prose h2 {
@@ -67,6 +67,10 @@
 <body>
 
   <header class="site-header">
+    <button class="nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+    </button>
     <a class="brand" href="../../" aria-label="Chan Digital home">
       <img class="brand-logo" src="../../assets/logo.png" alt="" width="36" height="36">
       <span>Chan Digital</span>
@@ -77,6 +81,12 @@
       <div class="lang-picker" data-lang-picker></div>
     </nav>
   </header>
+
+    <nav class="nav-drawer" id="nav-drawer" hidden aria-label="Menu">
+      <a href="../../">Chan Digital</a>
+      <a href="../">Badminton Go</a>
+      <a href="../faq/">FAQ</a>
+    </nav>
 
   <main>
 
@@ -92,23 +102,23 @@
       <span class="updated">Last updated: June 24, 2026</span>
 
       <h2>1. Who we are</h2>
-      <p>Chan Digital ("we", "us", "our") operates the Badminton Go Garmin app and the website at <a href="https://chandigital.in/badmintongo/">chandigital.in/badmintongo/</a>. Contact us at <a href="mailto:contact@chandigital.in">contact@chandigital.in</a>.</p>
+      <p>Chan Digital ("we", "us", "our") operates the Badminton Go Garmin app and the website at <a href="https://chandigital.in/badmintongo/">chandigital.in/badmintongo/</a>. Contact us at <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button>.</p>
 
       <h2>2. Data collected by the watch app</h2>
       <p>Badminton Go runs on your Garmin device. On-device, the app stores:</p>
       <ul>
-        <li><strong>Settings</strong> — your preferences (game mode, score limits, bottom stat choice) stored locally via Garmin Application.Storage.</li>
-        <li><strong>License state</strong> — a claim code and license status flag (free / trial / paid) stored locally. No personal data is included.</li>
-        <li><strong>Session count</strong> — a counter for free trial sessions, stored locally on the device.</li>
+        <li><strong>Settings</strong> - your preferences (game mode, score limits, bottom stat choice) stored locally via Garmin Application.Storage.</li>
+        <li><strong>License state</strong> - a claim code and license status flag (free / trial / paid) stored locally. No personal data is included.</li>
+        <li><strong>Session count</strong> - a counter for free trial sessions, stored locally on the device.</li>
       </ul>
       <p>None of this data is transmitted by the app itself. Activity data (heart rate, duration) is handled by Garmin and governed by <a href="https://www.garmin.com/en-US/privacy/connect/policy/" target="_blank" rel="noreferrer">Garmin's privacy policy</a>.</p>
 
       <h2>3. Data collected on this website</h2>
       <p>When you purchase or restore a license at chandigital.in/badmintongo/, we collect:</p>
       <ul>
-        <li><strong>Name and email address</strong> — used to send your license confirmation and to process refund requests.</li>
-        <li><strong>Claim code</strong> — the device-generated code used to bind the license to your watch.</li>
-        <li><strong>Payment information</strong> — processed directly by Razorpay (India) or PayPal / Dodo (international). We do not store card numbers or payment credentials.</li>
+        <li><strong>Name and email address</strong> - used to send your license confirmation and to process refund requests.</li>
+        <li><strong>Claim code</strong> - the device-generated code used to bind the license to your watch.</li>
+        <li><strong>Payment information</strong> - processed directly by Razorpay (India) or PayPal / Dodo (international). We do not store card numbers or payment credentials.</li>
       </ul>
 
       <h2>4. How we use your data</h2>
@@ -129,16 +139,16 @@
       <p>chandigital.in does not use analytics cookies or third-party tracking scripts. No cookie consent banner is shown because no tracking cookies are set.</p>
 
       <h2>8. Data retention</h2>
-      <p>Purchase records (name, email, claim code) are retained for up to 3 years to support license restore requests and legal compliance. You may request deletion at any time by emailing <a href="mailto:contact@chandigital.in">contact@chandigital.in</a>.</p>
+      <p>Purchase records (name, email, claim code) are retained for up to 3 years to support license restore requests and legal compliance. You may request deletion at any time by emailing <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button>.</p>
 
       <h2>9. Your rights</h2>
-      <p>Depending on your location, you may have the right to access, correct, or delete your personal data. To exercise these rights, email <a href="mailto:contact@chandigital.in">contact@chandigital.in</a> with "Privacy Request" in the subject line.</p>
+      <p>Depending on your location, you may have the right to access, correct, or delete your personal data. To exercise these rights, email <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button> with "Privacy Request" in the subject line.</p>
 
       <h2>10. Changes to this policy</h2>
       <p>We may update this policy from time to time. The updated date at the top of this page will reflect any changes. Continued use of the app or website after changes constitutes acceptance of the updated policy.</p>
 
       <h2>11. Contact</h2>
-      <p>For any privacy-related questions, email <a href="mailto:contact@chandigital.in">contact@chandigital.in</a>.</p>
+      <p>For any privacy-related questions, email <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button>.</p>
     </div>
 
   </main>
@@ -147,11 +157,85 @@
     <p>&copy; 2026 Chan Digital. All rights reserved.</p>
     <div class="footer-links">
       <a href="../../">Chan Digital</a>
-      <a href="../">Badminton Go</a>
-      <a href="../faq/">FAQ</a>
+      <a href="../privacy/">Privacy</a>
+      <a href="../../terms/">Terms</a>
+      <a href="../../refund/">Refund</a>
     </div>
   </footer>
 
   <script src="../i18n.js"></script>
+  <script>
+    // Mobile menu drawer. Desktop hides the button and drawer via CSS.
+    (function () {
+      var toggle = document.getElementById("nav-toggle");
+      var drawer = document.getElementById("nav-drawer");
+      if (!toggle || !drawer) { return; }
+
+      function setOpen(open) {
+        drawer.hidden = !open;
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      }
+
+      toggle.addEventListener("click", function (event) {
+        event.stopPropagation();
+        setOpen(drawer.hidden);
+      });
+
+      drawer.addEventListener("click", function (event) {
+        if (event.target.tagName === "A") { setOpen(false); }
+      });
+
+      document.addEventListener("click", function (event) {
+        if (drawer.hidden) { return; }
+        if (!drawer.contains(event.target) && !toggle.contains(event.target)) { setOpen(false); }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !drawer.hidden) { setOpen(false); toggle.focus(); }
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 720 && !drawer.hidden) { setOpen(false); }
+      });
+    })();
+  </script>
+  <script>
+    // Email is always copied to the clipboard, never handed to a mail app,
+    // so the behaviour is identical everywhere it appears.
+    (function () {
+      var nodes = document.querySelectorAll(".copy-email-btn");
+      if (!nodes.length) { return; }
+      nodes.forEach(function (btn) {
+        var resetTimer = null;
+        btn.addEventListener("click", function () {
+          var email = btn.getAttribute("data-email");
+          var label = btn.getAttribute("data-label") || btn.textContent;
+          var show = function (text) {
+            clearTimeout(resetTimer);
+            btn.textContent = text;
+            resetTimer = setTimeout(function () { btn.textContent = label; }, 1800);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(
+              function () { show("Copied " + email); },
+              function () { show("Copy failed - " + email); }
+            );
+          } else {
+            var temp = document.createElement("textarea");
+            temp.value = email;
+            temp.setAttribute("readonly", "");
+            temp.style.position = "absolute";
+            temp.style.left = "-9999px";
+            document.body.appendChild(temp);
+            temp.select();
+            try { document.execCommand("copy"); show("Copied " + email); }
+            catch (e) { show("Copy failed - " + email); }
+            document.body.removeChild(temp);
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

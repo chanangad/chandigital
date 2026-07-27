@@ -17,14 +17,14 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Chan Digital">
     <meta property="og:title" content="Chan Digital | Device Apps and Watch Faces">
-    <meta property="og:description" content="Independent software studio behind Roxzone, LoopFace, Padel Go, Tennis Go, Pickleball Go, and Badminton Go — focused apps and watch faces for Garmin.">
+    <meta property="og:description" content="Independent software studio behind Roxzone, LoopFace, Padel Go, Tennis Go, Pickleball Go, and Badminton Go - focused apps and watch faces for Garmin.">
     <meta property="og:url" content="https://chandigital.in/">
     <meta property="og:image" content="https://chandigital.in/assets/favicon-512x512.png">
     <meta property="og:locale" content="en_US">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Chan Digital | Device Apps and Watch Faces">
-    <meta name="twitter:description" content="Independent software studio behind Roxzone, LoopFace, Padel Go, Tennis Go, Pickleball Go, and Badminton Go — focused apps for Garmin.">
+    <meta name="twitter:description" content="Independent software studio behind Roxzone, LoopFace, Padel Go, Tennis Go, Pickleball Go, and Badminton Go - focused apps for Garmin.">
     <meta name="twitter:image" content="https://chandigital.in/assets/favicon-512x512.png">
 
     <link rel="icon" href="assets/favicon.ico" sizes="any">
@@ -120,6 +120,10 @@
   </head>
   <body>
     <header class="site-header">
+    <button class="nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+    </button>
       <a class="brand" href="#top" aria-label="Chan Digital home">
         <img class="brand-logo" src="assets/logo.png" alt="" width="36" height="36">
         <span>Chan Digital</span>
@@ -132,6 +136,13 @@
       </nav>
     </header>
 
+    <nav class="nav-drawer" id="nav-drawer" hidden aria-label="Menu">
+      <a href="./">Chan Digital</a>
+      <a href="#products">Products</a>
+      <a href="#studio">Studio</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
     <main id="top">
       <section class="hero section">
         <div class="hero-copy">
@@ -139,7 +150,7 @@
           <p class="eyebrow">Independent device software studio</p>
           <h1>Chan Digital</h1>
           <p class="hero-lede">
-            Garmin apps and watch faces built for a single job, done properly — race pacing for HYROX athletes,
+            Garmin apps and watch faces built for a single job, done properly - race pacing for HYROX athletes,
             glucose at a glance, and racket-sport scoring that knows the rules of your game.
           </p>
           <p class="hero-meta">
@@ -303,7 +314,7 @@
         </div>
         <div class="studio-grid">
           <p>
-            Chan Digital builds compact software for specific communities — HYROX racers, people managing glucose,
+            Chan Digital builds compact software for specific communities - HYROX racers, people managing glucose,
             and racket-sport players. Every app is shaped by real use on court and in training, direct user feedback,
             and fast iteration on the details that matter at speed.
           </p>
@@ -324,17 +335,18 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <p>&copy; 2026 Chan Digital. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="./privacy/">Privacy Policy</a>
-        <a href="./terms/">Terms of Service</a>
-        <a href="./refund/">Refund Policy</a>
-      </div>
-      <p class="legal-note">
+  <footer class="site-footer">
+    <p>&copy; 2026 Chan Digital. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="./">Chan Digital</a>
+      <a href="privacy/">Privacy</a>
+      <a href="terms/">Terms</a>
+      <a href="refund/">Refund</a>
+    </div>
+    <p class="legal-note">
         Garmin, Connect IQ, HYROX, xDrip+, AAPS, Spike, and Nightscout names belong to their respective owners.
       </p>
-    </footer>
+  </footer>
   <script src="./badmintongo/i18n.js"></script>
   <script>
     (function () {
@@ -356,7 +368,7 @@
             navigator.clipboard.writeText(email).then(function () {
               showResult("Copied " + email);
             }, function () {
-              showResult("Copy failed — " + email);
+              showResult("Copy failed - " + email);
             });
           } else {
             // Fallback for browsers without the async Clipboard API.
@@ -371,7 +383,7 @@
               document.execCommand("copy");
               showResult("Copied " + email);
             } catch (e) {
-              showResult("Copy failed — " + email);
+              showResult("Copy failed - " + email);
             }
             document.body.removeChild(temp);
           }
@@ -379,5 +391,41 @@
       });
     })();
   </script>
-  </body>
+    <script>
+    // Mobile menu drawer. Desktop hides the button and drawer via CSS.
+    (function () {
+      var toggle = document.getElementById("nav-toggle");
+      var drawer = document.getElementById("nav-drawer");
+      if (!toggle || !drawer) { return; }
+
+      function setOpen(open) {
+        drawer.hidden = !open;
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      }
+
+      toggle.addEventListener("click", function (event) {
+        event.stopPropagation();
+        setOpen(drawer.hidden);
+      });
+
+      drawer.addEventListener("click", function (event) {
+        if (event.target.tagName === "A") { setOpen(false); }
+      });
+
+      document.addEventListener("click", function (event) {
+        if (drawer.hidden) { return; }
+        if (!drawer.contains(event.target) && !toggle.contains(event.target)) { setOpen(false); }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !drawer.hidden) { setOpen(false); toggle.focus(); }
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 720 && !drawer.hidden) { setOpen(false); }
+      });
+    })();
+  </script>
+</body>
 </html>

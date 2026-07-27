@@ -5,6 +5,12 @@
   --paper: #ffffff;
   --surface: #fafafa;
   --line: #e5e5e5;
+  /* Vibrant purple accent. Used for links, hover and focus states, and small
+     details. Primary buttons stay black so the accent keeps its emphasis. */
+  --accent: #7c3aed;
+  --accent-strong: #6d28d9;
+  --accent-soft: rgba(124, 58, 237, 0.09);
+  --accent-line: rgba(124, 58, 237, 0.32);
   --shadow: 0 28px 80px rgba(0, 0, 0, 0.08);
   --radius-sm: 12px;
   --radius-md: 20px;
@@ -186,6 +192,187 @@ h3 {
   line-height: 1.6;
 }
 
+/* Inline email trigger: looks like a link, copies instead of opening mail. */
+.copy-email-inline {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-line);
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.copy-email-inline:hover,
+.copy-email-inline:focus-visible {
+  color: var(--accent-strong);
+  text-decoration-color: var(--accent);
+}
+
+/* ── Purple accent ─────────────────────────────────── */
+.eyebrow {
+  color: var(--accent);
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--accent);
+}
+
+.site-nav a::after {
+  background: var(--accent);
+}
+
+.prose a,
+.legal-note a,
+.footer-links a:hover,
+.footer-links a:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent-line);
+}
+
+.prose a:hover,
+.prose a:focus-visible {
+  color: var(--accent-strong);
+  text-decoration-color: var(--accent);
+}
+
+.rp-guarantee a {
+  color: var(--accent);
+  text-decoration-color: var(--accent-line);
+}
+
+.rp-sibling:hover,
+.rp-sibling:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px var(--accent-soft);
+}
+
+.rp-sibling:hover strong {
+  color: var(--accent);
+}
+
+.product-card:hover .product-card-link,
+.product-card-link:hover,
+.product-card-link:focus-visible {
+  color: var(--accent);
+}
+
+.rp-tab--active {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.rp-price-amount {
+  color: var(--accent);
+}
+
+.rp-feature strong::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.buy-bar {
+  border-color: var(--accent);
+}
+
+.rp-status--ok {
+  color: var(--accent-strong);
+}
+
+/* Consistent, visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Legal / long-form pages sit outside .section, so they need their own
+   horizontal breathing room on small screens. */
+.prose {
+  width: min(720px, calc(100% - 40px));
+}
+
+/* Sticky purchase bar. Appears once the hero scrolls away, hides at the
+   unlock section and the footer so it never competes with the real form. */
+.buy-bar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(1160px, calc(100% - 32px));
+  margin: 0 auto 16px;
+  padding: 12px 14px 12px 22px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.buy-bar[hidden] {
+  display: none;
+}
+
+.buy-bar.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.buy-bar-name {
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.buy-bar-cta {
+  flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+  .buy-bar {
+    padding: 10px 10px 10px 18px;
+  }
+
+  .buy-bar-name {
+    font-size: 0.9rem;
+  }
+
+  .buy-bar-cta {
+    padding-right: 18px;
+    padding-left: 18px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .buy-bar {
+    transition: none;
+  }
+}
+
 /* Cross-links to sibling scoring apps */
 .rp-siblings {
   display: grid;
@@ -238,11 +425,21 @@ h3 {
     grid-template-columns: 1fr;
     margin-bottom: 64px;
   }
+
+  /* Keep the caption clear of the next section heading on small screens. */
+  .rp-explainer {
+    margin-bottom: 56px;
+  }
+
+  #more-apps .section-heading,
+  #more-apps {
+    margin-top: 0;
+  }
 }
 
 /* Annotated "how it works" explainer image on product pages */
 .rp-explainer {
-  margin: 32px 0 0;
+  margin: 32px 0 64px;
 }
 
 .rp-explainer img {
@@ -619,7 +816,11 @@ h3 {
 }
 
 @media (max-width: 720px) {
+  /* Mobile header: menu button left, logo centred, language right. */
   .site-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
     padding-block: 14px;
   }
 
@@ -627,9 +828,31 @@ h3 {
     display: none;
   }
 
+  .nav-toggle {
+    display: inline-flex;
+    justify-self: start;
+    grid-column: 1;
+  }
+
+  .brand {
+    grid-column: 2;
+    justify-self: center;
+  }
+
   .site-nav {
+    grid-column: 3;
+    justify-self: end;
     gap: 20px;
     font-size: 0.9rem;
+  }
+
+  /* Page links move into the drawer; only the language picker stays inline. */
+  .site-nav > a {
+    display: none;
+  }
+
+  .nav-drawer[hidden] {
+    display: none;
   }
 
   .section,
@@ -819,6 +1042,71 @@ h3 {
   .site-header {
     padding: 16px 40px;
   }
+
+  /* Desktop keeps the inline nav; the menu button and drawer are mobile-only. */
+  .nav-toggle,
+  .nav-drawer {
+    display: none !important;
+  }
+}
+
+/* ── Mobile menu button and drawer ─────────────────── */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+}
+
+.nav-toggle:hover,
+.nav-toggle[aria-expanded="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.nav-drawer {
+  position: fixed;
+  top: 68px;
+  right: 0;
+  left: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: min(100% - 32px, 420px);
+  margin: 0 auto;
+  padding: 10px;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+}
+
+.nav-drawer[hidden] {
+  display: none;
+}
+
+.nav-drawer a {
+  padding: 13px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 0.98rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav-drawer a:hover,
+.nav-drawer a:focus-visible {
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 /* ── Language picker (RallyPoint) ──────────────────── */
