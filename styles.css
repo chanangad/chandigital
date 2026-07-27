@@ -234,9 +234,11 @@ button:focus-visible,
   border-radius: 4px;
 }
 
-/* Legal / long-form pages sit outside .section, so they need their own
-   horizontal breathing room on small screens. */
-.prose {
+/* Long-form wrappers (legal pages, FAQ lists) sit outside .section as
+   direct children of <main>, so a bare max-width leaves them running edge
+   to edge below 720px. They need the same gutter as the rest of the site. */
+.prose,
+.faq-list {
   width: min(720px, calc(100% - 40px));
 }
 
