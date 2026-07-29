@@ -1176,6 +1176,11 @@ body { top: 0 !important; }
   font-size: 1.22rem;
 }
 
+/* Selection picks up the accent on the homepage. */
+.home ::selection {
+  background: rgba(169, 155, 216, 0.35);
+}
+
 /* The dot-schematic watch in the hero. Monumental: it outgrows its column
    and leans under the headline, which stays layered above it. */
 .home .hero-clock-wrap {

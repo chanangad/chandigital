@@ -147,7 +147,6 @@
       <section class="hero section">
         <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
         <div class="hero-copy">
-          <img class="hero-logo" src="assets/logo.png" alt="Chan Digital logo" width="72" height="72">
           <p class="eyebrow">Independent device software studio</p>
           <h1>Chan Digital</h1>
           <p class="hero-lede">
@@ -432,6 +431,22 @@
       var w = 0;
       var h = 0;
 
+      var clearing = null;
+
+      // The grid parts around the watch: dots inside a soft radius around the
+      // watch canvas fade away so the schematic sits on clean ground.
+      function computeClearing() {
+        var clock = document.getElementById("clock-canvas");
+        if (!clock) { clearing = null; return; }
+        var cr = clock.getBoundingClientRect();
+        clearing = {
+          x: cr.left - rect.left + cr.width / 2,
+          y: cr.top - rect.top + cr.height / 2,
+          inner: cr.width * 0.46,
+          outer: cr.width * 0.72
+        };
+      }
+
       function build() {
         var dpr = window.devicePixelRatio || 1;
         rect = canvas.getBoundingClientRect();
@@ -446,6 +461,7 @@
             dots.push({ x: x, y: y, s: 0 });
           }
         }
+        computeClearing();
         draw();
       }
 
@@ -463,6 +479,14 @@
           var push = d.s * 7;
           var px = dist > 1 ? d.x + (dx / dist) * push : d.x;
           var py = dist > 1 ? d.y + (dy / dist) * push : d.y;
+          var mask = 1;
+          if (clearing) {
+            var mdx = d.x - clearing.x, mdy = d.y - clearing.y;
+            var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+            mask = Math.max(0, Math.min(1,
+              (mdist - clearing.inner) / (clearing.outer - clearing.inner)));
+          }
+          if (mask < 0.02) { continue; }
           ctx.beginPath();
           ctx.arc(px, py, 1 + d.s * 1.7, 0, TAU);
           // Dots shift from faint ink to lavender as the cursor approaches.
@@ -470,7 +494,7 @@
             Math.round(10 + 159 * d.s) + ", " +
             Math.round(10 + 145 * d.s) + ", " +
             Math.round(10 + 206 * d.s) + ", " +
-            (0.08 + d.s * 0.5).toFixed(3) + ")";
+            ((0.08 + d.s * 0.5) * mask).toFixed(3) + ")";
           ctx.fill();
         }
         return settling;
