@@ -493,9 +493,6 @@ button:focus-visible,
   letter-spacing: 0.02em;
 }
 
-.preview-loopface {
-  margin-top: 52px;
-}
 
 .trust-strip {
   display: grid;
@@ -845,9 +842,7 @@ button:focus-visible,
     transform: none;
   }
 
-  .preview-loopface {
-    margin-top: 0;
-  }
+  
 
   .section-heading {
     align-items: flex-start;
@@ -1181,16 +1176,31 @@ body { top: 0 !important; }
   font-size: 1.22rem;
 }
 
-/* Lavender dash before the hero eyebrow */
-.home .hero .eyebrow::before {
-  content: "";
-  display: inline-block;
-  width: 26px;
-  height: 2px;
-  margin-right: 12px;
-  border-radius: 2px;
-  background: var(--lav);
-  vertical-align: middle;
+/* The dot-schematic watch in the hero. Monumental: it outgrows its column
+   and leans under the headline, which stays layered above it. */
+.home .hero-clock-wrap {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.home .hero-clock {
+  width: min(680px, 132%);
+  margin-left: -32%;
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 980px) {
+  .home .hero-clock-wrap {
+    justify-content: center;
+  }
+
+  .home .hero-clock {
+    width: min(400px, 100%);
+    margin: 0 auto;
+  }
 }
 
 /* Numbered section markers: 01 Products, 02 Studio, 03 Contact */
