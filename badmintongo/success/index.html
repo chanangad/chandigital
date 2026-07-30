@@ -112,8 +112,11 @@
       statusEl.className = "success-status" + (kind ? " success-status--" + kind : "");
     }
 
-    const PAID_COPY = "Return to the watch app and choose <strong>Refresh License</strong> to activate Badminton Go.";
-    const NOT_CHARGED_COPY = "We couldn't complete your payment - <strong>you have not been charged</strong>. Return to the store to try again, or email <a href=\"mailto:contact@chandigital.in\">contact@chandigital.in</a>.";
+    // Auto-unlock: a current build polls while the unlock menu is open and
+    // lets itself in. Older builds still need the one manual tap, so both
+    // paths are described.
+    const PAID_COPY = "Open Badminton Go on your watch with your phone nearby - it unlocks itself within a few seconds. On older versions, choose <strong>Refresh License</strong> once.";
+    const NOT_CHARGED_COPY = "We couldn't complete your payment - <strong>you have not been charged</strong>. Return to the store to try again, or email <button type=\"button\" class=\"copy-email-inline copy-email-btn\" data-email=\"contact@chandigital.in\" data-label=\"contact@chandigital.in\">contact@chandigital.in</button>.";
 
     async function pollPaid(code) {
       for (let i = 0; i < 10; i++) {
@@ -197,6 +200,43 @@
 
       window.addEventListener("resize", function () {
         if (window.innerWidth > 720 && !drawer.hidden) { setOpen(false); }
+      });
+    })();
+  </script>
+  <script>
+    // Email is always copied to the clipboard, never handed to a mail app,
+    // so the behaviour is identical everywhere it appears.
+    (function () {
+      var nodes = document.querySelectorAll(".copy-email-btn");
+      if (!nodes.length) { return; }
+      nodes.forEach(function (btn) {
+        var resetTimer = null;
+        btn.addEventListener("click", function () {
+          var email = btn.getAttribute("data-email");
+          var label = btn.getAttribute("data-label") || btn.textContent;
+          var show = function (text) {
+            clearTimeout(resetTimer);
+            btn.textContent = text;
+            resetTimer = setTimeout(function () { btn.textContent = label; }, 1800);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(
+              function () { show("Copied " + email); },
+              function () { show("Copy failed - " + email); }
+            );
+          } else {
+            var temp = document.createElement("textarea");
+            temp.value = email;
+            temp.setAttribute("readonly", "");
+            temp.style.position = "absolute";
+            temp.style.left = "-9999px";
+            document.body.appendChild(temp);
+            temp.select();
+            try { document.execCommand("copy"); show("Copied " + email); }
+            catch (e) { show("Copy failed - " + email); }
+            document.body.removeChild(temp);
+          }
+        });
       });
     })();
   </script>
