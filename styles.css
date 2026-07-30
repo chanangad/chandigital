@@ -1432,23 +1432,30 @@ body { top: 0 !important; }
     opacity: 0.6;
   }
 
-  /* Sibling-app cross-links: mini rows, same idea. */
-  .rp-siblings .rp-sibling {
-    flex-direction: row;
-    align-items: center;
+  /* Sibling-app cross-links become a swipeable snap carousel: full-bleed
+     scroller, gutter-aligned snap points, and the next card peeking from
+     the edge as the swipe affordance. */
+  .rp-siblings {
+    display: flex;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding: 4px 20px 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 20px;
     gap: 14px;
-    padding: 12px 14px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
 
-  .rp-siblings .rp-sibling img {
-    width: 64px;
-    flex-shrink: 0;
-    margin-bottom: 0;
+  .rp-siblings::-webkit-scrollbar {
+    display: none;
   }
 
-  .rp-siblings .rp-sibling strong {
-    display: block;
-    margin-bottom: 2px;
+  .rp-siblings .rp-sibling {
+    flex: 0 0 66vw;
+    max-width: 270px;
+    scroll-snap-align: start;
   }
 
   .rp-siblings .rp-sibling span {
