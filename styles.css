@@ -1330,6 +1330,34 @@ body { top: 0 !important; }
    sit side by side, and secondary grids go two-up. CSS only, appended last
    so it wins the cascade at equal specificity. */
 @media (max-width: 720px) {
+  /* The first screen belongs to the hero: copy up top, the watch anchored
+     low, and the products list arrives only after the scroll - which is
+     also what plays the disassembly. */
+  .home .hero {
+    grid-template-rows: auto 1fr;
+    gap: 8px;
+    min-height: calc(100vh - 68px);
+    min-height: calc(100svh - 68px);
+    padding-bottom: 24px;
+  }
+
+  /* The watch goes full-bleed and centres in the leftover space, so the
+     first screen reads composed rather than half empty. */
+  .home .hero-clock-wrap {
+    align-self: center;
+    /* Let the wrap shrink to the column so the oversized canvas overflows
+       it visually instead of inflating the grid track (which pushed the
+       second CTA off-screen). */
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .home .hero .hero-clock {
+    width: min(100vw, 430px);
+    margin: 0 auto;
+  }
+
   /* Paired CTAs side by side instead of stacked slabs. */
   .hero-actions {
     display: grid;

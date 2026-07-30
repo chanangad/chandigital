@@ -596,6 +596,7 @@
       var coarse = window.matchMedia("(pointer: coarse)").matches;
 
       var S = 0, k = 1, scalePx = 0, rect = null;
+      var clockDocTop = 0;
       var geo = [];
       var offX = [], offY = [];       // eased chaos offsets, body dots only
       var raf = null, minuteTimer = null;
@@ -671,7 +672,7 @@
         // Scatter origins and stagger for the assembly entrance.
         for (i = 0; i < geo.length; i++) {
           var ang = rnd(i + 7) * TAU;
-          var rad = 1.7 + rnd(i + 13) * 1.2;
+          var rad = 1.28 + rnd(i + 13) * 0.5;
           geo[i].fx = Math.cos(ang) * rad;
           geo[i].fy = Math.sin(ang) * rad;
           geo[i].fz = (rnd(i + 29) - 0.5) * 2.2;
@@ -749,6 +750,7 @@
       function build() {
         var dpr = window.devicePixelRatio || 1;
         rect = canvas.getBoundingClientRect();
+        clockDocTop = rect.top + (window.pageYOffset || 0);
         S = rect.width;
         k = Math.max(0.6, Math.min(1, S / 620));
         scalePx = S * 0.285;
@@ -768,11 +770,21 @@
         lean.y += (leanTarget.y - lean.y) * 0.05;
 
         // The sway waits for the assembly to finish, then breathes.
+        // Scroll drives disassembly: as the watch leaves the viewport the
+        // dots blow back out to their scatter, staggered per dot, and the
+        // piece turns as it comes apart. Scrolling back reassembles it.
+        var scrollP = 0;
+        if (!reduced) {
+          var sy0 = (window.pageYOffset || 0);
+          var start = clockDocTop - window.innerHeight * 0.35;
+          scrollP = Math.max(0, Math.min(1, (sy0 - start) / (S * 1.1)));
+        }
+
         var swayIn = reduced ? 1 : Math.max(0, Math.min(1, (age - 1200) / 900));
         // Touch devices get a gentler sway: with no cursor play, a strong
         // lean reads as crooked in a glance rather than alive.
         var swayAmp = coarse ? SWAY * 0.5 : SWAY;
-        var rotY = (reduced ? 0.26 : swayAmp * swayIn * Math.sin((t / SWAY_T) * TAU)) + lean.y;
+        var rotY = (reduced ? 0.26 : swayAmp * swayIn * Math.sin((t / SWAY_T) * TAU)) + lean.y + scrollP * 0.9;
         var rotX = TILT_X + lean.x;
         var cy = Math.cos(rotY), sy = Math.sin(rotY);
         var cxr = Math.cos(rotX), sxr = Math.sin(rotX);
@@ -793,6 +805,14 @@
             px3 = p.fx + (p.x - p.fx) * e;
             py3 = p.fy + (p.y - p.fy) * e;
             pz3 = p.fz + (p.z - p.fz) * e;
+            if (scrollP > 0) {
+              // Disassembly runs the same journey in reverse, scroll-linked.
+              var pd = Math.max(0, Math.min(1, scrollP * 1.35 - rnd(i + 91) * 0.35));
+              pd = pd * pd * (3 - 2 * pd);
+              px3 += (p.fx - px3) * pd;
+              py3 += (p.fy - py3) * pd;
+              pz3 += (p.fz - pz3) * pd;
+            }
           }
 
           var y1 = py3 * cxr - pz3 * sxr;
@@ -845,6 +865,7 @@
 
           var alpha = p.a * (p.s ? 0.82 + 0.18 * depth : 0.45 + 0.55 * depth);
           if (!isBody) { alpha *= screenIn; }
+          if (scrollP > 0) { alpha *= 1 - scrollP * (p.s ? 1 : 0.55); }
 
           proj.push({ x: sx, y: sy2,
                       r: Math.max(0.4, p.r * persp * (0.8 + 0.3 * depth)),
