@@ -774,7 +774,7 @@
         // dots blow back out to their scatter, staggered per dot, and the
         // piece turns as it comes apart. Scrolling back reassembles it.
         var scrollP = 0;
-        if (!reduced) {
+        if (!reduced && coarse) {
           var sy0 = (window.pageYOffset || 0);
           var start = clockDocTop - window.innerHeight * 0.35;
           scrollP = Math.max(0, Math.min(1, (sy0 - start) / (S * 1.1)));
