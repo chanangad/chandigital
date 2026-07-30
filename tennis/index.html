@@ -98,7 +98,53 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
 
+  <script>
+    // Geo decision before the body paints. Both regions' payment groups live in
+    // the markup, so deciding in JS after load leaves a window where both are
+    // on screen. CSS gates them off this attribute instead.
+    (function () {
+      var geo = "intl";
+      try {
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (tz === "Asia/Kolkata" || tz === "Asia/Calcutta") { geo = "india"; }
+        else if (tz === "Asia/Shanghai" || tz === "Asia/Urumqi"
+              || tz === "Asia/Chongqing" || tz === "Asia/Harbin"
+              || tz === "Asia/Hong_Kong" || tz === "Asia/Macau") { geo = "china"; }
+      } catch (e) {}
+      document.documentElement.setAttribute("data-geo", geo);
+    })();
+  </script>
   <style>
+
+    /* Region gating, keyed off the data-geo attribute set in <head>. Prices are
+       gated here too: leaving them to JS meant the wrong currency could show
+       until the script ran, which is worse than a late button. */
+    #intl-pay-group, #india-pay-group, #unlock-state-row,
+    #price-intl, #price-inr, #stat-price-intl, #stat-price-inr { display: none; }
+    [data-geo="india"] #price-inr, [data-geo="india"] #stat-price-inr,
+    [data-geo="intl"]  #price-intl, [data-geo="intl"] #stat-price-intl,
+    [data-geo="china"] #price-intl, [data-geo="china"] #stat-price-intl { display: block; }
+    [data-geo="india"] #india-pay-group,
+    [data-geo="india"] #unlock-state-row,
+    [data-geo="intl"]  #intl-pay-group,
+    [data-geo="china"] #intl-pay-group { display: block; }
+
+    /* Mainland-China payment note. WeChat Pay is available but invisible until
+       the Dodo checkout page, so from here it looks card-only and buyers with
+       no foreign card give up. Bilingual because the language picker runs on
+       Google Translate, which is blocked in China. */
+    .china-note { display: none; }
+    [data-geo="china"] .china-note {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+    }
+    .china-note p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+    .china-note__zh { color: var(--ink); }
     /* Override the full-viewport-height hero from chandigital's shared CSS */
     .hero {
       min-height: unset;
@@ -476,7 +522,7 @@
         <strong>$7.99</strong>
         <span>One-time purchase</span>
       </div>
-      <div id="stat-price-inr" style="display:none">
+      <div id="stat-price-inr">
         <strong>449</strong>
         <span>One-time purchase</span>
       </div>
@@ -559,7 +605,7 @@
                   <input id="unlock-email" name="email" type="email" required placeholder="you@example.com">
                 </div>
               </div>
-                          <div class="rp-field" id="unlock-state-row" hidden>
+                          <div class="rp-field" id="unlock-state-row">
                 <label for="unlock-state">State</label>
                 <select id="unlock-state" name="state" class="is-placeholder">
             <option value="">Select your state</option>
@@ -608,6 +654,10 @@
             <div id="intl-pay-group" class="rp-pay-group">
               <div class="rp-pay-buttons">
                 <button type="button" id="dodo-button" class="rp-pay-btn rp-pay-btn--primary">Card or Wallet</button>
+              </div>
+              <div class="china-note">
+                <p class="china-note__zh"><strong>中国用户：支持微信支付，无需国外信用卡。</strong>点击上方 “Card or Wallet”，在结算页面选择 <strong>WeChat</strong> 完成付款。请用 Safari 或 Chrome 打开，不要在微信内置浏览器中打开。</p>
+                <p class="china-note__en">WeChat Pay is supported, no foreign card needed. Tap “Card or Wallet” above, then choose <strong>WeChat</strong> on the checkout page. Open it in Safari or Chrome rather than WeChat's built-in browser.</p>
               </div>
             </div>
 
@@ -851,18 +901,7 @@
       catch(e) { return false; }
     })();
     if (!isIndia) {
-      document.getElementById("india-pay-group").style.display = "none";
-      document.getElementById("price-inr").style.display = "none";
-      document.getElementById("stat-price-inr").style.display = "none";
     } else {
-      document.getElementById("intl-pay-group").style.display = "none";
-      document.getElementById("price-intl").style.display = "none";
-      document.getElementById("stat-price-intl").style.display = "none";
-      document.getElementById("stat-price-inr").style.display = "";
-      // Place of supply is only meaningful for a domestic GST invoice, so the
-      // picker stays hidden for international buyers.
-      var stateRow = document.getElementById("unlock-state-row");
-      if (stateRow) { stateRow.hidden = false; }
       var stateSelect = document.getElementById("unlock-state");
       if (stateSelect) {
         stateSelect.addEventListener("change", function () {
