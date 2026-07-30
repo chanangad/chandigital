@@ -527,6 +527,23 @@
         rect = canvas.getBoundingClientRect();
       }, { passive: true });
 
+      // Touch drives the same scatter the cursor does: tap or sweep a finger
+      // across the watch and the dots part around it, healing on release.
+      var touchTimer = null;
+      function setTouchPoint(e) {
+        var t2 = e.touches && e.touches[0];
+        if (!t2) { return; }
+        var r2 = canvas.getBoundingClientRect();
+        mouse.x = t2.clientX - r2.left;
+        mouse.y = t2.clientY - r2.top;
+        if (touchTimer) { clearTimeout(touchTimer); touchTimer = null; }
+      }
+      canvas.addEventListener("touchstart", setTouchPoint, { passive: true });
+      canvas.addEventListener("touchmove", setTouchPoint, { passive: true });
+      canvas.addEventListener("touchend", function () {
+        touchTimer = setTimeout(function () { mouse.x = -9999; mouse.y = -9999; }, 350);
+      }, { passive: true });
+
       var resizeTimer = null;
       window.addEventListener("resize", function () {
         clearTimeout(resizeTimer);
@@ -790,18 +807,35 @@
 
           // Cursor chaos: body dots inside the field scatter turbulently and
           // spring back. The screen is exempt so the time stays readable.
-          if (isBody && !coarse && !reduced) {
+          if (isBody && !reduced) {
             var dx = sx - mouse.x, dy2 = sy2 - mouse.y;
             var dist = Math.sqrt(dx * dx + dy2 * dy2);
             var RCH = 150 * k;
             var tx = 0, ty = 0;
+            // Idle ripple on touch devices: every few seconds a soft wave
+            // passes through the body, so the watch shows it is alive even
+            // before anyone touches it.
+            if (coarse) {
+              var rp = t % 9000;
+              if (rp < 1400) {
+                var wave = rp / 1400;
+                var wr = wave * S * 0.8;
+                var ddx = sx - S / 2, ddy = sy2 - S / 2;
+                var dd = Math.sqrt(ddx * ddx + ddy * ddy);
+                var band = Math.exp(-Math.pow((dd - wr) / (26 * k), 2));
+                if (band > 0.02 && dd > 1) {
+                  tx += (ddx / dd) * band * 9 * k * (1 - wave * 0.5);
+                  ty += (ddy / dd) * band * 9 * k * (1 - wave * 0.5);
+                }
+              }
+            }
             if (dist < RCH && dist > 0.5) {
               var f = 1 - dist / RCH;
               var mag = f * f * 52 * k;
               var ang2 = Math.atan2(dy2, dx) + (rnd(i + 51) - 0.5) * 2.4 +
                          Math.sin(t * 0.004 + i * 1.7) * 0.55;
-              tx = Math.cos(ang2) * mag;
-              ty = Math.sin(ang2) * mag;
+              tx += Math.cos(ang2) * mag;
+              ty += Math.sin(ang2) * mag;
             }
             offX[i] += (tx - offX[i]) * 0.16;
             offY[i] += (ty - offY[i]) * 0.16;
