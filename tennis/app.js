@@ -32,8 +32,16 @@ async function loadPricing() {
     }
     const {usd, inr} = await res.json();
     if (usd) {
+      // Write into the number span only. Setting textContent on the whole
+      // amount wipes its children, which would silently delete the "incl. tax"
+      // pill the moment this fetch resolves. Falls back to the old behaviour
+      // for any markup that predates the span.
+      const setAmount = (el, text) => {
+        const num = el.querySelector(".rp-price-num");
+        if (num) { num.textContent = text; } else { el.textContent = text; }
+      };
       document.querySelectorAll("#price-intl .rp-price-amount").forEach((el) => {
-        el.textContent = `$${usd}`;
+        setAmount(el, `$${usd}`);
       });
       const statIntl = document.querySelector("#stat-price-intl strong");
       if (statIntl) statIntl.textContent = `$${usd}`;
@@ -41,7 +49,8 @@ async function loadPricing() {
     if (inr) {
       const inrInt = String(inr).replace(/\.00$/, "");
       document.querySelectorAll("#price-inr .rp-price-amount").forEach((el) => {
-        el.textContent = `₹${inrInt}`;
+        const num = el.querySelector(".rp-price-num");
+        if (num) { num.textContent = `₹${inrInt}`; } else { el.textContent = `₹${inrInt}`; }
       });
       const statInr = document.querySelector("#stat-price-inr strong");
       if (statInr) statInr.textContent = inrInt;

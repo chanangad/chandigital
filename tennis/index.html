@@ -432,6 +432,24 @@
       color: var(--ink);
       line-height: 1;
     }
+    /* A quiet chip beside the amount, in this site's own label vocabulary:
+       eyebrow typography (muted, 700, wide tracking, uppercase) on a soft
+       neutral fill, like the page's other chips - not the thin outlined pill
+       the Roxzone site uses. */
+    .rp-price-tax {
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: 0.5em;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--muted);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
     .rp-price-region {
       font-size: 0.88rem;
       font-weight: 600;
@@ -592,7 +610,8 @@
                 <label for="claim-code-input">Claim code from watch</label>
                 <div class="rp-prefix-wrap">
                   <span class="rp-prefix" aria-hidden="true">TN-</span>
-                  <input id="claim-code-input" name="claim-code" type="text" required placeholder="12345678" autocomplete="off" spellcheck="false">
+                  <input id="claim-code-input" name="claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
+                         inputmode="numeric" pattern="[0-9 -]*">
                 </div>
               </div>
               <div class="rp-field-row">
@@ -677,7 +696,8 @@
                 <label for="restore-claim-code-input">Claim code from watch</label>
                 <div class="rp-prefix-wrap">
                   <span class="rp-prefix" aria-hidden="true">TN-</span>
-                  <input id="restore-claim-code-input" name="restore-claim-code" type="text" required placeholder="12345678" autocomplete="off" spellcheck="false">
+                  <input id="restore-claim-code-input" name="restore-claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
+                         inputmode="numeric" pattern="[0-9 -]*">
                 </div>
               </div>
               <div class="rp-field">
@@ -699,10 +719,10 @@
           <div>
             <p class="eyebrow" style="margin-bottom:12px">Pricing</p>
             <div id="price-intl" class="rp-price-row">
-              <span class="rp-price-amount">$7.99</span>
+              <span class="rp-price-amount"><span class="rp-price-num">$7.99</span> <span class="rp-price-tax">incl. tax</span></span>
             </div>
             <div id="price-inr" class="rp-price-row">
-              <span class="rp-price-amount">₹449</span>
+              <span class="rp-price-amount"><span class="rp-price-num">₹449</span> <span class="rp-price-tax">incl. tax</span></span>
             </div>
           </div>
           <p>One-time purchase. No subscription, no hidden fees. The app is yours permanently on your Garmin device.</p>
@@ -804,12 +824,46 @@
     const restoreStatus = document.getElementById("restore-status");
     const claimCodeInput = document.getElementById("claim-code-input");
     const restoreClaimCodeInput = document.getElementById("restore-claim-code-input");
+    // The watch formats an integer, so the part after "TN-" is always digits.
+    // Length is deliberately NOT enforced here: the code is generated once and
+    // kept in Application.Storage forever, so watches first run under the old
+    // 8-digit generator still legitimately show 8-digit codes, and the newest
+    // builds derive 12 digits from the device identifier.
+    function claimCodeDigits(value) {
+      var text = String(value == null ? "" : value).trim().toUpperCase();
+      // The field holds only the number - "TN-" is a fixed prefix drawn beside
+      // it - but buyers paste the whole code, so strip the prefix and the
+      // single separator after it. iOS smart punctuation rewrites that
+      // separator to an em dash and some paste it with none at all.
+      if (text.indexOf("TN") === 0) {
+        text = text.replace(/^TN/, "").replace(/^[^0-9-]/, "");
+        if (text.charAt(0) === "-") { text = text.slice(1); }
+      }
+      // A hyphen still leading is a minus sign, not a separator: builds before
+      // 2026-07-14 overflowed a signed 32-bit seed and wrote real codes like
+      // TN--18301190, and those rows are still live.
+      var sign = text.charAt(0) === "-" ? "-" : "";
+      return sign + text.replace(/\D/g, "");
+    }
+
+    // Mirrors the watch, which shows the code grouped in fours ("4839 2017
+    // 5264"). The field displays the same grouping so the buyer can compare
+    // digit-for-digit; everything submitted or put in the URL stays unspaced.
+    function groupClaimDigits(digits) {
+      var out = "";
+      for (var i = 0; i < digits.length; i += 4) {
+        if (i > 0) { out += " "; }
+        out += digits.substring(i, i + 4);
+      }
+      return out;
+    }
+
     const rawCode = query("code").trim().toUpperCase();
-    const initialClaimCode = (rawCode.startsWith("TN-") ? rawCode.slice(3) : rawCode).replace(/[^0-9]/g,"");
+    const initialClaimCode = claimCodeDigits(rawCode);
     const initialTab = query("tab") === "restore" ? "restore" : "unlock";
 
-    claimCodeInput.value = initialClaimCode;
-    restoreClaimCodeInput.value = initialClaimCode;
+    claimCodeInput.value = groupClaimDigits(initialClaimCode);
+    restoreClaimCodeInput.value = groupClaimDigits(initialClaimCode);
     activateTab(initialTab, false);
 
     function setPanelStatus(node, message, kind) {
@@ -818,11 +872,10 @@
     }
 
     function syncClaimCode(value) {
-      var suffix = value.trim().toUpperCase();
-      if (suffix.startsWith("TN-")) { suffix = suffix.slice(3); }
-      suffix = suffix.replace(/[^0-9]/g,"");
-      claimCodeInput.value = suffix;
-      restoreClaimCodeInput.value = suffix;
+      var suffix = claimCodeDigits(value);
+      var display = groupClaimDigits(suffix);
+      claimCodeInput.value = display;
+      restoreClaimCodeInput.value = display;
       const params = new URLSearchParams(window.location.search);
       if (suffix) { params.set("code", "TN-" + suffix); } else { params.delete("code"); }
       if (!params.get("tab")) { params.set("tab", initialTab); }
@@ -844,7 +897,7 @@
       if (pushState !== false) {
         var params = new URLSearchParams(window.location.search);
         params.set("tab", name);
-        var s = claimCodeInput.value.trim().toUpperCase();
+        var s = claimCodeDigits(claimCodeInput.value);
         if (s) { params.set("code", "TN-" + s); } else { params.delete("code"); }
         window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
       }
@@ -857,11 +910,25 @@
     restoreClaimCodeInput.addEventListener("input", function() { syncClaimCode(restoreClaimCodeInput.value); });
 
     async function beginCheckout(provider, currency) {
-      var suffix = claimCodeInput.value.trim().toUpperCase();
+      var rawSuffix = claimCodeInput.value.trim().toUpperCase();
+      var suffix = claimCodeDigits(rawSuffix);
       var claimCode = suffix ? "TN-" + suffix : "";
       var name = document.getElementById("unlock-name").value.trim();
       var email = document.getElementById("unlock-email").value.trim();
       if (!claimCode) { setPanelStatus(unlockStatus, "Enter the claim code shown on your watch.", "warn"); return; }
+      // Caught here rather than after payment: a code that is not all digits
+      // buys a licence no watch will ever ask about, so the buyer pays and
+      // stays locked. Letters are impossible - the watch formats an integer.
+      if (/\D/.test(rawSuffix.replace(/^TN/, "").replace(/[\s-]/g, ""))) {
+        setPanelStatus(unlockStatus, "Claim codes are numbers only. Check the code on your watch and re-enter it.", "warn");
+        return;
+      }
+      // "%08d" pads to at least 8, so a shorter code cannot have come from any
+      // build - it means digits were dropped. Deliberately no upper bound.
+      if (suffix.replace("-", "").length < 8) {
+        setPanelStatus(unlockStatus, "That code looks too short. Claim codes are at least 8 digits - check your watch screen.", "warn");
+        return;
+      }
       if (!name) { setPanelStatus(unlockStatus, "Enter your name first.", "warn"); return; }
       if (!email) { setPanelStatus(unlockStatus, "Enter your email first.", "warn"); return; }
       try {
@@ -917,7 +984,7 @@
     document.getElementById("restore-form").addEventListener("submit", async function(e) {
       e.preventDefault();
       var email = document.getElementById("restore-email").value.trim();
-      var s = restoreClaimCodeInput.value.trim().toUpperCase();
+      var s = claimCodeDigits(restoreClaimCodeInput.value);
       var claimCode = s ? "TN-" + s : "";
       if (!claimCode) { setPanelStatus(restoreStatus, "Missing claim code.", "warn"); return; }
       setPanelStatus(restoreStatus, "Checking your purchase…");
