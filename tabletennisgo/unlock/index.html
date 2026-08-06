@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Redirecting…</title>
+  <meta http-equiv="refresh" content="0; url=../#unlock">
+</head>
+<body>
+  <script>
+    // Carries the ?code= the watch appends straight through to the storefront.
+    const params = new URLSearchParams(window.location.search);
+    params.delete("tab");
+    const query = params.toString();
+    window.location.replace(`../${query ? "?" + query : ""}#unlock`);
+  </script>
+</body>
+</html>

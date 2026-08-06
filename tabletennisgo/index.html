@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Table Tennis Go | Table Tennis Scoring for Garmin</title>
+  <meta name="description" content="Table Tennis Go is the Garmin watch app for table tennis - automatic serve switching, scoring, singles &amp; doubles, match history, and activity recording.">
+  <meta name="keywords" content="table tennis Garmin app, ping pong Garmin app, table tennis scoring watch, Garmin Connect IQ table tennis, table tennis serve tracker, ping pong score keeper, Garmin Fenix table tennis, Garmin Forerunner table tennis, table tennis smartwatch app, Table Tennis Go, table tennis match tracker">
+  <meta name="author" content="Chan Digital">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="canonical" href="https://chandigital.in/tabletennisgo/">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://chandigital.in/"},
+      {"@type": "ListItem", "position": 2, "name": "Table Tennis Go", "item": "https://chandigital.in/tabletennisgo/"}
+    ]
+  }
+  </script>
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Chan Digital">
+  <meta property="og:title" content="Table Tennis Go for Garmin">
+  <meta property="og:description" content="Table tennis scoring for Garmin - the serve switches itself, one-gesture scoring, singles &amp; doubles. One-time purchase.">
+  <meta property="og:url" content="https://chandigital.in/tabletennisgo/">
+  <meta property="og:image" content="https://chandigital.in/assets/og-tabletennis-go.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="600">
+  <meta property="og:image:alt" content="Table Tennis Go scoring app shown on a Garmin watch">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Table Tennis Go for Garmin">
+  <meta name="twitter:description" content="Table tennis scoring for Garmin - the serve switches itself, one-gesture scoring, singles &amp; doubles.">
+  <meta name="twitter:image" content="https://chandigital.in/assets/og-tabletennis-go.jpg">
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Table Tennis Go",
+  "alternateName": "Table Tennis Go Ping Pong Scorer",
+  "description": "Table tennis scoring app for Garmin smartwatches. Tracks the score, switches the serve every two points, handles singles and doubles, keeps match history, and records a Garmin Connect activity.",
+  "url": "https://chandigital.in/tabletennisgo/",
+  "applicationCategory": "SportsApplication",
+  "operatingSystem": "Garmin Connect IQ",
+  "offers": [
+    {
+      "@type": "Offer",
+      "price": "7.99",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "price": "399",
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock"
+    }
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Chan Digital",
+    "url": "https://chandigital.in"
+  },
+  "screenshot": "https://chandigital.in/assets/tabletennis-go.jpg",
+  "image": "https://chandigital.in/assets/tabletennis-go.jpg",
+  "downloadUrl": "https://apps.garmin.com/apps/1d31283c-0efc-4c5a-8550-26a199a5dc8f",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "reviewCount": 7,
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "featureList": [
+    "Automatic serve switching every two points",
+    "One-gesture point scoring",
+    "Singles and doubles support",
+    "Match history",
+    "Garmin Connect activity recording",
+    "Heart rate tracking"
+  ]
+}
+  </script>
+
+  <link rel="icon" href="../assets/favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+
+  <script>
+    // Geo decision before the body paints. Both regions' payment groups live in
+    // the markup, so deciding in JS after load leaves a window where both are
+    // on screen. CSS gates them off this attribute instead.
+    (function () {
+      var geo = "intl";
+      try {
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (tz === "Asia/Kolkata" || tz === "Asia/Calcutta") { geo = "india"; }
+        else if (tz === "Asia/Shanghai" || tz === "Asia/Urumqi"
+              || tz === "Asia/Chongqing" || tz === "Asia/Harbin"
+              || tz === "Asia/Hong_Kong" || tz === "Asia/Macau") { geo = "china"; }
+      } catch (e) {}
+      document.documentElement.setAttribute("data-geo", geo);
+    })();
+  </script>
+  <style>
+
+    /* Region gating, keyed off the data-geo attribute set in <head>. Prices are
+       gated here too: leaving them to JS meant the wrong currency could show
+       until the script ran, which is worse than a late button. */
+    #intl-pay-group, #india-pay-group, #unlock-state-row,
+    #price-intl, #price-inr, #stat-price-intl, #stat-price-inr { display: none; }
+    [data-geo="india"] #price-inr, [data-geo="india"] #stat-price-inr,
+    [data-geo="intl"]  #price-intl, [data-geo="intl"] #stat-price-intl,
+    [data-geo="china"] #price-intl, [data-geo="china"] #stat-price-intl { display: block; }
+    [data-geo="india"] #india-pay-group,
+    [data-geo="india"] #unlock-state-row,
+    [data-geo="intl"]  #intl-pay-group,
+    [data-geo="china"] #intl-pay-group { display: block; }
+
+    /* Mainland-China payment note. WeChat Pay is available but invisible until
+       the Dodo checkout page, so from here it looks card-only and buyers with
+       no foreign card give up. Bilingual because the language picker runs on
+       Google Translate, which is blocked in China. */
+    .china-note { display: none; }
+    [data-geo="china"] .china-note {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+    }
+    .china-note p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+    .china-note__zh { color: var(--ink); }
+    /* Override the full-viewport-height hero from chandigital's shared CSS */
+    .hero {
+      min-height: unset;
+      padding: 48px 0 48px;
+    }
+    .hero-visual {
+      max-width: 380px;
+      width: 100%;
+    }
+
+    .hero-visual .preview {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      overflow: visible;
+    }
+
+    .hero-visual .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      display: block;
+    } 
+    /* Table Tennis Go-specific additions - unlock form, feature grid, tabs */
+    .rp-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--line);
+      margin-bottom: 96px;
+    }
+    .rp-feature {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 28px 28px 30px;
+      background: var(--paper);
+    }
+    .rp-feature strong {
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .rp-feature span {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Unlock panel */
+    .rp-unlock {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 96px;
+    }
+    .rp-unlock-card {
+      padding: 32px;
+      border: 1.5px solid var(--ink);
+      border-radius: var(--radius-md);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .rp-unlock-card h3 {
+      margin-bottom: 6px;
+    }
+    .rp-unlock-card .eyebrow {
+      margin-bottom: 16px;
+    }
+    .rp-panel { display: none; }
+    .rp-panel--active { display: block; }
+    .rp-field {
+      margin-bottom: 16px;
+    }
+    .rp-field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .rp-prefix-wrap {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: border-color 150ms;
+    }
+    .rp-prefix-wrap:focus-within {
+      border-color: var(--ink);
+    }
+    .rp-prefix {
+      padding: 0 10px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-right: 1.5px solid var(--line);
+      line-height: 44px;
+      user-select: none;
+    }
+    .rp-field input {
+      flex: 1;
+      min-width: 0;
+      height: 44px;
+      padding: 0 12px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      outline: none;
+    }
+    .rp-field input:not(.rp-prefix-wrap input) {
+      height: 44px;
+      padding: 0 12px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      transition: border-color 150ms;
+    }
+    .rp-field input:not(.rp-prefix-wrap input):focus {
+      border-color: var(--ink);
+      outline: none;
+    }
+    .rp-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .rp-pay-group {
+      margin-top: 20px;
+    }
+    .rp-pay-label {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .rp-pay-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rp-pay-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 46px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-pill);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 150ms, background 150ms, transform 150ms, box-shadow 150ms;
+    }
+    .rp-pay-btn:hover {
+      border-color: var(--ink);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+    .rp-pay-btn--primary {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .rp-pay-btn--primary:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    .rp-status {
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      min-height: 20px;
+    }
+    .rp-status--warn { color: #c0392b; }
+    .rp-status--ok   { color: #1a7a3c; }
+    .rp-guarantee {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .rp-guarantee a { font-weight: 700; text-decoration: underline; }
+
+    .rp-field select {
+      width: 100%;
+      height: 44px;
+      padding: 0 36px 0 12px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-sm);
+      background-color: var(--paper);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235c5c5c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      transition: border-color 150ms;
+    }
+    .rp-field select:focus {
+      border-color: var(--ink);
+      outline: none;
+    }
+    /* Grey until a real state is chosen, matching input placeholder colour. */
+    .rp-field select.is-placeholder {
+      color: var(--muted);
+    }
+    .rp-field-hint {
+      margin: 6px 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Pricing info card */
+    .rp-price-card {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+    .rp-price-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .rp-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .rp-price-amount {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      line-height: 1;
+    }
+    /* A quiet chip beside the amount, in this site's own label vocabulary:
+       eyebrow typography (muted, 700, wide tracking, uppercase) on a soft
+       neutral fill, like the page's other chips - not the thin outlined pill
+       the Roxzone site uses. */
+    .rp-price-tax {
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: 0.5em;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--muted);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    .rp-price-region {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .rp-cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* "More from Chan Digital" as a horizontal rail. Overrides the grid in the
+       shared stylesheet (which the four sibling product pages still use), so
+       the row scrolls instead of wrapping as the app count grows. Snap points
+       land each card at the left edge; the arrows scroll by exactly one card. */
+    .rp-siblings-rail { position: relative; }
+    .rp-siblings {
+      display: flex;
+      grid-template-columns: none;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scroll-padding-left: 2px;
+      /* Room for the card's lift-on-hover shadow, which an overflow container
+         would otherwise clip. */
+      padding: 2px 2px 14px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+    .rp-siblings::-webkit-scrollbar { height: 6px; }
+    .rp-siblings::-webkit-scrollbar-track { background: transparent; }
+    .rp-siblings::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: var(--radius-pill);
+    }
+    .rp-siblings:hover::-webkit-scrollbar-thumb { background: var(--muted); }
+    .rp-siblings > .rp-sibling {
+      flex: 0 0 clamp(220px, 30%, 280px);
+      scroll-snap-align: start;
+    }
+    .rp-sibling-kicker {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .rp-rail-btn {
+      position: absolute;
+      top: calc(50% - 20px);
+      z-index: 2;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1.5px solid var(--line);
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+      transition: border-color 150ms, transform 150ms, opacity 150ms;
+    }
+    .rp-rail-btn:hover { border-color: var(--ink); transform: scale(1.06); }
+    .rp-rail-btn[hidden] { display: none; }
+    .rp-rail-btn--prev { left: -20px; }
+    .rp-rail-btn--next { right: -20px; }
+    /* Pointer-coarse devices swipe; the arrows are for mouse users only. */
+    @media (hover: hover) and (pointer: fine) {
+      .rp-rail-btn { display: flex; }
+    }
+
+    @media (max-width: 980px) {
+      .rp-features { grid-template-columns: repeat(2, 1fr); }
+      .rp-unlock { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .rp-features { grid-template-columns: 1fr; margin-bottom: 64px; }
+      .rp-unlock { margin-bottom: 64px; }
+      .rp-field-row { grid-template-columns: 1fr; }
+      .rp-unlock-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <button class="nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+    </button>
+    <a class="brand" href="../" aria-label="Chan Digital home">
+      <img class="brand-logo" src="../assets/logo.png" alt="" width="36" height="36">
+      <span>Chan Digital</span>
+    </a>
+    <nav class="site-nav" aria-label="Page navigation">
+      <a href="#features">Features</a>
+      <a href="#unlock">Unlock</a>
+      <a href="./faq/">FAQ</a>
+      <div class="lang-picker" data-lang-picker></div>
+    </nav>
+  </header>
+
+    <nav class="nav-drawer" id="nav-drawer" hidden aria-label="Menu">
+      <a href="../">Chan Digital</a>
+      <a href="#features">Features</a>
+      <a href="#unlock">Unlock</a>
+      <a href="./faq/">FAQ</a>
+    </nav>
+
+  <main id="top">
+
+    <!-- Hero -->
+    <section class="hero section">
+      <div class="hero-copy">
+        <p class="eyebrow">Table tennis activity</p>
+        <h1>Table Tennis Go</h1>
+        <p class="hero-lede">
+          A Garmin watch app for table tennis players - games to 11 with the serve switching itself every two points, one-gesture point entry, singles and doubles, and every match saved to Garmin Connect as a recorded activity.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#unlock">Unlock full access</a>
+          <a class="button button-secondary" href="https://apps.garmin.com/apps/1d31283c-0efc-4c5a-8550-26a199a5dc8f" target="_blank" rel="noreferrer">View on Connect IQ</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" style="grid-template-columns: 1fr; max-width: 320px; justify-self: center;">
+        <div class="preview">
+          <img src="../assets/w-tabletennis-go.jpg" alt="Table Tennis Go table tennis scoring app on a Garmin watch" width="900" height="900">
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats strip -->
+    <div class="trust-strip section" style="margin-top: 0; margin-bottom: 96px;">
+      <div id="stat-rating">
+        <strong>5.0 &#9733;</strong>
+        <span>From 7 Connect IQ reviews</span>
+      </div>
+      <div>
+        <strong>21</strong>
+        <span>Languages supported</span>
+      </div>
+      <div>
+        <strong>65</strong>
+        <span>Garmin devices</span>
+      </div>
+      <div id="stat-price-intl">
+        <strong>$7.99</strong>
+        <span>One-time purchase</span>
+      </div>
+      <div id="stat-price-inr">
+        <strong>399</strong>
+        <span>One-time purchase</span>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Features</p>
+          <h2>Everything you need at the table</h2>
+        </div>
+      </div>
+
+      <div class="rp-features">
+        <div class="rp-feature">
+          <strong>The serve switches itself</strong>
+          <span>Two points each, then one each at deuce - the watch counts it so you never argue about whose serve it is.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>One-gesture scoring</strong>
+          <span>Swipe down for your point, up for your opponent's - physical buttons work too, sweaty hands and all.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Singles &amp; doubles</strong>
+          <span>Singles or doubles, with the serving order and your standing side tracked as the serve moves round.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Undo last point</strong>
+          <span>Undo steps back through the full rally history, so a mistap never costs you a point.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Your game length</strong>
+          <span>Games to 11 or 21, win by 2 with no cap - or pick 5, 7, 9, 15, 25 or 30 for a shorter or longer game.</span>
+        </div>
+        <div class="rp-feature">
+          <strong>Activity recording</strong>
+          <span>Average and max heart rate, calories and match time saved to Garmin Connect, with per-game scores in the activity.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unlock -->
+    <section class="section" id="unlock">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">License</p>
+          <h2>One-time unlock</h2>
+        </div>
+      </div>
+
+      <div class="rp-unlock">
+
+        <div class="rp-unlock-card">
+          <p class="eyebrow">Checkout</p>
+          <h3>Unlock Table Tennis Go</h3>
+
+          <div class="rp-panel rp-panel--active" id="panel-unlock">
+            <form id="unlock-form">
+              <div class="rp-field">
+                <label for="claim-code-input">Claim code from watch</label>
+                <div class="rp-prefix-wrap">
+                  <span class="rp-prefix" aria-hidden="true">PP-</span>
+                  <input id="claim-code-input" name="claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
+                         inputmode="numeric" pattern="[0-9 -]*">
+                </div>
+                <p class="rp-field-hint">Your watch shows this on the lock screen. It is what the license is issued against - one code, one watch.</p>
+              </div>
+              <div class="rp-field-row">
+                <div class="rp-field">
+                  <label for="unlock-name">Name</label>
+                  <input id="unlock-name" name="name" type="text" required placeholder="Jane Player" autocomplete="name">
+                </div>
+                <div class="rp-field">
+                  <label for="unlock-email">Email</label>
+                  <input id="unlock-email" name="email" type="email" required placeholder="you@example.com">
+                </div>
+              </div>
+                          <div class="rp-field" id="unlock-state-row">
+                <label for="unlock-state">State</label>
+                <select id="unlock-state" name="state" class="is-placeholder">
+            <option value="">Select your state</option>
+            <option value="37">Andhra Pradesh</option>
+            <option value="35">Andaman and Nicobar Islands</option>
+            <option value="12">Arunachal Pradesh</option>
+            <option value="18">Assam</option>
+            <option value="10">Bihar</option>
+            <option value="04">Chandigarh</option>
+            <option value="22">Chhattisgarh</option>
+            <option value="26">Dadra and Nagar Haveli and Daman and Diu</option>
+            <option value="07">Delhi</option>
+            <option value="30">Goa</option>
+            <option value="24">Gujarat</option>
+            <option value="06">Haryana</option>
+            <option value="02">Himachal Pradesh</option>
+            <option value="01">Jammu and Kashmir</option>
+            <option value="20">Jharkhand</option>
+            <option value="29">Karnataka</option>
+            <option value="32">Kerala</option>
+            <option value="38">Ladakh</option>
+            <option value="31">Lakshadweep</option>
+            <option value="23">Madhya Pradesh</option>
+            <option value="27">Maharashtra</option>
+            <option value="14">Manipur</option>
+            <option value="17">Meghalaya</option>
+            <option value="15">Mizoram</option>
+            <option value="13">Nagaland</option>
+            <option value="21">Odisha</option>
+            <option value="34">Puducherry</option>
+            <option value="03">Punjab</option>
+            <option value="08">Rajasthan</option>
+            <option value="11">Sikkim</option>
+            <option value="33">Tamil Nadu</option>
+            <option value="36">Telangana</option>
+            <option value="16">Tripura</option>
+            <option value="09">Uttar Pradesh</option>
+            <option value="05">Uttarakhand</option>
+            <option value="19">West Bengal</option>
+            <option value="97">Other Territory</option>
+                </select>
+                <p class="rp-field-hint">Required for your GST invoice.</p>
+              </div>
+</form>
+
+            <div id="intl-pay-group" class="rp-pay-group">
+              <div class="rp-pay-buttons">
+                <button type="button" id="dodo-button" class="rp-pay-btn rp-pay-btn--primary">Card or Wallet</button>
+              </div>
+              <div class="china-note">
+                <p class="china-note__zh"><strong>中国用户：支持微信支付，无需国外信用卡。</strong>点击上方 “Card or Wallet”，在结算页面选择 <strong>WeChat</strong> 完成付款。请用 Safari 或 Chrome 打开，不要在微信内置浏览器中打开。</p>
+                <p class="china-note__en">WeChat Pay is supported, no foreign card needed. Tap “Card or Wallet” above, then choose <strong>WeChat</strong> on the checkout page. Open it in Safari or Chrome rather than WeChat's built-in browser.</p>
+              </div>
+            </div>
+
+            <div id="india-pay-group" class="rp-pay-group">
+              <div class="rp-pay-buttons">
+                <button type="button" id="razorpay-button" class="rp-pay-btn rp-pay-btn--primary">Pay with Razorpay</button>
+              </div>
+            </div>
+
+<p id="unlock-status" class="rp-status"></p>
+          </div>
+        </div>
+
+        <!-- Pricing info -->
+        <div class="rp-price-card">
+          <div>
+            <p class="eyebrow" style="margin-bottom:12px">Pricing</p>
+            <div id="price-intl" class="rp-price-row">
+              <span class="rp-price-amount"><span class="rp-price-num">$7.99</span> <span class="rp-price-tax">incl. tax</span></span>
+            </div>
+            <div id="price-inr" class="rp-price-row">
+              <span class="rp-price-amount"><span class="rp-price-num">₹399</span> <span class="rp-price-tax">incl. tax</span></span>
+            </div>
+          </div>
+          <p>One-time purchase. No subscription, no hidden fees. The app is yours permanently on that Garmin watch.</p>
+          <p><strong>One license unlocks one watch.</strong> The claim code is generated by the watch itself, so the license belongs to that watch - not to your email address. It survives uninstalling and reinstalling, but it cannot be moved to a different watch, and a second watch needs a second license.</p>
+          <div class="rp-cta-group">
+            <a class="button button-primary" href="https://apps.garmin.com/apps/1d31283c-0efc-4c5a-8550-26a199a5dc8f" target="_blank" rel="noreferrer">View on Garmin Connect IQ</a>
+            <a class="button button-secondary" href="./faq/">FAQ</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Sport-specific content -->
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2>Table tennis serving, counted for you</h2>
+        </div>
+      </div>
+      <div class="studio-grid">
+        <p>
+          Every rally is a point and games go to 11, win by 2 with no cap - deuce simply runs on until someone leads by two, and the watch shows a deuce banner the moment both sides reach 10. Points land with a single swipe or button press, so you score between rallies without breaking rhythm. Prefer a different length? Points to Win takes 5, 7, 9, 11, 15, 21, 25 or 30.
+        </p>
+        <p>
+          The serve is the part everyone loses track of, so Table Tennis Go counts it instead: two points each, switching on total points played, then one each once you are at deuce (five each in games to 21). In doubles it keeps the serving order and which half you are standing in as the serve moves round. When you finish, the match saves to Garmin Connect as a recorded activity with average and max heart rate, calories, elapsed time and per-game scores.
+        </p>
+      </div>
+      <figure class="rp-explainer">
+        <img src="../assets/og-tabletennis-go.jpg"
+             alt="Table Tennis Go on a Garmin watch showing live heart rate, both scores, your standing position and serve side during a table tennis match"
+             width="1200" height="600" loading="lazy" decoding="async">
+        <figcaption>The Table Tennis Go match screen at a glance.</figcaption>
+      </figure>
+    </section>
+
+    <!-- Everything else Chan Digital makes -->
+    <section class="section" id="more-apps">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Apps &amp; watch faces</p>
+          <h2>Other apps from Chan Digital</h2>
+        </div>
+      </div>
+      <div class="rp-siblings-rail">
+        <button type="button" class="rp-rail-btn rp-rail-btn--prev" data-rail-prev aria-label="Scroll to previous apps" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <div class="rp-siblings" data-rail>
+        <a class="rp-sibling" href="../padel/">
+          <img src="../assets/w-padel-go.jpg" alt="Padel Go on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
+          <strong>Padel Go</strong>
+          <span>Tennis-style scoring with Golden Point, built for doubles.</span>
+        </a>
+        <a class="rp-sibling" href="../tennis/">
+          <img src="../assets/w-tennis-go.jpg" alt="Tennis Go on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
+          <strong>Tennis Go</strong>
+          <span>Games, sets and tiebreaks with full deuce and advantage.</span>
+        </a>
+        <a class="rp-sibling" href="../pickleball/">
+          <img src="../assets/w-pickleball-go.jpg" alt="Pickleball Go on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
+          <strong>Pickleball Go</strong>
+          <span>Side-out scoring with the two-server sequence handled.</span>
+        </a>
+        <a class="rp-sibling" href="../badmintongo/">
+          <img src="../assets/w-badminton-go.jpg" alt="Badminton Go on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
+          <strong>Badminton Go</strong>
+          <span>Rally scoring to 21 with the service court shown every point.</span>
+        </a>
+        <a class="rp-sibling" href="https://roxzone.app/" target="_blank" rel="noreferrer">
+          <img src="../assets/w-roxzone-garmin.jpg" alt="Roxzone on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
+          <strong>Roxzone</strong>
+          <span>HYROX race mode, simulations, roxzone tracking and GPS pacing.</span>
+        </a>
+        <a class="rp-sibling" href="https://loopface.app/" target="_blank" rel="noreferrer">
+          <img src="../assets/w-loopface-garmin.jpg" alt="LoopFace on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Watch face</span>
+          <strong>LoopFace</strong>
+          <span>Glanceable glucose for xDrip+, AAPS, Spike and Nightscout.</span>
+        </a>
+        </div>
+        <button type="button" class="rp-rail-btn rp-rail-btn--next" data-rail-next aria-label="Scroll to more apps" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Contact band -->
+    <div class="contact-band section">
+      <div>
+        <p class="eyebrow">Support</p>
+        <h2>Questions or issues?</h2>
+      </div>
+      <button type="button" class="button button-dark copy-email-btn" data-email="contact@chandigital.in" data-label="Email Chan Digital">Email Chan Digital</button>
+    </div>
+
+    <div class="buy-bar" id="buy-bar" hidden aria-hidden="true">
+      <span class="buy-bar-name">Table Tennis Go</span>
+      <a class="button button-primary buy-bar-cta" href="#unlock">Unlock full access</a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Chan Digital. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="../">Chan Digital</a>
+      <a href="./privacy/">Privacy</a>
+      <a href="../terms/">Terms</a>
+      <a href="../refund/">Refund</a>
+    </div>
+    <p class="legal-note">Garmin and Connect IQ are trademarks of Garmin Ltd. Table Tennis Go is an independent app not affiliated with or endorsed by Garmin.</p>
+  </footer>
+
+  <script src="./app.js"></script>
+  <script src="./i18n.js"></script>
+  <script>
+    const unlockStatus = document.getElementById("unlock-status");
+    const claimCodeInput = document.getElementById("claim-code-input");
+    // The watch formats an integer, so the part after "PP-" is always digits.
+    // Length is deliberately NOT enforced here: the code is generated once and
+    // kept in Application.Storage forever, so watches first run under the old
+    // 8-digit generator still legitimately show 8-digit codes, and the newest
+    // builds derive 12 digits from the device identifier.
+    function claimCodeDigits(value) {
+      var text = String(value == null ? "" : value).trim().toUpperCase();
+      // The field holds only the number - "PP-" is a fixed prefix drawn beside
+      // it - but buyers paste the whole code, so strip the prefix and the
+      // single separator after it. iOS smart punctuation rewrites that
+      // separator to an em dash and some paste it with none at all.
+      if (text.indexOf("PP") === 0) {
+        text = text.replace(/^PP/, "").replace(/^[^0-9-]/, "");
+        if (text.charAt(0) === "-") { text = text.slice(1); }
+      }
+      // A hyphen still leading is a minus sign, not a separator: builds before
+      // 2026-07-14 overflowed a signed 32-bit seed and wrote real codes like
+      // PP--18301190, and those rows are still live.
+      var sign = text.charAt(0) === "-" ? "-" : "";
+      return sign + text.replace(/\D/g, "");
+    }
+
+    // Mirrors the watch, which shows the code grouped in fours ("4839 2017
+    // 5264"). The field displays the same grouping so the buyer can compare
+    // digit-for-digit; everything submitted or put in the URL stays unspaced.
+    function groupClaimDigits(digits) {
+      var out = "";
+      for (var i = 0; i < digits.length; i += 4) {
+        if (i > 0) { out += " "; }
+        out += digits.substring(i, i + 4);
+      }
+      return out;
+    }
+
+    const rawCode = query("code").trim().toUpperCase();
+    const initialClaimCode = claimCodeDigits(rawCode);
+
+    claimCodeInput.value = groupClaimDigits(initialClaimCode);
+
+    function setPanelStatus(node, message, kind) {
+      node.textContent = message;
+      node.className = "rp-status" + (kind ? " rp-status--" + kind : "");
+    }
+
+    function syncClaimCode(value) {
+      var suffix = claimCodeDigits(value);
+      claimCodeInput.value = groupClaimDigits(suffix);
+      const params = new URLSearchParams(window.location.search);
+      if (suffix) { params.set("code", "PP-" + suffix); } else { params.delete("code"); }
+      window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
+    }
+
+    claimCodeInput.addEventListener("input", function() { syncClaimCode(claimCodeInput.value); });
+
+    async function beginCheckout(provider, currency) {
+      var rawSuffix = claimCodeInput.value.trim().toUpperCase();
+      var suffix = claimCodeDigits(rawSuffix);
+      var claimCode = suffix ? "PP-" + suffix : "";
+      var name = document.getElementById("unlock-name").value.trim();
+      var email = document.getElementById("unlock-email").value.trim();
+      if (!claimCode) { setPanelStatus(unlockStatus, "Enter the claim code shown on your watch.", "warn"); return; }
+      // Caught here rather than after payment: a code that is not all digits
+      // buys a licence no watch will ever ask about, so the buyer pays and
+      // stays locked. Letters are impossible - the watch formats an integer.
+      if (/\D/.test(rawSuffix.replace(/^PP/, "").replace(/[\s-]/g, ""))) {
+        setPanelStatus(unlockStatus, "Claim codes are numbers only. Check the code on your watch and re-enter it.", "warn");
+        return;
+      }
+      // "%08d" pads to at least 8, so a shorter code cannot have come from any
+      // build - it means digits were dropped. Deliberately no upper bound.
+      if (suffix.replace("-", "").length < 8) {
+        setPanelStatus(unlockStatus, "That code looks too short. Claim codes are at least 8 digits - check your watch screen.", "warn");
+        return;
+      }
+      if (!name) { setPanelStatus(unlockStatus, "Enter your name first.", "warn"); return; }
+      if (!email) { setPanelStatus(unlockStatus, "Enter your email first.", "warn"); return; }
+      try {
+        if (provider === "paypal") {
+          setPanelStatus(unlockStatus, "Creating PayPal checkout…");
+          var data = await postJson("/api/paypal/create-order", {claimCode, email, name});
+          if (data && data.approveUrl) { window.location.href = data.approveUrl; return; }
+        } else if (provider === "dodo") {
+          setPanelStatus(unlockStatus, "Creating checkout…");
+          var data = await postJson("/api/dodo/create-checkout", {claimCode, email, name});
+          if (data && (data.checkoutUrl || data.paymentUrl)) { window.location.href = data.checkoutUrl || data.paymentUrl; return; }
+        } else {
+          setPanelStatus(unlockStatus, "Creating Razorpay checkout…");
+          // Place of supply decides CGST+SGST vs IGST on the GST invoice, so it
+          // is required for INR checkouts.
+          var stateCode = (document.getElementById("unlock-state") || {}).value || "";
+          if (!stateCode) {
+            setPanelStatus(unlockStatus, "Select your state - it is required on your GST invoice.", "warn");
+            return;
+          }
+          var data = await postJson("/api/razorpay/create-link", {claimCode, email, name, currency: currency || "INR", stateCode});
+          if (data && data.shortUrl) { window.location.href = data.shortUrl; return; }
+        }
+        setPanelStatus(unlockStatus, "Checkout link was not returned by the server.", "warn");
+      } catch (err) {
+        setPanelStatus(unlockStatus, err.message, "warn");
+      }
+    }
+
+    // Populate prices from the worker (single source of truth); hardcoded values
+    // remain as fallback if the fetch fails.
+    loadPricing();
+
+    // Geo-lock: India sees ₹199 + Razorpay only; international sees $4.99 + PayPal/Dodo only
+    var isIndia = (function() {
+      try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone; return tz === "Asia/Kolkata" || tz === "Asia/Calcutta"; }
+      catch(e) { return false; }
+    })();
+    if (!isIndia) {
+    } else {
+      var stateSelect = document.getElementById("unlock-state");
+      if (stateSelect) {
+        stateSelect.addEventListener("change", function () {
+          stateSelect.classList.toggle("is-placeholder", !stateSelect.value);
+        });
+      }
+    }
+
+    document.getElementById("unlock-form").addEventListener("submit", async function(e) { e.preventDefault(); if (isIndia) { await beginCheckout("razorpay", "INR"); } else { await beginCheckout("dodo"); } });
+    document.getElementById("dodo-button").addEventListener("click", async function() { await beginCheckout("dodo"); });
+    document.getElementById("razorpay-button").addEventListener("click", async function() { await beginCheckout("razorpay", "INR"); });
+
+  </script>
+  <script>
+    // Sticky purchase bar. Shows once the hero scrolls away, and hides whenever
+    // the real unlock form or the footer is on screen so it never competes with
+    // them. Purely an anchor to #unlock - no payment logic here.
+    (function () {
+      var bar = document.getElementById("buy-bar");
+      var hero = document.querySelector(".hero");
+      var unlock = document.getElementById("unlock");
+      var footer = document.querySelector(".site-footer");
+      if (!bar || !hero || !unlock || !("IntersectionObserver" in window)) { return; }
+
+      var visible = { hero: true, unlock: false, footer: false };
+
+      function sync() {
+        var show = !visible.hero && !visible.unlock && !visible.footer;
+        if (show) {
+          bar.hidden = false;
+          bar.setAttribute("aria-hidden", "false");
+          requestAnimationFrame(function () { bar.classList.add("is-visible"); });
+        } else {
+          bar.classList.remove("is-visible");
+          bar.setAttribute("aria-hidden", "true");
+          window.setTimeout(function () {
+            if (!bar.classList.contains("is-visible")) { bar.hidden = true; }
+          }, 200);
+        }
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.target === hero) { visible.hero = entry.isIntersecting; }
+          if (entry.target === unlock) { visible.unlock = entry.isIntersecting; }
+          if (entry.target === footer) { visible.footer = entry.isIntersecting; }
+        });
+        sync();
+      });
+
+      observer.observe(hero);
+      observer.observe(unlock);
+      if (footer) { observer.observe(footer); }
+    })();
+  </script>
+  <script>
+    // Arrows for the "More from Chan Digital" rail. The rail itself scrolls on
+    // its own (touch, trackpad, snap points); these only exist for mouse users,
+    // and each hides itself at the end it points to, so a rail that fits on
+    // screen shows no controls at all.
+    (function () {
+      var rail = document.querySelector("[data-rail]");
+      var prev = document.querySelector("[data-rail-prev]");
+      var next = document.querySelector("[data-rail-next]");
+      if (!rail || !prev || !next) { return; }
+
+      function step() {
+        var card = rail.querySelector(".rp-sibling");
+        if (!card) { return rail.clientWidth; }
+        // One card plus the flex gap, so a click lands the next card on the
+        // same snap point rather than halfway across it.
+        var gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+        return card.getBoundingClientRect().width + gap;
+      }
+
+      function sync() {
+        // 1px of slack: fractional widths mean scrollLeft rarely reaches the
+        // exact maximum, which would leave the arrow showing with nowhere left.
+        var max = rail.scrollWidth - rail.clientWidth;
+        prev.hidden = rail.scrollLeft <= 1;
+        next.hidden = rail.scrollLeft >= max - 1;
+      }
+
+      prev.addEventListener("click", function () { rail.scrollBy({left: -step(), behavior: "smooth"}); });
+      next.addEventListener("click", function () { rail.scrollBy({left: step(), behavior: "smooth"}); });
+      rail.addEventListener("scroll", sync, {passive: true});
+      window.addEventListener("resize", sync);
+      sync();
+    })();
+  </script>
+  <script>
+    // Mobile menu drawer. Desktop hides the button and drawer via CSS.
+    (function () {
+      var toggle = document.getElementById("nav-toggle");
+      var drawer = document.getElementById("nav-drawer");
+      if (!toggle || !drawer) { return; }
+
+      function setOpen(open) {
+        drawer.hidden = !open;
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      }
+
+      toggle.addEventListener("click", function (event) {
+        event.stopPropagation();
+        setOpen(drawer.hidden);
+      });
+
+      drawer.addEventListener("click", function (event) {
+        if (event.target.tagName === "A") { setOpen(false); }
+      });
+
+      document.addEventListener("click", function (event) {
+        if (drawer.hidden) { return; }
+        if (!drawer.contains(event.target) && !toggle.contains(event.target)) { setOpen(false); }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !drawer.hidden) { setOpen(false); toggle.focus(); }
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 720 && !drawer.hidden) { setOpen(false); }
+      });
+    })();
+  </script>
+  <script>
+    // Email is always copied to the clipboard, never handed to a mail app,
+    // so the behaviour is identical everywhere it appears.
+    (function () {
+      var nodes = document.querySelectorAll(".copy-email-btn");
+      if (!nodes.length) { return; }
+      nodes.forEach(function (btn) {
+        var resetTimer = null;
+        btn.addEventListener("click", function () {
+          var email = btn.getAttribute("data-email");
+          var label = btn.getAttribute("data-label") || btn.textContent;
+          var show = function (text) {
+            clearTimeout(resetTimer);
+            btn.textContent = text;
+            resetTimer = setTimeout(function () { btn.textContent = label; }, 1800);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(
+              function () { show("Copied " + email); },
+              function () { show("Copy failed - " + email); }
+            );
+          } else {
+            var temp = document.createElement("textarea");
+            temp.value = email;
+            temp.setAttribute("readonly", "");
+            temp.style.position = "absolute";
+            temp.style.left = "-9999px";
+            document.body.appendChild(temp);
+            temp.select();
+            try { document.execCommand("copy"); show("Copied " + email); }
+            catch (e) { show("Copy failed - " + email); }
+            document.body.removeChild(temp);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
