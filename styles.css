@@ -653,49 +653,46 @@ button:focus-visible,
   transform: translateX(3px);
 }
 
-/* No border here: the .home .section-heading editorial rule already draws
-   the line above this section; a second one at the section edge doubled it. */
-
-/* About reads as a story, so its heading stacks: the site-wide side-by-side
-   .section-heading pushes this long title against the right edge, detached
-   from its own eyebrow. */
-.studio-section .section-heading {
-  display: block;
+/* About: heading as a left rail with the story beside it, under the same
+   editorial top rule the other sections draw. The title breaks are authored
+   (<br>), so the two sentences stack instead of wrapping mid-thought. */
+.studio-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 40px 72px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
 }
 
-.studio-section .section-heading h2 {
-  max-width: 680px;
+.studio-head h2 {
   margin-top: 8px;
 }
 
-.studio-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
+/* The working-style claim lives in the rail: it balances the story column
+   and hands off to the cards below. */
+.studio-lede {
+  margin: 18px 0 0;
   color: var(--muted);
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   line-height: 1.65;
 }
 
-.studio-grid p {
+.studio-story {
+  color: var(--muted);
+}
+
+.studio-story p {
+  margin-bottom: 18px;
+}
+
+.studio-story p:last-child {
   margin-bottom: 0;
 }
 
 /* The working style under the studio paragraphs: an intro line, then the
    three commitments as cards in the same language as the product grid. */
 .studio-ethos {
-  margin-top: 44px;
-}
-
-/* The lead-in is a claim, not body copy: ink and weight make it introduce
-   the three cards instead of floating between the story and the grid. */
-.studio-ethos > p {
-  max-width: 680px;
-  margin-bottom: 22px;
-  color: var(--ink);
-  font-size: 1.14rem;
-  font-weight: 600;
-  line-height: 1.6;
+  margin-top: 48px;
 }
 
 .ethos-grid {
@@ -708,16 +705,30 @@ button:focus-visible,
   padding: 26px 24px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: var(--paper);
 }
 
-.ethos-icon {
+.ethos-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 14px;
+}
+
+/* Icon chips: the bare 22px glyphs floated in the card whitespace; a tinted
+   tile gives each card an anchor and one quiet moment of the site accent. */
+.ethos-icon {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--lav-line);
   color: var(--ink);
 }
 
 .ethos-card h3 {
-  margin-bottom: 10px;
+  margin: 0;
   font-size: 1.12rem;
   letter-spacing: -0.02em;
 }
@@ -795,7 +806,7 @@ button:focus-visible,
   }
 
   .product-grid,
-  .studio-grid {
+  .studio-layout {
     grid-template-columns: 1fr;
   }
 
@@ -969,8 +980,11 @@ button:focus-visible,
     line-height: 1.6;
   }
 
-  .studio-grid {
-    gap: 20px;
+  .studio-layout {
+    gap: 24px;
+  }
+
+  .studio-story {
     font-size: 1rem;
   }
 
@@ -1326,7 +1340,7 @@ body { top: 0 !important; }
 }
 
 /* Studio section reads as an editorial pull-block */
-.home .studio-grid {
+.home .studio-story {
   padding-left: 32px;
   border-left: 2px solid var(--lav-line);
   font-size: 1.16rem;
@@ -1369,7 +1383,7 @@ body { top: 0 !important; }
     margin-bottom: 32px;
   }
 
-  .home .studio-grid {
+  .home .studio-story {
     padding-left: 22px;
   }
 

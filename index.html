@@ -319,11 +319,13 @@
       </section>
 
       <section class="section studio-section" id="studio">
-        <div class="section-heading">
-          <p class="eyebrow">About Chan Digital</p>
-          <h2>Engineered with Passion. Built out of Necessity.</h2>
-        </div>
-        <div class="studio-grid">
+        <div class="studio-layout">
+          <div class="studio-head">
+            <p class="eyebrow">About Chan Digital</p>
+            <h2>Engineered with Passion.<br>Built out of Necessity.</h2>
+            <p class="studio-lede">I design for real people in real scenarios, there are no middle managers or slow release cycles:</p>
+          </div>
+          <div class="studio-story">
           <p>
             Chan Digital is an independent studio (more like a team of 1) with a personal mission.
             As an engineer who is medically dependent on devices, I have a deep appreciation for
@@ -336,23 +338,29 @@
             keep score during badminton matches. Excitedly, I built the solutions and am striving
             to make more, and keep bettering them.
           </p>
+          </div>
         </div>
         <div class="studio-ethos">
-          <p>I design for real people in real scenarios, there are no middle managers or slow release cycles:</p>
           <div class="ethos-grid">
             <div class="ethos-card">
-              <svg class="ethos-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-              <h3>Direct Access</h3>
+              <div class="ethos-card-head">
+                <svg class="ethos-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+                <h3>Direct Access</h3>
+              </div>
               <p>When you share feedback or request a feature, you talk directly with the engineer building it.</p>
             </div>
             <div class="ethos-card">
-              <svg class="ethos-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              <h3>Same-Day Updates</h3>
+              <div class="ethos-card-head">
+                <svg class="ethos-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <h3>Same-Day Updates</h3>
+              </div>
               <p>Good ideas shouldn't sit in a backlog. Bug fixes and requested tweaks are frequently pushed live the exact same day.</p>
             </div>
             <div class="ethos-card">
-              <svg class="ethos-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-              <h3>Relentless Refinement</h3>
+              <div class="ethos-card-head">
+                <svg class="ethos-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                <h3>Relentless Refinement</h3>
+              </div>
               <p>I use these apps every day while training and playing. If a minor bug exists or a feature feels awkward, it bothers me as much as it bothers you. I'm obsessed with the details and won't settle until it's right.</p>
             </div>
           </div>
@@ -612,7 +620,7 @@
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { return; }
       if (!("IntersectionObserver" in window)) { return; }
       var targets = document.querySelectorAll(
-        ".hero-clock-wrap, .section-heading, .product-card, .studio-grid, .contact-band"
+        ".hero-clock-wrap, .section-heading, .product-card, .studio-layout, .contact-band"
       );
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
