@@ -663,8 +663,19 @@ button:focus-visible,
   transform: translateX(3px);
 }
 
-.studio-section {
-  border-top: 1px solid var(--line);
+/* No border here: the .home .section-heading editorial rule already draws
+   the line above this section; a second one at the section edge doubled it. */
+
+/* About reads as a story, so its heading stacks: the site-wide side-by-side
+   .section-heading pushes this long title against the right edge, detached
+   from its own eyebrow. */
+.studio-section .section-heading {
+  display: block;
+}
+
+.studio-section .section-heading h2 {
+  max-width: 680px;
+  margin-top: 8px;
 }
 
 .studio-grid {
@@ -686,11 +697,15 @@ button:focus-visible,
   margin-top: 44px;
 }
 
+/* The lead-in is a claim, not body copy: ink and weight make it introduce
+   the three cards instead of floating between the story and the grid. */
 .studio-ethos > p {
-  margin-bottom: 20px;
-  color: var(--muted);
-  font-size: 1.16rem;
-  line-height: 1.7;
+  max-width: 680px;
+  margin-bottom: 22px;
+  color: var(--ink);
+  font-size: 1.14rem;
+  font-weight: 600;
+  line-height: 1.6;
 }
 
 .ethos-grid {
@@ -704,6 +719,11 @@ button:focus-visible,
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--surface);
+}
+
+.ethos-icon {
+  margin-bottom: 14px;
+  color: var(--ink);
 }
 
 .ethos-card h3 {
