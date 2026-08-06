@@ -461,6 +461,70 @@
       gap: 10px;
     }
 
+    /* The sibling apps scroll as a horizontal rail rather than wrapping, so
+       the row stays one line however many apps the studio ships. Overrides the
+       grid in the shared stylesheet. Snap points land each card at the left
+       edge; the arrows scroll by exactly one card. */
+    .rp-siblings-rail { position: relative; }
+    .rp-siblings {
+      display: flex;
+      grid-template-columns: none;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scroll-padding-left: 2px;
+      /* Room for the card's lift-on-hover shadow, which an overflow container
+         would otherwise clip. */
+      padding: 2px 2px 14px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+    .rp-siblings::-webkit-scrollbar { height: 6px; }
+    .rp-siblings::-webkit-scrollbar-track { background: transparent; }
+    .rp-siblings::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: var(--radius-pill);
+    }
+    .rp-siblings:hover::-webkit-scrollbar-thumb { background: var(--muted); }
+    .rp-siblings > .rp-sibling {
+      flex: 0 0 clamp(220px, 30%, 280px);
+      scroll-snap-align: start;
+    }
+    .rp-sibling-kicker {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .rp-rail-btn {
+      position: absolute;
+      top: calc(50% - 20px);
+      z-index: 2;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1.5px solid var(--line);
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+      transition: border-color 150ms, transform 150ms, opacity 150ms;
+    }
+    .rp-rail-btn:hover { border-color: var(--ink); transform: scale(1.06); }
+    .rp-rail-btn[hidden] { display: none; }
+    .rp-rail-btn--prev { left: -20px; }
+    .rp-rail-btn--next { right: -20px; }
+    /* Pointer-coarse devices swipe; the arrows are for mouse users only. */
+    @media (hover: hover) and (pointer: fine) {
+      .rp-rail-btn { display: flex; }
+    }
+
     @media (max-width: 980px) {
       .rp-features { grid-template-columns: repeat(2, 1fr); }
       .rp-unlock { grid-template-columns: 1fr; }
@@ -759,33 +823,65 @@
       </figure>
     </section>
 
-    <!-- Cross-links to sibling scoring apps -->
+    <!-- Everything else Chan Digital makes -->
     <section class="section" id="more-apps">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">More from Chan Digital</p>
-          <h2>Other racket-sport scoring apps</h2>
+          <p class="eyebrow">Apps &amp; watch faces</p>
+          <h2>Other apps from Chan Digital</h2>
         </div>
       </div>
-      <div class="rp-siblings">
+      <div class="rp-siblings-rail">
+        <button type="button" class="rp-rail-btn rp-rail-btn--prev" data-rail-prev aria-label="Scroll to previous apps" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <div class="rp-siblings" data-rail>
         <a class="rp-sibling" href="../padel/">
           <img src="../assets/w-padel-go.jpg" alt="Padel Go on a Garmin watch"
                width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
           <strong>Padel Go</strong>
           <span>Tennis-style scoring with Golden Point, built for doubles.</span>
         </a>
         <a class="rp-sibling" href="../tennis/">
           <img src="../assets/w-tennis-go.jpg" alt="Tennis Go on a Garmin watch"
                width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
           <strong>Tennis Go</strong>
           <span>Games, sets and tiebreaks with full deuce and advantage.</span>
         </a>
         <a class="rp-sibling" href="../badmintongo/">
           <img src="../assets/w-badminton-go.jpg" alt="Badminton Go on a Garmin watch"
                width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
           <strong>Badminton Go</strong>
-          <span>Rally scoring to 21 with correct service-court logic.</span>
+          <span>Rally scoring to 21 with the service court shown every point.</span>
         </a>
+        <a class="rp-sibling" href="../tabletennisgo/">
+          <img src="../assets/w-tabletennis-go.jpg" alt="Table Tennis Go on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
+          <strong>Table Tennis Go</strong>
+          <span>Games to 11 with the serve switching itself every two points.</span>
+        </a>
+        <a class="rp-sibling" href="https://roxzone.app/" target="_blank" rel="noreferrer">
+          <img src="../assets/w-roxzone-garmin.jpg" alt="Roxzone on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Device app</span>
+          <strong>Roxzone</strong>
+          <span>HYROX race mode, simulations, roxzone tracking and GPS pacing.</span>
+        </a>
+        <a class="rp-sibling" href="https://loopface.app/" target="_blank" rel="noreferrer">
+          <img src="../assets/w-loopface-garmin.jpg" alt="LoopFace on a Garmin watch"
+               width="760" height="760" loading="lazy" decoding="async">
+          <span class="rp-sibling-kicker">Watch face</span>
+          <strong>LoopFace</strong>
+          <span>Glanceable glucose for xDrip+, AAPS, Spike and Nightscout.</span>
+        </a>
+        </div>
+        <button type="button" class="rp-rail-btn rp-rail-btn--next" data-rail-next aria-label="Scroll to more apps" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
       </div>
     </section>
 
@@ -1040,6 +1136,41 @@
       observer.observe(hero);
       observer.observe(unlock);
       if (footer) { observer.observe(footer); }
+    })();
+  </script>
+  <script>
+    // Arrows for the "More from Chan Digital" rail. The rail itself scrolls on
+    // its own (touch, trackpad, snap points); these only exist for mouse users,
+    // and each hides itself at the end it points to, so a rail that fits on
+    // screen shows no controls at all.
+    (function () {
+      var rail = document.querySelector("[data-rail]");
+      var prev = document.querySelector("[data-rail-prev]");
+      var next = document.querySelector("[data-rail-next]");
+      if (!rail || !prev || !next) { return; }
+
+      function step() {
+        var card = rail.querySelector(".rp-sibling");
+        if (!card) { return rail.clientWidth; }
+        // One card plus the flex gap, so a click lands the next card on the
+        // same snap point rather than halfway across it.
+        var gap = parseFloat(getComputedStyle(rail).columnGap) || 0;
+        return card.getBoundingClientRect().width + gap;
+      }
+
+      function sync() {
+        // 1px of slack: fractional widths mean scrollLeft rarely reaches the
+        // exact maximum, which would leave the arrow showing with nowhere left.
+        var max = rail.scrollWidth - rail.clientWidth;
+        prev.hidden = rail.scrollLeft <= 1;
+        next.hidden = rail.scrollLeft >= max - 1;
+      }
+
+      prev.addEventListener("click", function () { rail.scrollBy({left: -step(), behavior: "smooth"}); });
+      next.addEventListener("click", function () { rail.scrollBy({left: step(), behavior: "smooth"}); });
+      rail.addEventListener("scroll", sync, {passive: true});
+      window.addEventListener("resize", sync);
+      sync();
     })();
   </script>
   <script>
