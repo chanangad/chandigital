@@ -689,6 +689,21 @@ button:focus-visible,
   margin-bottom: 0;
 }
 
+/* The story stays muted so its emphasised beats can do the work: key
+   phrases rise to ink, personal asides go italic, and the line the whole
+   section hangs on gets a marker swipe in the site accent. */
+.studio-story strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.story-mark {
+  color: var(--ink);
+  font-weight: 600;
+  background: linear-gradient(transparent 64%, var(--lav-line) 64%);
+  padding: 0 2px;
+}
+
 /* The working style under the studio paragraphs: an intro line, then the
    three commitments as cards in the same language as the product grid. */
 .studio-ethos {
