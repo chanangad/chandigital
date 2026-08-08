@@ -1356,8 +1356,6 @@ body { top: 0 !important; }
 
 /* Studio section reads as an editorial pull-block */
 .home .studio-story {
-  padding-left: 32px;
-  border-left: 2px solid var(--lav-line);
   font-size: 1.16rem;
   line-height: 1.7;
 }
@@ -1396,10 +1394,6 @@ body { top: 0 !important; }
   .home .section-heading {
     padding-top: 20px;
     margin-bottom: 32px;
-  }
-
-  .home .studio-story {
-    padding-left: 22px;
   }
 
   .home .contact-band {
