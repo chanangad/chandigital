@@ -1017,10 +1017,11 @@
         setPanelStatus(unlockStatus, "Claim codes are numbers only. Check the code on your watch and re-enter it.", "warn");
         return;
       }
-      // "%08d" pads to at least 8, so a shorter code cannot have come from any
-      // build - it means digits were dropped. Deliberately no upper bound.
-      if (suffix.replace("-", "").length < 8) {
-        setPanelStatus(unlockStatus, "That code looks too short. Claim codes are at least 8 digits - check your watch screen.", "warn");
+      // Every build has padded to at least 5 digits (a one-week Badminton Go
+      // build in June 2026 used "%05d"; later ones 8, now 12), so anything
+      // shorter means digits were dropped. Deliberately no upper bound.
+      if (suffix.replace("-", "").length < 5) {
+        setPanelStatus(unlockStatus, "That code looks too short. Claim codes are at least 5 digits - check your watch screen.", "warn");
         return;
       }
       if (!name) { setPanelStatus(unlockStatus, "Enter your name first.", "warn"); return; }
