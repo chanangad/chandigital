@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Shared spot | Way Back</title>
+  <meta name="description" content="Open a spot shared from a Way Back Garmin watch app in your maps app.">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#0d1117">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Chan Digital">
+  <meta property="og:title" content="Someone shared a spot with you">
+  <meta property="og:description" content="Open it in Google Maps or Apple Maps.">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; background: #0d1117; color: #e8edf3;
+      font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .card { width: 100%; max-width: 420px; text-align: center; }
+    .mark { width: 76px; height: 76px; margin: 0 auto 20px; }
+    h1 { font-size: 1.5rem; margin: 0 0 6px; }
+    .kind { color: #00e676; font-weight: 600; letter-spacing: .02em; }
+    .coords {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #161b22; border: 1px solid #232b36; border-radius: 10px;
+      padding: 12px 14px; margin: 18px 0; word-break: break-all; font-size: .95rem;
+    }
+    a.btn, button.btn {
+      display: block; width: 100%; padding: 14px 16px; margin: 10px 0;
+      border-radius: 12px; border: 1px solid #232b36; background: #161b22;
+      color: #e8edf3; font: inherit; font-weight: 600; text-decoration: none; cursor: pointer;
+    }
+    a.btn.primary { background: #00e676; border-color: #00e676; color: #06210f; }
+    .muted { color: #8b98a5; font-size: .85rem; margin-top: 22px; }
+    .muted a { color: #8b98a5; }
+    .err { color: #ff6b6b; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <svg class="mark" viewBox="0 0 96 96" role="img" aria-label="Way Back">
+      <circle cx="48" cy="48" r="45" fill="#161b22" stroke="#232b36" stroke-width="3"/>
+      <path d="M48 20 L68 72 L48 60 L28 72 Z" fill="#00e676"/>
+    </svg>
+
+    <div id="loading">
+      <h1>Opening spot...</h1>
+    </div>
+
+    <div id="found" class="hidden">
+      <h1>Someone shared a <span class="kind" id="kind">spot</span> with you</h1>
+      <div class="coords" id="coords"></div>
+      <a class="btn primary" id="gmaps" href="#" rel="noopener">Open in Google Maps</a>
+      <a class="btn" id="amaps" href="#" rel="noopener">Open in Apple Maps</a>
+      <button class="btn" id="copy" type="button">Copy coordinates</button>
+      <p class="muted" id="expiry"></p>
+    </div>
+
+    <div id="missing" class="hidden">
+      <h1>Spot not found</h1>
+      <p class="muted">Shared spots expire 24 hours after they are created. Ask for a fresh code.</p>
+    </div>
+
+    <p class="muted">
+      Sent from <a href="https://chandigital.in/wayback/">Way Back</a>, the Garmin watch app
+      that buzzes you back to where you left something.
+    </p>
+  </main>
+
+  <script>
+    (function () {
+      var KINDS = ["Car", "Bike", "Tent", "Hotel", "Meet", "Trail", "Spot"];
+      var code = new URLSearchParams(location.search).get("c") || "";
+      var show = function (id) {
+        ["loading", "found", "missing"].forEach(function (n) {
+          document.getElementById(n).classList.toggle("hidden", n !== id);
+        });
+      };
+
+      if (!/^[0-9]{6}$/.test(code)) {
+        show("missing");
+        return;
+      }
+
+      fetch("https://chandigital.in/api/wayback/spot/" + code)
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function (spot) {
+          var lat = Number(spot.lat).toFixed(6);
+          var lon = Number(spot.lon).toFixed(6);
+          var pair = lat + "," + lon;
+
+          document.getElementById("kind").textContent =
+            (KINDS[spot.kind] || "spot").toLowerCase();
+          document.getElementById("coords").textContent = pair;
+          document.getElementById("gmaps").href =
+            "https://www.google.com/maps/search/?api=1&query=" + pair;
+          document.getElementById("amaps").href = "https://maps.apple.com/?q=" + pair;
+
+          if (spot.expiresAt) {
+            var hrs = Math.max(0, Math.round((spot.expiresAt * 1000 - Date.now()) / 3600000));
+            document.getElementById("expiry").textContent =
+              hrs > 0 ? "This link expires in about " + hrs + " hour" + (hrs === 1 ? "" : "s") + "."
+                      : "This link is about to expire.";
+          }
+
+          document.getElementById("copy").addEventListener("click", function () {
+            var btn = this;
+            navigator.clipboard.writeText(pair).then(function () {
+              btn.textContent = "Copied";
+              setTimeout(function () { btn.textContent = "Copy coordinates"; }, 1600);
+            });
+          });
+
+          show("found");
+        })
+        .catch(function () { show("missing"); });
+    })();
+  </script>
+</body>
+</html>
