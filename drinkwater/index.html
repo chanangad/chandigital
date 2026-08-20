@@ -543,6 +543,16 @@
       border-top: 1px solid var(--line);
       font-size: 0.92rem;
     }
+
+    /* Left-aligned like every other section: the page has one content edge
+       and a centred block breaks it. */
+    .dw-note {
+      max-width: 720px;
+      margin: 0 0 96px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
   </style>
 </head>
 <body>
@@ -682,13 +692,16 @@
     </section>
 
     <!-- Honest limitation -->
-    <section class="section">
-      <div class="prose" style="width: min(720px, 100%); margin: 0 auto 96px;">
-        <h2 style="margin-bottom: 16px;">One thing to know</h2>
-        <p style="color: var(--muted); line-height: 1.7;">
-          Garmin does not let third-party apps write to the built-in hydration log, so your intake is tracked inside this widget and will not appear on Garmin Connect's hydration card. Everything stays on your watch. That is a Garmin platform limit rather than a choice, and it applies to every third-party hydration app on Connect IQ.
-        </p>
+    <section class="section" id="note">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Good to know</p>
+          <h2>One Garmin limitation</h2>
+        </div>
       </div>
+      <p class="dw-note">
+        Garmin does not let third-party apps write to the built-in hydration log, so your intake is tracked inside this widget and will not appear on Garmin Connect's hydration card. Everything stays on your watch. That is a platform limit rather than a choice, and it applies to every third-party hydration app on Connect IQ.
+      </p>
     </section>
 
     <!-- Everything else Chan Digital makes -->
