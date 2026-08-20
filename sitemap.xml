@@ -65,6 +65,11 @@
   </url>
 
   <url>
+    <loc>https://chandigital.in/drinkwater/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://chandigital.in/tabletennisgo/</loc>
     <lastmod>2026-08-06</lastmod>
     <changefreq>weekly</changefreq>
