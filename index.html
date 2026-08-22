@@ -190,7 +190,10 @@
       <section class="section products-section" id="products">
         <div class="section-heading">
           <p class="eyebrow">Products</p>
-          <h2>Maximizing your Device</h2>
+          <!-- The last word cycles through the watch families these apps ship
+               to, so the headline names the devices before a card is read.
+               Markup stays "Device" for crawlers and reduced-motion users. -->
+          <h2>Maximizing your <span class="rotator" data-words="Fenix,Forerunner,Venu,Epix,Instinct,vivoactive,MARQ,Device"><span class="rotator-word">Device</span></span></h2>
         </div>
 
         <div class="product-grid">
@@ -419,6 +422,57 @@
       </p>
   </footer>
   <script src="./badmintongo/i18n.js"></script>
+  <script>
+    // Headline word rotator. Each swap measures the incoming word and
+    // animates the container width, so the rest of the line never jumps.
+    // Holds on "Device" a little longer - it is the true sentence.
+    (function () {
+      var rot = document.querySelector(".rotator");
+      if (!rot || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { return; }
+      var words = rot.getAttribute("data-words").split(",");
+      var word = rot.querySelector(".rotator-word");
+      var i = words.length - 1;               // starts on "Device"
+      // The measuring probe lives OUTSIDE the heading, with the word's font
+      // copied onto it: inside the <h2> it doubled the text for screen
+      // readers and copy-paste ("FenixFenix").
+      var probe = document.createElement("span");
+      var cs = getComputedStyle(word);
+      // Individual properties, not the "font" shorthand: several browsers
+      // return an empty shorthand, which silently measured at body size and
+      // clipped the longest words.
+      probe.style.cssText = "position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;"
+        + "font-family:" + cs.fontFamily + ";font-size:" + cs.fontSize + ";font-weight:" + cs.fontWeight
+        + ";font-style:" + cs.fontStyle + ";letter-spacing:" + cs.letterSpacing + ";";
+      probe.setAttribute("aria-hidden", "true");
+      document.body.appendChild(probe);
+      function widthOf(text) { probe.textContent = text; return probe.offsetWidth; }
+      // The heading is right-anchored, so a slot that resized per word would
+      // shove "Maximizing your" left and right. Size it once to the widest
+      // word and keep it there; only the word inside moves.
+      function fixSlot() {
+        var max = 0;
+        for (var k = 0; k < words.length; k++) { max = Math.max(max, widthOf(words[k])); }
+        rot.style.width = (Math.ceil(max) + 2) + "px";   // +2: subpixel rounding headroom
+      }
+      fixSlot();
+      function swap() {
+        i = (i + 1) % words.length;
+        var next = words[i];
+        word.classList.add("is-leaving");
+        setTimeout(function () {
+          word.textContent = next;
+          word.classList.remove("is-leaving");
+          word.classList.add("is-entering");
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () { word.classList.remove("is-entering"); });
+          });
+        }, 260);
+        setTimeout(swap, next === "Device" ? 3400 : 1900);
+      }
+      setTimeout(swap, 2600);
+      window.addEventListener("resize", fixSlot);
+    })();
+  </script>
   <script>
     (function () {
       var buttons = document.querySelectorAll(".copy-email-btn");

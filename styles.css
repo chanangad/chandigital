@@ -1552,3 +1552,34 @@ body { top: 0 !important; }
     line-height: 1.45 !important;
   }
 }
+
+/* Headline word rotator (homepage Products heading). The container's width
+   is set by script to the incoming word so the line holds still; the word
+   itself slides up and out, then the next slides up and in. */
+.rotator {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+.rotator-word {
+  display: inline-block;
+  transition: transform 260ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease;
+}
+
+.rotator-word.is-leaving {
+  transform: translateY(-60%);
+  opacity: 0;
+}
+
+.rotator-word.is-entering {
+  transform: translateY(60%);
+  opacity: 0;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotator, .rotator-word { transition: none; }
+}
