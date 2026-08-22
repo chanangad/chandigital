@@ -1565,8 +1565,13 @@ body { top: 0 !important; }
   white-space: nowrap;
 }
 
+/* The variable word contrasts with the static ones - the site accent at a
+   lighter weight - so the rotation reads as a slot changing, not text
+   glitching. Echoes the lavender product kickers directly below. */
 .rotator-word {
   display: inline-block;
+  color: var(--lav-deep);
+  font-weight: 600;
   transition: transform 260ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease;
 }
 
