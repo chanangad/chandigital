@@ -188,7 +188,7 @@
       </section>
 
       <section class="section products-section" id="products">
-        <div class="section-heading">
+        <div class="section-heading studio-heading">
           <p class="eyebrow">Products</p>
           <!-- The last word cycles through the watch families these apps ship
                to, so the headline names the devices before a card is read.
@@ -446,21 +446,19 @@
       probe.setAttribute("aria-hidden", "true");
       document.body.appendChild(probe);
       function widthOf(text) { probe.textContent = text; return probe.offsetWidth; }
-      // The heading is right-anchored, so a slot that resized per word would
-      // shove "Maximizing your" left and right. Size it once to the widest
-      // word and keep it there; only the word inside moves.
-      function fixSlot() {
-        var max = 0;
-        for (var k = 0; k < words.length; k++) { max = Math.max(max, widthOf(words[k])); }
-        rot.style.width = (Math.ceil(max) + 2) + "px";   // +2: subpixel rounding headroom
-      }
-      fixSlot();
+      // The heading is left-anchored, so the slot can follow each word: the
+      // line end glides, and nothing static moves. Re-measured once Inter
+      // lands (font-display: swap) since the fallback font is narrower.
+      function fitCurrent() { rot.style.width = (Math.ceil(widthOf(word.textContent)) + 2) + "px"; }
+      fitCurrent();
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fitCurrent); }
       function swap() {
         i = (i + 1) % words.length;
         var next = words[i];
         word.classList.add("is-leaving");
         setTimeout(function () {
           word.textContent = next;
+          rot.style.width = (Math.ceil(widthOf(next)) + 2) + "px";
           word.classList.remove("is-leaving");
           word.classList.add("is-entering");
           requestAnimationFrame(function () {
@@ -470,7 +468,7 @@
         setTimeout(swap, next === "Device" ? 3400 : 1900);
       }
       setTimeout(swap, 2600);
-      window.addEventListener("resize", fixSlot);
+      window.addEventListener("resize", fitCurrent);
     })();
   </script>
   <script>

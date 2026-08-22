@@ -1561,6 +1561,7 @@ body { top: 0 !important; }
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
+  transition: width 320ms cubic-bezier(.2,.7,.2,1);
   white-space: nowrap;
 }
 
