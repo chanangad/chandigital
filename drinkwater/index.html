@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Drink Water! | Hydration Tracker Widget for Garmin</title>
-  <meta name="description" content="Drink Water! is a Garmin hydration tracker widget - log a glass in two taps, a progress ring that turns green at your goal, smart reminders that only nudge when you are behind, and 7 and 30 day history. Free beta.">
+  <meta name="description" content="Drink Water! is a Garmin hydration tracker widget - log a glass in two taps, a progress ring that turns green at your goal, smart reminders that only nudge when you are behind, and 7 and 30 day history. Free 36-hour trial, then a one-time unlock.">
   <meta name="keywords" content="Garmin hydration widget, water tracker Garmin, drink water reminder watch, Connect IQ hydration, water intake tracker, hydration goal, Garmin water widget">
   <meta name="author" content="Chan Digital">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -25,7 +25,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Chan Digital">
   <meta property="og:title" content="Drink Water! for Garmin">
-  <meta property="og:description" content="Track water intake from your wrist in about two seconds. Free beta on Connect IQ.">
+  <meta property="og:description" content="Track water intake from your wrist in about two seconds. Free 36-hour trial on Connect IQ.">
   <meta property="og:url" content="https://chandigital.in/drinkwater/">
   <meta property="og:image" content="https://chandigital.in/assets/drinkwater-cover.jpg">
   <meta property="og:image:width" content="1200">
@@ -35,7 +35,7 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Drink Water! for Garmin">
-  <meta name="twitter:description" content="Track water intake from your wrist in about two seconds. Free beta on Connect IQ.">
+  <meta name="twitter:description" content="Track water intake from your wrist in about two seconds. Free 36-hour trial on Connect IQ.">
   <meta name="twitter:image" content="https://chandigital.in/assets/drinkwater-cover.jpg">
 
   <script type="application/ld+json">
@@ -50,13 +50,21 @@
   "applicationSubCategory": "Hydration",
   "operatingSystem": "Garmin Connect IQ",
   "downloadUrl": "https://apps.garmin.com/apps/f7ca63e4-4f0e-4e89-b28b-599b81f0237b",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock",
-    "description": "Free while the app is in beta"
-  },
+  "offers": [
+    {
+      "@type": "Offer",
+      "price": "2.49",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "price": "99",
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock",
+      "areaServed": "IN"
+    }
+  ],
   "author": {
     "@type": "Organization",
     "name": "Chan Digital",
@@ -512,37 +520,6 @@
       .rp-unlock-card { padding: 24px 20px; }
     }
 
-    /* Free-beta panel: sits where the checkout card sits on the paid pages,
-       so the page keeps the same rhythm without pretending to sell anything. */
-    .dw-beta {
-      max-width: 720px;
-      /* The paid pages get their breathing room from the checkout card's own
-         margin; this panel needs the same gap before the next section. */
-      margin-bottom: 96px;
-      padding: 32px 30px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background: var(--surface);
-    }
-    .dw-beta p { color: var(--muted); line-height: 1.7; }
-    .dw-beta-lead {
-      color: var(--ink);
-      font-size: 1.12rem;
-      font-weight: 600;
-      line-height: 1.6;
-    }
-    .dw-beta-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 24px 0 20px;
-    }
-    .dw-beta-note {
-      margin: 0;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      font-size: 0.92rem;
-    }
 
     /* Left-aligned like every other section: the page has one content edge
        and a centred block breaks it. */
@@ -568,7 +545,7 @@
     </a>
     <nav class="site-nav" aria-label="Page navigation">
       <a href="#features">Features</a>
-      <a href="#get">Get it</a>
+      <a href="#unlock">Unlock</a>
       <div class="lang-picker" data-lang-picker></div>
     </nav>
   </header>
@@ -576,7 +553,7 @@
     <nav class="nav-drawer" id="nav-drawer" hidden aria-label="Menu">
       <a href="../">Chan Digital</a>
       <a href="#features">Features</a>
-      <a href="#get">Get it</a>
+      <a href="#unlock">Unlock</a>
     </nav>
 
   <main id="top">
@@ -590,8 +567,8 @@
           A Garmin widget that tracks your water intake from your wrist in about two seconds. Open it, pick your glass, done - the ring fills as you drink and turns green the moment you hit your goal.
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="https://apps.garmin.com/apps/f7ca63e4-4f0e-4e89-b28b-599b81f0237b" target="_blank" rel="noreferrer">Install free on Connect IQ</a>
-          <a class="button button-secondary" href="#features">See what it does</a>
+          <a class="button button-primary" href="https://apps.garmin.com/apps/f7ca63e4-4f0e-4e89-b28b-599b81f0237b" target="_blank" rel="noreferrer">Try free for 36 hours</a>
+          <a class="button button-secondary" href="#unlock">Unlock full version</a>
         </div>
       </div>
 
@@ -616,29 +593,141 @@
         <strong>2s</strong>
         <span>To log a glass</span>
       </div>
+      <div id="stat-price-intl">
+        <strong>$2.49</strong>
+        <span>+ tax, one-time</span>
+      </div>
+      <div id="stat-price-inr">
+        <strong>99</strong>
+        <span>One-time purchase</span>
+      </div>
       <div>
-        <strong>Free</strong>
-        <span>While in beta</span>
+        <strong>36h</strong>
+        <span>Free trial</span>
       </div>
     </div>
 
-    <!-- Free beta notice, in place of the checkout other products carry -->
-    <section class="section" id="get">
+    <!-- Checkout -->
+    <section class="section" id="unlock">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Availability</p>
-          <h2>Free while in beta</h2>
+          <p class="eyebrow">License</p>
+          <h2>One-time unlock</h2>
         </div>
       </div>
 
-      <div class="dw-beta">
-        <p class="dw-beta-lead">Drink Water! is in an open beta, and every feature is unlocked for everyone. There is nothing to buy and nothing to enter - install it from Connect IQ and it works.</p>
-        <p>The beta is here to find the last rough edges across the whole Garmin range. If something misbehaves, or a size or setting you need is missing, tell me and it usually ships the same week.</p>
-        <div class="dw-beta-actions">
-          <a class="button button-primary" href="https://apps.garmin.com/apps/f7ca63e4-4f0e-4e89-b28b-599b81f0237b" target="_blank" rel="noreferrer">Install free on Connect IQ</a>
-          <button type="button" class="button button-secondary copy-email-btn" data-email="contact@chandigital.in" data-label="Report a bug">Report a bug</button>
+      <div class="rp-unlock">
+
+        <div class="rp-unlock-card">
+          <p class="eyebrow">Checkout</p>
+          <h3>Unlock Drink Water!</h3>
+
+          <!-- Purchase panel -->
+          <div class="rp-panel rp-panel--active" id="panel-unlock" role="tabpanel" aria-labelledby="tab-unlock">
+            <form id="unlock-form">
+              <div class="rp-field">
+                <label for="claim-code-input">Claim code from watch</label>
+                <div class="rp-prefix-wrap">
+                  <span class="rp-prefix" aria-hidden="true">DW-</span>
+                  <input id="claim-code-input" name="claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
+                         inputmode="numeric" pattern="[0-9 -]*">
+                </div>
+              </div>
+              <div class="rp-field-row">
+                <div class="rp-field">
+                  <label for="unlock-name">Name</label>
+                  <input id="unlock-name" name="name" type="text" required placeholder="Jane Player" autocomplete="name">
+                </div>
+                <div class="rp-field">
+                  <label for="unlock-email">Email</label>
+                  <input id="unlock-email" name="email" type="email" required placeholder="you@example.com">
+                </div>
+              </div>
+                          <div class="rp-field" id="unlock-state-row">
+                <label for="unlock-state">State</label>
+                <select id="unlock-state" name="state" class="is-placeholder">
+            <option value="">Select your state</option>
+            <option value="37">Andhra Pradesh</option>
+            <option value="35">Andaman and Nicobar Islands</option>
+            <option value="12">Arunachal Pradesh</option>
+            <option value="18">Assam</option>
+            <option value="10">Bihar</option>
+            <option value="04">Chandigarh</option>
+            <option value="22">Chhattisgarh</option>
+            <option value="26">Dadra and Nagar Haveli and Daman and Diu</option>
+            <option value="07">Delhi</option>
+            <option value="30">Goa</option>
+            <option value="24">Gujarat</option>
+            <option value="06">Haryana</option>
+            <option value="02">Himachal Pradesh</option>
+            <option value="01">Jammu and Kashmir</option>
+            <option value="20">Jharkhand</option>
+            <option value="29">Karnataka</option>
+            <option value="32">Kerala</option>
+            <option value="38">Ladakh</option>
+            <option value="31">Lakshadweep</option>
+            <option value="23">Madhya Pradesh</option>
+            <option value="27">Maharashtra</option>
+            <option value="14">Manipur</option>
+            <option value="17">Meghalaya</option>
+            <option value="15">Mizoram</option>
+            <option value="13">Nagaland</option>
+            <option value="21">Odisha</option>
+            <option value="34">Puducherry</option>
+            <option value="03">Punjab</option>
+            <option value="08">Rajasthan</option>
+            <option value="11">Sikkim</option>
+            <option value="33">Tamil Nadu</option>
+            <option value="36">Telangana</option>
+            <option value="16">Tripura</option>
+            <option value="09">Uttar Pradesh</option>
+            <option value="05">Uttarakhand</option>
+            <option value="19">West Bengal</option>
+            <option value="97">Other Territory</option>
+                </select>
+                <p class="rp-field-hint">Required for your GST invoice.</p>
+              </div>
+</form>
+
+            <div id="intl-pay-group" class="rp-pay-group">
+              <div class="rp-pay-buttons">
+                <button type="button" id="dodo-button" class="rp-pay-btn rp-pay-btn--primary">Card or Wallet</button>
+              </div>
+              <div class="china-note">
+                <p class="china-note__zh"><strong>中国用户：支持微信支付，无需国外信用卡。</strong>点击上方 “Card or Wallet”，在结算页面选择 <strong>WeChat</strong> 完成付款。请用 Safari 或 Chrome 打开，不要在微信内置浏览器中打开。</p>
+                <p class="china-note__en">WeChat Pay is supported, no foreign card needed. Tap “Card or Wallet” above, then choose <strong>WeChat</strong> on the checkout page. Open it in Safari or Chrome rather than WeChat's built-in browser.</p>
+              </div>
+            </div>
+
+            <div id="india-pay-group" class="rp-pay-group">
+              <div class="rp-pay-buttons">
+                <button type="button" id="razorpay-button" class="rp-pay-btn rp-pay-btn--primary">Pay with Razorpay</button>
+              </div>
+            </div>
+
+<p id="unlock-status" class="rp-status"></p>
+          </div>
+
         </div>
-        <p class="dw-beta-note">When the beta ends the widget becomes a one-time purchase. Anything you have logged stays on your watch either way.</p>
+
+        <!-- Pricing info -->
+        <div class="rp-price-card">
+          <div>
+            <p class="eyebrow" style="margin-bottom:12px">Pricing</p>
+            <div id="price-intl" class="rp-price-row">
+              <span class="rp-price-amount"><span class="rp-price-num">$2.49</span> <span class="rp-price-tax">+ tax</span></span>
+            </div>
+            <div id="price-inr" class="rp-price-row">
+              <span class="rp-price-amount"><span class="rp-price-num">₹99</span> <span class="rp-price-tax">incl. tax</span></span>
+            </div>
+          </div>
+          <p>Every install starts with a free 36-hour trial - no code, no card. After it ends, this one-time unlock makes the widget yours permanently. No subscription.</p>
+          <div class="rp-cta-group">
+            <a class="button button-primary" href="https://apps.garmin.com/apps/c4e0d92b-5e7b-4dde-940d-0f54ebd69922" target="_blank" rel="noreferrer">View on Garmin Connect IQ</a>
+            <a class="button button-secondary" href="./faq/">FAQ</a>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -795,7 +884,139 @@
     <p class="legal-note">Garmin and Connect IQ are trademarks of Garmin Ltd. Drink Water! is an independent widget not affiliated with or endorsed by Garmin.</p>
   </footer>
 
+  <script src="./app.js"></script>
   <script src="./i18n.js"></script>
+  <script>
+    const unlockStatus = document.getElementById("unlock-status");
+    const claimCodeInput = document.getElementById("claim-code-input");
+    // The watch formats an integer, so the part after "DW-" is always
+    // digits. Drink Water! shipped after the device-derived generator, so
+    // every real code is exactly 12 digits.
+    function claimCodeDigits(value) {
+      var text = String(value == null ? "" : value).trim().toUpperCase();
+      // The field holds only the number - "DW-" is a fixed prefix drawn beside
+      // it - but buyers paste the whole code, so strip the prefix and the
+      // single separator after it. iOS smart punctuation rewrites that
+      // separator to an em dash and some paste it with none at all.
+      if (text.indexOf("TN") === 0) {
+        text = text.replace(/^TN/, "").replace(/^[^0-9-]/, "");
+        if (text.charAt(0) === "-") { text = text.slice(1); }
+      }
+      // A hyphen still leading is a minus sign, not a separator: builds before
+      // 2026-07-14 overflowed a signed 32-bit seed and wrote real codes like
+      // DW--18301190, and those rows are still live.
+      var sign = text.charAt(0) === "-" ? "-" : "";
+      return sign + text.replace(/\D/g, "");
+    }
+
+    // Mirrors the watch, which shows the code grouped in fours ("4839 2017
+    // 5264"). The field displays the same grouping so the buyer can compare
+    // digit-for-digit; everything submitted or put in the URL stays unspaced.
+    function groupClaimDigits(digits) {
+      var out = "";
+      for (var i = 0; i < digits.length; i += 4) {
+        if (i > 0) { out += " "; }
+        out += digits.substring(i, i + 4);
+      }
+      return out;
+    }
+
+    const rawCode = query("code").trim().toUpperCase();
+    const initialClaimCode = claimCodeDigits(rawCode);
+
+    claimCodeInput.value = groupClaimDigits(initialClaimCode);
+
+    function setPanelStatus(node, message, kind) {
+      node.textContent = message;
+      node.className = "rp-status" + (kind ? " rp-status--" + kind : "");
+    }
+
+    function syncClaimCode(value) {
+      var suffix = claimCodeDigits(value);
+      var display = groupClaimDigits(suffix);
+      claimCodeInput.value = display;
+      const params = new URLSearchParams(window.location.search);
+      if (suffix) { params.set("code", "DW-" + suffix); } else { params.delete("code"); }
+      window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
+    }
+
+
+    claimCodeInput.addEventListener("input", function() { syncClaimCode(claimCodeInput.value); });
+
+    async function beginCheckout(provider, currency) {
+      var rawSuffix = claimCodeInput.value.trim().toUpperCase();
+      var suffix = claimCodeDigits(rawSuffix);
+      var claimCode = suffix ? "DW-" + suffix : "";
+      var name = document.getElementById("unlock-name").value.trim();
+      var email = document.getElementById("unlock-email").value.trim();
+      if (!claimCode) { setPanelStatus(unlockStatus, "Enter the claim code shown on your watch.", "warn"); return; }
+      // Caught here rather than after payment: a code that is not all digits
+      // buys a licence no watch will ever ask about, so the buyer pays and
+      // stays locked. Letters are impossible - the watch formats an integer.
+      if (/\D/.test(rawSuffix.replace(/^TN/, "").replace(/[\s-]/g, ""))) {
+        setPanelStatus(unlockStatus, "Claim codes are numbers only. Check the code on your watch and re-enter it.", "warn");
+        return;
+      }
+      // Every build has padded to at least 5 digits (a one-week Badminton Go
+      // build in June 2026 used "%05d"; later ones 8, now 12), so anything
+      // shorter means digits were dropped. Deliberately no upper bound.
+      if (suffix.replace("-", "").length < 12) {
+        setPanelStatus(unlockStatus, "That code looks too short. Drink Water! codes are 12 digits - check your watch screen.", "warn");
+        return;
+      }
+      if (!name) { setPanelStatus(unlockStatus, "Enter your name first.", "warn"); return; }
+      if (!email) { setPanelStatus(unlockStatus, "Enter your email first.", "warn"); return; }
+      try {
+        if (provider === "paypal") {
+          setPanelStatus(unlockStatus, "Creating PayPal checkout…");
+          var data = await postJson("/api/paypal/create-order", {claimCode, email, name});
+          if (data && data.approveUrl) { window.location.href = data.approveUrl; return; }
+        } else if (provider === "dodo") {
+          setPanelStatus(unlockStatus, "Creating checkout…");
+          var data = await postJson("/api/dodo/create-checkout", {claimCode, email, name});
+          if (data && (data.checkoutUrl || data.paymentUrl)) { window.location.href = data.checkoutUrl || data.paymentUrl; return; }
+        } else {
+          setPanelStatus(unlockStatus, "Creating Razorpay checkout…");
+          // Place of supply decides CGST+SGST vs IGST on the GST invoice, so it
+          // is required for INR checkouts.
+          var stateCode = (document.getElementById("unlock-state") || {}).value || "";
+          if (!stateCode) {
+            setPanelStatus(unlockStatus, "Select your state - it is required on your GST invoice.", "warn");
+            return;
+          }
+          var data = await postJson("/api/razorpay/create-link", {claimCode, email, name, currency: currency || "INR", stateCode});
+          if (data && data.shortUrl) { window.location.href = data.shortUrl; return; }
+        }
+        setPanelStatus(unlockStatus, "Checkout link was not returned by the server.", "warn");
+      } catch (err) {
+        setPanelStatus(unlockStatus, err.message, "warn");
+      }
+    }
+
+    // Populate prices from the worker (single source of truth); hardcoded values
+    // remain as fallback if the fetch fails.
+    loadPricing();
+
+    // Geo-lock: India sees ₹199 + Razorpay only; international sees $4.99 + PayPal/Dodo only
+    var isIndia = (function() {
+      try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone; return tz === "Asia/Kolkata" || tz === "Asia/Calcutta"; }
+      catch(e) { return false; }
+    })();
+    if (!isIndia) {
+    } else {
+      var stateSelect = document.getElementById("unlock-state");
+      if (stateSelect) {
+        stateSelect.addEventListener("change", function () {
+          stateSelect.classList.toggle("is-placeholder", !stateSelect.value);
+        });
+      }
+    }
+
+    document.getElementById("unlock-form").addEventListener("submit", async function(e) { e.preventDefault(); if (isIndia) { await beginCheckout("razorpay", "INR"); } else { await beginCheckout("dodo"); } });
+    document.getElementById("dodo-button").addEventListener("click", async function() { await beginCheckout("dodo"); });
+    document.getElementById("razorpay-button").addEventListener("click", async function() { await beginCheckout("razorpay", "INR"); });
+
+  </script>
   <script>
     // Arrows for the "More from Chan Digital" rail. The rail itself scrolls on
     // its own (touch, trackpad, snap points); these only exist for mouse users,
