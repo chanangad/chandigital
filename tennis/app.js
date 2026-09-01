@@ -33,7 +33,7 @@ async function loadPricing() {
     const {usd, inr} = await res.json();
     if (usd) {
       // Write into the number span only. Setting textContent on the whole
-      // amount wipes its children, which would silently delete the "incl. tax"
+      // amount wipes its children, which would silently delete the tax
       // pill the moment this fetch resolves. Falls back to the old behaviour
       // for any markup that predates the span.
       const setAmount = (el, text) => {

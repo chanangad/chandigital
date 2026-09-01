@@ -781,7 +781,7 @@
           <div>
             <p class="eyebrow" style="margin-bottom:12px">Pricing</p>
             <div id="price-intl" class="rp-price-row">
-              <span class="rp-price-amount"><span class="rp-price-num">$8.99</span> <span class="rp-price-tax">incl. tax</span></span>
+              <span class="rp-price-amount"><span class="rp-price-num">$8.99</span> <span class="rp-price-tax">+ local tax</span></span>
             </div>
             <div id="price-inr" class="rp-price-row">
               <span class="rp-price-amount"><span class="rp-price-num">₹449</span> <span class="rp-price-tax">incl. tax</span></span>
@@ -1064,7 +1064,7 @@
     // remain as fallback if the fetch fails.
     loadPricing();
 
-    // Geo-lock: India sees ₹499 + Razorpay only; international sees $8.99 + PayPal/Dodo only
+    // Geo-lock: India sees ₹449 incl. GST + Razorpay only; international sees $8.99 + local tax via Dodo
     var isIndia = (function() {
       try { var tz = Intl.DateTimeFormat().resolvedOptions().timeZone; return tz === "Asia/Kolkata" || tz === "Asia/Calcutta"; }
       catch(e) { return false; }
