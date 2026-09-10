@@ -23,6 +23,327 @@ const LANGUAGES = [
   { code: "zh-TW", label: "繁體中文" }
 ];
 
+// Scoring-setting names, generated from the app's own strings.xml files so
+// the website always shows exactly the terms the watch shows. The cells are
+// marked notranslate; applyModeNames() swaps them per selected language.
+const MODE_NAMES = {
+  "cs": {
+    "f1set": "1 set",
+    "fbo3": "Nejlepší z 3",
+    "fbo5": "Nejlepší z 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.",
+    "ftb7": "TB to 7",
+    "menuFormat": "Formát",
+    "menuScoring": "Skóre",
+    "menuSetStyle": "Typ setu",
+    "noad": "Bez výhody",
+    "standard": "Standardní",
+    "style4": "4 hry",
+    "style6": "6 her"
+  },
+  "da": {
+    "f1set": "1 sæt",
+    "fbo3": "Bedst af 3",
+    "fbo5": "Bedst af 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Scoring",
+    "menuSetStyle": "Sættype",
+    "noad": "Uden fordel",
+    "standard": "Standard",
+    "style4": "4 partier",
+    "style6": "6 partier"
+  },
+  "de": {
+    "f1set": "1 Satz",
+    "fbo3": "Best of 3",
+    "fbo5": "Best of 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Zählweise",
+    "menuSetStyle": "Satz-Typ",
+    "noad": "Ohne Vorteil",
+    "standard": "Standard",
+    "style4": "4 Spiele",
+    "style6": "6 Spiele"
+  },
+  "en": {
+    "f1set": "1 Set",
+    "fbo3": "Best of 3",
+    "fbo5": "Best of 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3rd",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Scoring",
+    "menuSetStyle": "Set Style",
+    "noad": "No-Ad",
+    "standard": "Standard",
+    "style4": "4-Game",
+    "style6": "6-Game"
+  },
+  "es": {
+    "f1set": "1 set",
+    "fbo3": "Al mejor de 3",
+    "fbo5": "Al mejor de 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.º",
+    "ftb7": "TB to 7",
+    "menuFormat": "Formato",
+    "menuScoring": "Puntuación",
+    "menuSetStyle": "Tipo de set",
+    "noad": "Sin ventaja",
+    "standard": "Estándar",
+    "style4": "4 juegos",
+    "style6": "6 juegos"
+  },
+  "fi": {
+    "f1set": "1 erä",
+    "fbo3": "Paras 3:sta",
+    "fbo5": "Paras 5:sta",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.",
+    "ftb7": "TB to 7",
+    "menuFormat": "Muoto",
+    "menuScoring": "Pisteytys",
+    "menuSetStyle": "Erätyyppi",
+    "noad": "Ei etua",
+    "standard": "Vakio",
+    "style4": "4 peliä",
+    "style6": "6 peliä"
+  },
+  "fr": {
+    "f1set": "1 set",
+    "fbo3": "Au meilleur de 3",
+    "fbo5": "Au meilleur de 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tie-break 3e",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Comptage",
+    "menuSetStyle": "Type de set",
+    "noad": "Sans avantage",
+    "standard": "Standard",
+    "style4": "4 jeux",
+    "style6": "6 jeux"
+  },
+  "hu": {
+    "f1set": "1 szett",
+    "fbo3": "Legjobb 3-ból",
+    "fbo5": "Legjobb 5-ből",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.",
+    "ftb7": "TB to 7",
+    "menuFormat": "Formátum",
+    "menuScoring": "Számolás",
+    "menuSetStyle": "Szett típusa",
+    "noad": "Előny nélkül",
+    "standard": "Normál",
+    "style4": "4 játék",
+    "style6": "6 játék"
+  },
+  "id": {
+    "f1set": "1 set",
+    "fbo3": "Terbaik dari 3",
+    "fbo5": "Terbaik dari 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak ke-3",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Penilaian",
+    "menuSetStyle": "Jenis Set",
+    "noad": "Tanpa Ad",
+    "standard": "Standar",
+    "style4": "4 gim",
+    "style6": "6 gim"
+  },
+  "it": {
+    "f1set": "1 set",
+    "fbo3": "Al meglio di 3",
+    "fbo5": "Al meglio di 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3°",
+    "ftb7": "TB to 7",
+    "menuFormat": "Formato",
+    "menuScoring": "Punteggio",
+    "menuSetStyle": "Tipo di set",
+    "noad": "Senza vantaggi",
+    "standard": "Standard",
+    "style4": "4 game",
+    "style6": "6 game"
+  },
+  "ja": {
+    "f1set": "1セット",
+    "fbo3": "3セットマッチ",
+    "fbo5": "5セットマッチ",
+    "ftb10": "TB to 10",
+    "ftb3": "3セット目TB",
+    "ftb7": "TB to 7",
+    "menuFormat": "形式",
+    "menuScoring": "採点",
+    "menuSetStyle": "セット形式",
+    "noad": "ノーアド",
+    "standard": "標準",
+    "style4": "4ゲーム",
+    "style6": "6ゲーム"
+  },
+  "ko": {
+    "f1set": "1세트",
+    "fbo3": "3판 2선승",
+    "fbo5": "5판 3선승",
+    "ftb10": "TB to 10",
+    "ftb3": "3세트 타이브레이크",
+    "ftb7": "TB to 7",
+    "menuFormat": "형식",
+    "menuScoring": "채점",
+    "menuSetStyle": "세트 방식",
+    "noad": "노애드",
+    "standard": "표준",
+    "style4": "4게임",
+    "style6": "6게임"
+  },
+  "nl": {
+    "f1set": "1 set",
+    "fbo3": "Best of 3",
+    "fbo5": "Best of 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3e",
+    "ftb7": "TB to 7",
+    "menuFormat": "Formaat",
+    "menuScoring": "Telling",
+    "menuSetStyle": "Settype",
+    "noad": "Geen voordeel",
+    "standard": "Standaard",
+    "style4": "4 games",
+    "style6": "6 games"
+  },
+  "no": {
+    "f1set": "1 sett",
+    "fbo3": "Best av 3",
+    "fbo5": "Best av 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Poeng",
+    "menuSetStyle": "Sett-type",
+    "noad": "Uten fordel",
+    "standard": "Standard",
+    "style4": "4 game",
+    "style6": "6 game"
+  },
+  "pl": {
+    "f1set": "1 set",
+    "fbo3": "Najlepszy z 3",
+    "fbo5": "Najlepszy z 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Punktacja",
+    "menuSetStyle": "Typ seta",
+    "noad": "Bez przewagi",
+    "standard": "Standard",
+    "style4": "4 gemy",
+    "style6": "6 gemów"
+  },
+  "pt-BR": {
+    "f1set": "1 set",
+    "fbo3": "Melhor de 3",
+    "fbo5": "Melhor de 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3º",
+    "ftb7": "TB to 7",
+    "menuFormat": "Formato",
+    "menuScoring": "Pontuação",
+    "menuSetStyle": "Tipo de set",
+    "noad": "Sem vantagem",
+    "standard": "Padrão",
+    "style4": "4 games",
+    "style6": "6 games"
+  },
+  "pt-PT": {
+    "f1set": "1 set",
+    "fbo3": "Melhor de 3",
+    "fbo5": "Melhor de 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3.º",
+    "ftb7": "TB to 7",
+    "menuFormat": "Formato",
+    "menuScoring": "Pontuação",
+    "menuSetStyle": "Tipo de set",
+    "noad": "Sem vantagem",
+    "standard": "Padrão",
+    "style4": "4 jogos",
+    "style6": "6 jogos"
+  },
+  "sv": {
+    "f1set": "1 set",
+    "fbo3": "Bäst av 3",
+    "fbo5": "Bäst av 5",
+    "ftb10": "TB to 10",
+    "ftb3": "Tiebreak 3:e",
+    "ftb7": "TB to 7",
+    "menuFormat": "Format",
+    "menuScoring": "Poäng",
+    "menuSetStyle": "Set-typ",
+    "noad": "Utan fördel",
+    "standard": "Standard",
+    "style4": "4 gem",
+    "style6": "6 gem"
+  },
+  "th": {
+    "f1set": "1 เซต",
+    "fbo3": "ดีที่สุดใน 3",
+    "fbo5": "ดีที่สุดใน 5",
+    "ftb10": "TB to 10",
+    "ftb3": "ไทเบรกเซต 3",
+    "ftb7": "TB to 7",
+    "menuFormat": "รูปแบบ",
+    "menuScoring": "การนับแต้ม",
+    "menuSetStyle": "ชนิดเซต",
+    "noad": "ไม่มีแอด",
+    "standard": "มาตรฐาน",
+    "style4": "4 เกม",
+    "style6": "6 เกม"
+  },
+  "zh-CN": {
+    "f1set": "1盘",
+    "fbo3": "三盘两胜",
+    "fbo5": "五盘三胜",
+    "ftb10": "TB to 10",
+    "ftb3": "第三盘抢十",
+    "ftb7": "TB to 7",
+    "menuFormat": "赛制",
+    "menuScoring": "计分",
+    "menuSetStyle": "盘制",
+    "noad": "无占先",
+    "standard": "标准",
+    "style4": "4局",
+    "style6": "6局"
+  },
+  "zh-TW": {
+    "f1set": "1盤",
+    "fbo3": "三盤兩勝",
+    "fbo5": "五盤三勝",
+    "ftb10": "TB to 10",
+    "ftb3": "第三盤搶十",
+    "ftb7": "TB to 7",
+    "menuFormat": "賽制",
+    "menuScoring": "計分",
+    "menuSetStyle": "盤制",
+    "noad": "無占先",
+    "standard": "標準",
+    "style4": "4局",
+    "style6": "6局"
+  }
+};
+
 const STORAGE_KEY = "tennis-lang";
 const GOOGLE_LANG_CODES = LANGUAGES
   .filter((l) => l.code !== "en")
@@ -95,10 +416,20 @@ function clearGoogleTranslateCookie() {
   });
 }
 
+
+function applyModeNames(code) {
+  const names = MODE_NAMES[code] || MODE_NAMES.en;
+  document.querySelectorAll("[data-mode-name]").forEach((el) => {
+    const name = names[el.dataset.modeName];
+    if (name) el.textContent = name;
+  });
+}
+
 function setLang(code) {
   const previous = getStoredLang();
   storeLang(code);
   updatePickerSelection(code);
+  applyModeNames(code);
   if (code === "en" && previous !== "en") {
     // Google's TranslateElement sets a googtrans cookie on change events,
     // which would auto-re-translate on reload. Clear it before reloading.
@@ -275,5 +606,6 @@ function injectGoogleTranslate() {
 
 document.addEventListener("DOMContentLoaded", () => {
   buildLangPicker();
+  applyModeNames(getStoredLang());
   injectGoogleTranslate();
 });

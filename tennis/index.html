@@ -116,6 +116,14 @@
   </script>
   <style>
 
+    .rp-modes-wrap { margin: 0 0 28px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); overflow-x: auto; }
+    .rp-modes { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 0.95rem; line-height: 1.5; }
+    .rp-modes th, .rp-modes td { padding: 14px 18px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); color: var(--ink); }
+    .rp-modes thead th { border-top: 0; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    .rp-modes td:first-child { font-weight: 600; white-space: nowrap; }
+    .rp-modes td small { display: block; font-weight: 400; color: var(--muted); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
     /* Region gating, keyed off the data-geo attribute set in <head>. Prices are
        gated here too: leaving them to JS meant the wrong currency could show
        until the script ran, which is worse than a late button. */
@@ -807,12 +815,28 @@
           <h2>Real tennis scoring, on your wrist</h2>
         </div>
       </div>
+      <div class="rp-modes-wrap">
+        <table class="rp-modes">
+          <caption class="sr-only">Tennis Go scoring settings and what each option changes</caption>
+          <thead>
+            <tr><th scope="col">Setting</th><th scope="col">Options</th><th scope="col">What it changes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="notranslate" translate="no" data-mode-name="menuScoring">Scoring</span></td><td><span class="notranslate" translate="no" data-mode-name="standard">Standard</span> / <span class="notranslate" translate="no" data-mode-name="noad">No-Ad</span></td><td>The deuce rule. Standard plays advantage and the game is won by two points; No-Ad makes the next point after 40-40 decide the game.</td></tr>
+            <tr><td><span class="notranslate" translate="no" data-mode-name="menuSetStyle">Set Style</span></td><td><span class="notranslate" translate="no" data-mode-name="style6">6-Game</span> / <span class="notranslate" translate="no" data-mode-name="style4">4-Game</span></td><td>Classic sets to six games with a 7-point tiebreak at 6-6, or quick Fast4 sets to four games with a sudden-death tiebreak to 5 at 3-3.</td></tr>
+            <tr><td><span class="notranslate" translate="no" data-mode-name="menuFormat">Format</span></td><td><span class="notranslate" translate="no" data-mode-name="f1set">1 Set</span>, <span class="notranslate" translate="no" data-mode-name="fbo3">Best of 3</span>, <span class="notranslate" translate="no" data-mode-name="fbo5">Best of 5</span>, <span class="notranslate" translate="no" data-mode-name="ftb3">Tiebreak 3rd</span>, <span class="notranslate" translate="no" data-mode-name="ftb7">TB to 7</span>, <span class="notranslate" translate="no" data-mode-name="ftb10">TB to 10</span></td><td>How the match is decided: one set, best of three or five sets, a 10-point championship tiebreak at one set all, or a single standalone tiebreak.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="studio-grid">
         <p>
-          Tennis Go keeps the full scoring ladder - 15, 30, 40, deuce and advantage - and rolls completed games into sets, starting a 7-point tiebreak automatically at six games all. Prefer a quicker match? Switch to No-Ad games or a Fast4 set, or let a 10-point Championship tiebreak decide at one set all.
+          Tennis Go scores the full ladder - 15, 30, 40, deuce and advantage - and rolls games into sets and sets into the match. Pick your rules once in settings and the watch scores them for the rest of the match.
         </p>
         <p>
-          The watch tracks whose serve it is and which box is live, alternating deuce and ad court as the score moves and rotating serve each game. In doubles it keeps the serving order and receiving sides straight, so you focus on the point, not the paperwork. Every match is written to Garmin Connect as a recorded activity with average and max heart rate, calories, elapsed time and per-set scores.
+          The watch tracks whose serve it is and which box is live, alternating deuce and ad court as the score moves and rotating serve each game. In doubles it keeps the serving order and receiving sides straight.
+        </p>
+        <p>
+          Every match is written to Garmin Connect as a recorded activity - average and max heart rate, calories, elapsed time and per-set scores.
         </p>
       </div>
       <figure class="rp-explainer">
