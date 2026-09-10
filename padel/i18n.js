@@ -23,6 +23,138 @@ const LANGUAGES = [
   { code: "zh-TW", label: "繁體中文" }
 ];
 
+// Scoring-mode names, generated from the app's own strings.xml files so the
+// website always shows exactly the terms the watch shows. These cells are
+// marked notranslate; applyModeNames() swaps them per selected language.
+const MODE_NAMES = {
+  "cs": {
+    "golden": "Zlatý míček",
+    "silver": "Stříbrný míček",
+    "standard": "Standard",
+    "star": "Hvězdný míček"
+  },
+  "da": {
+    "golden": "Guldbold",
+    "silver": "Sølvbold",
+    "standard": "Standard",
+    "star": "Stjernebold"
+  },
+  "de": {
+    "golden": "Goldpunkt",
+    "silver": "Silberpunkt",
+    "standard": "Standard",
+    "star": "Sternpunkt"
+  },
+  "en": {
+    "golden": "Golden Point",
+    "silver": "Silver Point",
+    "standard": "Standard",
+    "star": "Star Point"
+  },
+  "es": {
+    "golden": "Punto de oro",
+    "silver": "Punto de plata",
+    "standard": "Estándar",
+    "star": "Punto estrella"
+  },
+  "fi": {
+    "golden": "Kultapiste",
+    "silver": "Hopeapiste",
+    "standard": "Vakio",
+    "star": "Tähtipiste"
+  },
+  "fr": {
+    "golden": "Point en or",
+    "silver": "Point en argent",
+    "standard": "Standard",
+    "star": "Point étoile"
+  },
+  "hu": {
+    "golden": "Arany pont",
+    "silver": "Ezüst pont",
+    "standard": "Standard",
+    "star": "Csillag pont"
+  },
+  "id": {
+    "golden": "Poin emas",
+    "silver": "Poin perak",
+    "standard": "Standar",
+    "star": "Poin bintang"
+  },
+  "it": {
+    "golden": "Punto d'oro",
+    "silver": "Punto d'argento",
+    "standard": "Standard",
+    "star": "Punto stella"
+  },
+  "ja": {
+    "golden": "ゴールデンポイント",
+    "silver": "シルバーポイント",
+    "standard": "スタンダード",
+    "star": "スターポイント"
+  },
+  "ko": {
+    "golden": "골든 포인트",
+    "silver": "실버 포인트",
+    "standard": "스탠다드",
+    "star": "스타 포인트"
+  },
+  "nl": {
+    "golden": "Gouden punt",
+    "silver": "Zilveren punt",
+    "standard": "Standaard",
+    "star": "Sterpunt"
+  },
+  "no": {
+    "golden": "Gullpoeng",
+    "silver": "Sølvpoeng",
+    "standard": "Standard",
+    "star": "Stjernepoeng"
+  },
+  "pl": {
+    "golden": "Złoty punkt",
+    "silver": "Srebrny punkt",
+    "standard": "Standard",
+    "star": "Gwiezdny punkt"
+  },
+  "pt-BR": {
+    "golden": "Ponto de ouro",
+    "silver": "Ponto de prata",
+    "standard": "Padrão",
+    "star": "Ponto estrela"
+  },
+  "pt-PT": {
+    "golden": "Ponto de oro",
+    "silver": "Ponto de prata",
+    "standard": "Padrão",
+    "star": "Ponto estrela"
+  },
+  "sv": {
+    "golden": "Guldpoäng",
+    "silver": "Silverpoäng",
+    "standard": "Standard",
+    "star": "Stjärnpoäng"
+  },
+  "th": {
+    "golden": "โกลเดนพอยต์",
+    "silver": "ซิลเวอร์พอยต์",
+    "standard": "มาตรฐาน",
+    "star": "สตาร์พอยต์"
+  },
+  "zh-CN": {
+    "golden": "黄金分",
+    "silver": "白银分",
+    "standard": "标准",
+    "star": "星点"
+  },
+  "zh-TW": {
+    "golden": "黃金分",
+    "silver": "白銀分",
+    "standard": "標準",
+    "star": "星點"
+  }
+};
+
 const STORAGE_KEY = "padel-lang";
 const GOOGLE_LANG_CODES = LANGUAGES
   .filter((l) => l.code !== "en")
@@ -95,10 +227,20 @@ function clearGoogleTranslateCookie() {
   });
 }
 
+
+function applyModeNames(code) {
+  const names = MODE_NAMES[code] || MODE_NAMES.en;
+  document.querySelectorAll("[data-mode-name]").forEach((el) => {
+    const name = names[el.dataset.modeName];
+    if (name) el.textContent = name;
+  });
+}
+
 function setLang(code) {
   const previous = getStoredLang();
   storeLang(code);
   updatePickerSelection(code);
+  applyModeNames(code);
   if (code === "en" && previous !== "en") {
     // Google's TranslateElement sets a googtrans cookie on change events,
     // which would auto-re-translate on reload. Clear it before reloading.
@@ -275,5 +417,6 @@ function injectGoogleTranslate() {
 
 document.addEventListener("DOMContentLoaded", () => {
   buildLangPicker();
+  applyModeNames(getStoredLang());
   injectGoogleTranslate();
 });
