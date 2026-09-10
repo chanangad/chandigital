@@ -534,6 +534,15 @@
       .rp-field-row { grid-template-columns: 1fr; }
       .rp-unlock-card { padding: 24px 20px; }
     }
+  
+    /* Scoring-mode table (How it works) */
+    .rp-modes-wrap { margin: 0 0 28px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); overflow-x: auto; }
+    .rp-modes { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 0.95rem; line-height: 1.5; }
+    .rp-modes th, .rp-modes td { padding: 14px 18px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); color: var(--ink); }
+    .rp-modes thead th { border-top: 0; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    .rp-modes td:first-child { font-weight: 600; white-space: nowrap; }
+    .rp-modes td small { display: block; font-weight: 400; color: var(--muted); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   </style>
 </head>
 <body>
@@ -806,9 +815,23 @@
           <h2>Padel scoring, whichever way your club plays it</h2>
         </div>
       </div>
+      <div class="rp-modes-wrap">
+        <table class="rp-modes">
+          <caption class="sr-only">Padel Go scoring modes and what decides the game at 40-40</caption>
+          <thead>
+            <tr><th scope="col">Mode</th><th scope="col">At 40-40</th><th scope="col">The game is won</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Standard</td><td>Advantage, as often as it takes</td><td>By the first side to lead by two points</td></tr>
+            <tr><td>Golden Point</td><td>No advantage</td><td>On the very next point</td></tr>
+            <tr><td>Silver Point</td><td>One advantage plays out</td><td>If it returns to deuce, on the next point</td></tr>
+            <tr><td>Star Point <small>FIP 2026 rule</small></td><td>Up to two advantages play out</td><td>At the third deuce, on the next point</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="studio-grid">
         <p>
-          Padel Go handles the whole 15-30-40 ladder - deuce, advantage, games and sets, with a 7-point tiebreak at six games all - and lets you choose what happens at 40-40, because clubs and tournaments do not all play it the same way. Standard is classic advantage scoring: win by two points, however long it takes. Golden Point makes the next point after 40-40 decide the game. Silver Point plays out one advantage as normal; if the game comes back to deuce, the next point decides it. Star Point, the FIP 2026 rule, allows up to two advantages before a deciding point at the third deuce. Pick the mode once in settings and the watch scores it correctly for the rest of the match.
+          Padel Go handles the whole 15-30-40 ladder - deuce, advantage, games and sets, with a 7-point tiebreak at six games all - and lets you choose what happens at 40-40, because clubs and tournaments do not all play it the same way. Pick the mode once in settings and the watch scores it correctly for the rest of the match.
         </p>
         <p>
           Because padel is almost always doubles, the app is built around it - tracking the serving player, the box for the underhand serve, and which side each pair is on, point after point. You keep your eyes on the glass and the volley, not the score. Every match saves to Garmin Connect as a recorded activity with average and max heart rate, calories, elapsed time and per-set scores.

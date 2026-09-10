@@ -49,7 +49,7 @@
         "name": "Which scoring modes does Padel Go support?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Four, chosen in the app's settings. Standard is classic advantage scoring, win by two. Golden Point means the next point after 40-40 wins the game. Silver Point plays one advantage as normal, and if the game returns to deuce the next point decides it. Star Point, the FIP 2026 rule, allows up to two advantages before a deciding point at the third deuce. All four work in singles and doubles and are saved to your match history."
+          "text": "<p>Four, chosen in the app's settings:</p><ul><li><strong>Standard</strong> - classic advantage scoring, win by two points.</li><li><strong>Golden Point</strong> - the next point after 40-40 wins the game.</li><li><strong>Silver Point</strong> - one advantage plays out as normal; if the game returns to deuce, the next point decides it.</li><li><strong>Star Point</strong> (FIP 2026 rule) - up to two advantages play out, then a deciding point at the third deuce.</li></ul><p>All four work in singles and doubles and are saved to your match history.</p>"
         }
       },
       {
@@ -188,6 +188,12 @@
       border-radius: 4px;
       padding: 1px 5px;
     }
+  
+    /* Answers that carry a list use a div; scope so plain <p class="faq-a"> answers are untouched */
+    .faq-a p { margin: 0 0 8px; }
+    .faq-a p:last-child { margin-bottom: 0; }
+    .faq-a ul { margin: 0 0 10px; padding-left: 20px; }
+    .faq-a li { margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -238,7 +244,7 @@
 
       <div class="faq-item">
         <p class="faq-q">Which scoring modes does Padel Go support?</p>
-        <p class="faq-a">Four, chosen in the app's settings. Standard is classic advantage scoring, win by two. Golden Point means the next point after 40-40 wins the game. Silver Point plays one advantage as normal, and if the game returns to deuce the next point decides it. Star Point, the FIP 2026 rule, allows up to two advantages before a deciding point at the third deuce. All four work in singles and doubles and are saved to your match history.</p>
+        <div class="faq-a"><p>Four, chosen in the app's settings:</p><ul><li><strong>Standard</strong> - classic advantage scoring, win by two points.</li><li><strong>Golden Point</strong> - the next point after 40-40 wins the game.</li><li><strong>Silver Point</strong> - one advantage plays out as normal; if the game returns to deuce, the next point decides it.</li><li><strong>Star Point</strong> (FIP 2026 rule) - up to two advantages play out, then a deciding point at the third deuce.</li></ul><p>All four work in singles and doubles and are saved to your match history.</p></div>
       </div>
 
       <div class="faq-item">
