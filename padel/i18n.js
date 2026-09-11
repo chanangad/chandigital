@@ -28,126 +28,168 @@ const LANGUAGES = [
 // marked notranslate; applyModeNames() swaps them per selected language.
 const MODE_NAMES = {
   "cs": {
+    "endmatch": "Ukončit zápas",
+    "freeplay": "Volná hra",
     "golden": "Zlatý míček",
     "silver": "Stříbrný míček",
     "standard": "Standard",
     "star": "Hvězdný míček"
   },
   "da": {
+    "endmatch": "Afslut kamp",
+    "freeplay": "Frit spil",
     "golden": "Guldbold",
     "silver": "Sølvbold",
     "standard": "Standard",
     "star": "Stjernebold"
   },
   "de": {
+    "endmatch": "Match beenden",
+    "freeplay": "Freies Spiel",
     "golden": "Goldpunkt",
     "silver": "Silberpunkt",
     "standard": "Standard",
     "star": "Sternpunkt"
   },
   "en": {
+    "endmatch": "End Match",
+    "freeplay": "Free Play",
     "golden": "Golden Point",
     "silver": "Silver Point",
     "standard": "Standard",
     "star": "Star Point"
   },
   "es": {
+    "endmatch": "Finalizar partido",
+    "freeplay": "Juego libre",
     "golden": "Punto de oro",
     "silver": "Punto de plata",
     "standard": "Estándar",
     "star": "Punto estrella"
   },
   "fi": {
+    "endmatch": "Lopeta ottelu",
+    "freeplay": "Vapaa peli",
     "golden": "Kultapiste",
     "silver": "Hopeapiste",
     "standard": "Vakio",
     "star": "Tähtipiste"
   },
   "fr": {
+    "endmatch": "Terminer le match",
+    "freeplay": "Jeu libre",
     "golden": "Point en or",
     "silver": "Point en argent",
     "standard": "Standard",
     "star": "Point étoile"
   },
   "hu": {
+    "endmatch": "Meccs befejezése",
+    "freeplay": "Szabad játék",
     "golden": "Arany pont",
     "silver": "Ezüst pont",
     "standard": "Standard",
     "star": "Csillag pont"
   },
   "id": {
+    "endmatch": "Akhiri pertandingan",
+    "freeplay": "Main bebas",
     "golden": "Poin emas",
     "silver": "Poin perak",
     "standard": "Standar",
     "star": "Poin bintang"
   },
   "it": {
+    "endmatch": "Termina partita",
+    "freeplay": "Gioco libero",
     "golden": "Punto d'oro",
     "silver": "Punto d'argento",
     "standard": "Standard",
     "star": "Punto stella"
   },
   "ja": {
+    "endmatch": "試合を終了",
+    "freeplay": "フリープレー",
     "golden": "ゴールデンポイント",
     "silver": "シルバーポイント",
     "standard": "スタンダード",
     "star": "スターポイント"
   },
   "ko": {
+    "endmatch": "경기 종료",
+    "freeplay": "자유 플레이",
     "golden": "골든 포인트",
     "silver": "실버 포인트",
     "standard": "스탠다드",
     "star": "스타 포인트"
   },
   "nl": {
+    "endmatch": "Partij beëindigen",
+    "freeplay": "Vrij spel",
     "golden": "Gouden punt",
     "silver": "Zilveren punt",
     "standard": "Standaard",
     "star": "Sterpunt"
   },
   "no": {
+    "endmatch": "Avslutt kamp",
+    "freeplay": "Fritt spill",
     "golden": "Gullpoeng",
     "silver": "Sølvpoeng",
     "standard": "Standard",
     "star": "Stjernepoeng"
   },
   "pl": {
+    "endmatch": "Zakończ mecz",
+    "freeplay": "Gra dowolna",
     "golden": "Złoty punkt",
     "silver": "Srebrny punkt",
     "standard": "Standard",
     "star": "Gwiezdny punkt"
   },
   "pt-BR": {
+    "endmatch": "Encerrar partida",
+    "freeplay": "Jogo livre",
     "golden": "Ponto de ouro",
     "silver": "Ponto de prata",
     "standard": "Padrão",
     "star": "Ponto estrela"
   },
   "pt-PT": {
+    "endmatch": "Terminar partida",
+    "freeplay": "Jogo livre",
     "golden": "Ponto de oro",
     "silver": "Ponto de prata",
     "standard": "Padrão",
     "star": "Ponto estrela"
   },
   "sv": {
+    "endmatch": "Avsluta match",
+    "freeplay": "Fritt spel",
     "golden": "Guldpoäng",
     "silver": "Silverpoäng",
     "standard": "Standard",
     "star": "Stjärnpoäng"
   },
   "th": {
+    "endmatch": "จบแมตช์",
+    "freeplay": "เล่นอิสระ",
     "golden": "โกลเดนพอยต์",
     "silver": "ซิลเวอร์พอยต์",
     "standard": "มาตรฐาน",
     "star": "สตาร์พอยต์"
   },
   "zh-CN": {
+    "endmatch": "结束比赛",
+    "freeplay": "自由模式",
     "golden": "黄金分",
     "silver": "白银分",
     "standard": "标准",
     "star": "星点"
   },
   "zh-TW": {
+    "endmatch": "結束比賽",
+    "freeplay": "自由模式",
     "golden": "黃金分",
     "silver": "白銀分",
     "standard": "標準",
