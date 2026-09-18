@@ -4,7 +4,7 @@
 // is path-scoped (chandigital.in/api/tabletennis/*) because the racket workers
 // share one zone, and the worker strips that prefix before routing - so call
 // sites keep using the plain "/api/..." paths and apiUrl() does the mapping.
-const API_BASE = "https://pingpong-unlock-worker.roxzone.workers.dev";
+const API_BASE = "https://chandigital.in";
 const API_PREFIX = "/api/tabletennis";
 
 function apiUrl(path) {
