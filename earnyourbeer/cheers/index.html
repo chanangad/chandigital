@@ -46,7 +46,7 @@
     <button class="mode" data-mode="card">Full card</button>
   </div>
   <div id="card" class="card-wrap checker" hidden>
-    <canvas id="sticker" width="1080" height="1080" aria-label="Earn Your Beer sticker"></canvas>
+    <canvas id="sticker" width="1080" height="800" aria-label="Earn Your Beer sticker"></canvas>
     <canvas id="canvas" width="1080" height="1920" aria-label="Earn Your Beer share card" hidden></canvas>
   </div>
   <div class="actions" id="actions" hidden>
@@ -54,7 +54,7 @@
     <button class="button button-secondary" id="share">Share</button>
   </div>
   <p class="status" id="status"></p>
-  <p class="hint" id="hint" hidden>The sticker is a transparent PNG. Download it, then in your Instagram story add it from your photos as a sticker and it sits see-through on top of your picture. The full card is a normal image: Share → Instagram → Story.</p>
+  <p class="hint" id="hint" hidden>The sticker is a transparent PNG made to sit on your own photo: download it, then in your Instagram story add it from your photos as a sticker and drag it where you like. The full card is a normal image: Share → Instagram → Story.</p>
 
   <div id="error" class="error" hidden>
     <strong>This link is missing its numbers.</strong><br>
@@ -272,31 +272,38 @@ function halfWidthAt(prof, yf, bw) {
   return prof[prof.length - 1][1] * half;
 }
 
-// Sticker: no background, just the vessel, the number and the rank, sized to
-// sit on someone's own story photo. Kept to the top 78% so the watermark can
-// be cropped away by anyone who wants to.
+// Sticker: a transparent overlay cropped to its content, for dropping onto
+// the wearer's own photo (same rules as the Roxzone stickers). Type is white
+// with a soft shadow, painted twice so the shadow is dense enough to hold
+// against a bright sky or a white wall; the vessel keeps its colours because
+// it is the brand, and gets the same shadow so it sits on the picture.
 function drawSticker(c, data) {
   const ctx = c.getContext("2d");
   const W = c.width, H = c.height;
   ctx.clearRect(0, 0, W, H);
   const liquid = data.reward ? REWARD_COLORS[data.reward] : STYLE_COLORS[data.style];
   const dark = ["#3b1f0e", "#2a1205", "#8b1a3a", "#5a3a22", "#c8301e"].includes(liquid);
-  // Soft dark plate behind the text so it survives a light photo.
-  ctx.fillStyle = "rgba(20,14,8,0.55)"; roundRect(ctx, 40, 40, W - 80, H - 200, 70); ctx.fill();
-  ctx.textAlign = "center"; ctx.fillStyle = "#f5b800"; ctx.font = "900 92px Inter, sans-serif";
-  fitText(ctx, RANKS[data.rank], W / 2, 170, W - 200);
-  drawVessel(ctx, data.reward, 110, 240, 330, 620, data.beers, liquid, dark);
-  const cx = 740;
-  ctx.textAlign = "center"; ctx.fillStyle = "#ffffff"; ctx.font = "900 260px Inter, sans-serif";
-  ctx.fillText(whole(data.beers), cx, 600);
-  ctx.fillStyle = "#fff4dc"; ctx.font = "700 54px Inter, sans-serif";
-  fitText(ctx, unitFor(data), cx, 690, 440);
-  ctx.fillStyle = "#c9b48a"; ctx.font = "500 40px Inter, sans-serif";
-  ctx.fillText("earned today", cx, 750);
-  ctx.fillStyle = "#8d7a56"; ctx.font = "500 34px Inter, sans-serif";
-  ctx.fillText(`${Math.round(data.kcal)} ${data.mode === 1 ? "kcal" : "active kcal"}`, cx, 810);
-  ctx.fillStyle = "#c9b48a"; ctx.font = "700 34px Inter, sans-serif";
-  ctx.fillText("Earn Your Beer for Garmin", W / 2, 960);
+  const shadow = () => { ctx.shadowColor = "rgba(0,0,0,0.55)"; ctx.shadowBlur = 26; ctx.shadowOffsetY = 6; };
+  ctx.save(); shadow();
+  drawVessel(ctx, data.reward, 60, 120, 330, 620, data.beers, liquid, dark);
+  ctx.restore();
+  const cx = 720;
+  const paint = () => {
+    ctx.save(); shadow();
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#ffffff"; ctx.font = "900 78px Inter, sans-serif";
+    fitText(ctx, RANKS[data.rank], cx, 190, 600);
+    ctx.font = "900 250px Inter, sans-serif";
+    ctx.fillText(whole(data.beers), cx, 470);
+    ctx.fillStyle = "rgba(255,255,255,0.92)"; ctx.font = "700 56px Inter, sans-serif";
+    fitText(ctx, unitFor(data), cx, 550, 600);
+    ctx.fillStyle = "rgba(255,255,255,0.78)"; ctx.font = "500 40px Inter, sans-serif";
+    ctx.fillText(`earned today · ${Math.round(data.kcal)} kcal`, cx, 615);
+    ctx.font = "700 32px Inter, sans-serif";
+    ctx.fillText("EARN YOUR BEER · GARMIN", cx, 700);
+    ctx.restore();
+  };
+  paint(); paint();
 }
 
 function stat(ctx, x, label, value) {
@@ -358,6 +365,9 @@ async function main() {
     document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("is-on", b.dataset.mode === m));
     save.href = URL.createObjectURL(blobs[m]); save.download = files[m].name;
     save.textContent = m === "sticker" ? "Download sticker" : "Download card";
+    // Stickers are download-only: the share sheet can hand a transparent PNG
+    // to an app that flattens the alpha onto black.
+    document.getElementById("share").hidden = m === "sticker";
   };
   document.querySelectorAll(".mode").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
   setMode("sticker");
