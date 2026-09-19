@@ -21,6 +21,10 @@
     .card-wrap { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); box-shadow: 0 20px 50px rgba(0,0,0,.5); }
     canvas { display: block; width: 100%; height: auto; }
     .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .modes { display: flex; gap: 6px; margin: 0 0 12px; padding: 4px; border-radius: 14px; background: #2b1f10; border: 1px solid var(--line); }
+    .mode { flex: 1; appearance: none; border: 0; border-radius: 10px; padding: 10px; font: inherit; font-weight: 700; color: var(--muted); background: transparent; cursor: pointer; }
+    .mode.is-on { background: var(--amber); color: #1a1000; }
+    .checker { background-color: #2a2018; background-image: linear-gradient(45deg, #332819 25%, transparent 25%), linear-gradient(-45deg, #332819 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #332819 75%), linear-gradient(-45deg, transparent 75%, #332819 75%); background-size: 28px 28px; background-position: 0 0, 0 14px, 14px -14px, -14px 0; }
     .button { appearance: none; border: 0; border-radius: 14px; padding: 15px 14px; font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; text-align: center; text-decoration: none; }
     .button-primary { background: var(--amber); color: #1a1000; grid-column: 1 / -1; }
     .button-secondary { background: #2b1f10; color: var(--text); border: 1px solid var(--line); }
@@ -37,16 +41,21 @@
   <p class="eyebrow">Earn Your Beer · share card</p>
   <h1 id="headline">Cheers!</h1>
 
-  <div id="card" class="card-wrap" hidden>
-    <canvas id="canvas" width="1080" height="1920" aria-label="Earn Your Beer share card"></canvas>
+  <div class="modes" id="modes" hidden>
+    <button class="mode is-on" data-mode="sticker">Sticker</button>
+    <button class="mode" data-mode="card">Full card</button>
+  </div>
+  <div id="card" class="card-wrap checker" hidden>
+    <canvas id="sticker" width="1080" height="1080" aria-label="Earn Your Beer sticker"></canvas>
+    <canvas id="canvas" width="1080" height="1920" aria-label="Earn Your Beer share card" hidden></canvas>
   </div>
   <div class="actions" id="actions" hidden>
     <button class="button button-primary" id="share">Share</button>
-    <a class="button button-secondary" id="save" download="earn-your-beer.png">Save image</a>
-    <a class="button button-secondary" href="../../">Chan Digital</a>
+    <button class="button button-secondary" id="copy">Copy</button>
+    <a class="button button-secondary" id="save" download="earn-your-beer-sticker.png">Save</a>
   </div>
   <p class="status" id="status"></p>
-  <p class="hint" id="hint" hidden>Tip: on iPhone, Share → Instagram → Story. On Android, Share → Instagram.</p>
+  <p class="hint" id="hint" hidden>Sticker: tap Copy, open your Instagram story, long-press and Paste. It lands as a see-through sticker you can move and resize. Full card: Share → Instagram → Story.</p>
 
   <div id="error" class="error" hidden>
     <strong>This link is missing its numbers.</strong><br>
@@ -264,6 +273,33 @@ function halfWidthAt(prof, yf, bw) {
   return prof[prof.length - 1][1] * half;
 }
 
+// Sticker: no background, just the vessel, the number and the rank, sized to
+// sit on someone's own story photo. Kept to the top 78% so the watermark can
+// be cropped away by anyone who wants to.
+function drawSticker(c, data) {
+  const ctx = c.getContext("2d");
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+  const liquid = data.reward ? REWARD_COLORS[data.reward] : STYLE_COLORS[data.style];
+  const dark = ["#3b1f0e", "#2a1205", "#8b1a3a", "#5a3a22", "#c8301e"].includes(liquid);
+  // Soft dark plate behind the text so it survives a light photo.
+  ctx.fillStyle = "rgba(20,14,8,0.55)"; roundRect(ctx, 40, 40, W - 80, H - 200, 70); ctx.fill();
+  ctx.textAlign = "center"; ctx.fillStyle = "#f5b800"; ctx.font = "900 92px Inter, sans-serif";
+  fitText(ctx, RANKS[data.rank], W / 2, 170, W - 200);
+  drawVessel(ctx, data.reward, 110, 240, 330, 620, data.beers, liquid, dark);
+  const cx = 740;
+  ctx.textAlign = "center"; ctx.fillStyle = "#ffffff"; ctx.font = "900 260px Inter, sans-serif";
+  ctx.fillText(whole(data.beers), cx, 600);
+  ctx.fillStyle = "#fff4dc"; ctx.font = "700 54px Inter, sans-serif";
+  fitText(ctx, unitFor(data), cx, 690, 440);
+  ctx.fillStyle = "#c9b48a"; ctx.font = "500 40px Inter, sans-serif";
+  ctx.fillText("earned today", cx, 750);
+  ctx.fillStyle = "#8d7a56"; ctx.font = "500 34px Inter, sans-serif";
+  ctx.fillText(`${Math.round(data.kcal)} ${data.mode === 1 ? "kcal" : "active kcal"}`, cx, 810);
+  ctx.fillStyle = "#c9b48a"; ctx.font = "700 34px Inter, sans-serif";
+  ctx.fillText("Earn Your Beer for Garmin", W / 2, 960);
+}
+
 function stat(ctx, x, label, value) {
   ctx.textAlign = "center";
   ctx.fillStyle = "#ffffff"; ctx.font = "900 74px Inter, sans-serif"; ctx.fillText(value, x, 1330);
@@ -296,23 +332,52 @@ async function main() {
   if (!data) { document.getElementById("error").hidden = false; return; }
   try { await document.fonts.load("900 100px Inter"); await document.fonts.load("700 40px Inter"); await document.fonts.load("500 40px Inter"); } catch (e) {}
   const c = document.getElementById("canvas");
+  const st = document.getElementById("sticker");
   drawCard(c, data);
+  drawSticker(st, data);
   document.getElementById("headline").textContent = `${whole(data.beers)} ${unitFor(data)} earned. ${RANKS[data.rank]}.`;
   document.getElementById("card").hidden = false;
   document.getElementById("actions").hidden = false;
   document.getElementById("hint").hidden = false;
+  document.getElementById("modes").hidden = false;
   document.title = `Earn Your Beer · ${whole(data.beers)} ${unitFor(data)} earned`;
 
-  const blob = await new Promise((res) => c.toBlob(res, "image/png"));
-  const file = new File([blob], "earn-your-beer.png", { type: "image/png" });
-  const url = URL.createObjectURL(blob);
-  document.getElementById("save").href = url;
+  const blobs = {
+    card: await new Promise((res) => c.toBlob(res, "image/png")),
+    sticker: await new Promise((res) => st.toBlob(res, "image/png"))
+  };
+  const files = {
+    card: new File([blobs.card], "earn-your-beer.png", { type: "image/png" }),
+    sticker: new File([blobs.sticker], "earn-your-beer-sticker.png", { type: "image/png" })
+  };
+  let mode = "sticker";
+  const save = document.getElementById("save");
+  const setMode = (m) => {
+    mode = m;
+    st.hidden = m !== "sticker"; c.hidden = m !== "card";
+    document.getElementById("card").classList.toggle("checker", m === "sticker");
+    document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("is-on", b.dataset.mode === m));
+    save.href = URL.createObjectURL(blobs[m]); save.download = files[m].name;
+  };
+  document.querySelectorAll(".mode").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  setMode("sticker");
   const status = document.getElementById("status");
   const shareBtn = document.getElementById("share");
-  const canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
+  const copyBtn = document.getElementById("copy");
+  const canShareFiles = navigator.canShare && navigator.canShare({ files: [files.card] });
   if (!navigator.share) { shareBtn.textContent = "Save image to share"; }
+  copyBtn.addEventListener("click", async () => {
+    try {
+      if (!navigator.clipboard || !window.ClipboardItem) throw new Error("no clipboard");
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": blobs[mode] })]);
+      status.textContent = mode === "sticker" ? "Copied. Open your story and paste." : "Copied.";
+    } catch (e) {
+      status.textContent = "Copy is not available here. Save the image instead.";
+    }
+  });
   shareBtn.addEventListener("click", async () => {
     try {
+      const file = files[mode];
       if (canShareFiles) {
         await navigator.share({ files: [file], title: "Earn Your Beer", text: `${whole(data.beers)} ${unitFor(data)} earned today. ${RANKS[data.rank]}. 🍺` });
       } else if (navigator.share) {
