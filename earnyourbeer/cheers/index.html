@@ -26,7 +26,7 @@
     .mode.is-on { background: var(--amber); color: #1a1000; }
     .checker { background-color: #2a2018; background-image: linear-gradient(45deg, #332819 25%, transparent 25%), linear-gradient(-45deg, #332819 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #332819 75%), linear-gradient(-45deg, transparent 75%, #332819 75%); background-size: 28px 28px; background-position: 0 0, 0 14px, 14px -14px, -14px 0; }
     .button { appearance: none; border: 0; border-radius: 14px; padding: 15px 14px; font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; text-align: center; text-decoration: none; }
-    .button-primary { background: var(--amber); color: #1a1000; grid-column: 1 / -1; }
+    .button-primary { background: var(--amber); color: #1a1000; }
     .button-secondary { background: #2b1f10; color: var(--text); border: 1px solid var(--line); }
     .hint { margin: 14px 0 0; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
     .status { margin: 10px 0 0; font-size: 0.85rem; color: var(--amber); min-height: 1.2em; }
@@ -50,12 +50,11 @@
     <canvas id="canvas" width="1080" height="1920" aria-label="Earn Your Beer share card" hidden></canvas>
   </div>
   <div class="actions" id="actions" hidden>
-    <button class="button button-primary" id="share">Share</button>
-    <button class="button button-secondary" id="copy">Copy</button>
-    <a class="button button-secondary" id="save" download="earn-your-beer-sticker.png">Save</a>
+    <a class="button button-primary" id="save" download="earn-your-beer-sticker.png">Download sticker</a>
+    <button class="button button-secondary" id="share">Share</button>
   </div>
   <p class="status" id="status"></p>
-  <p class="hint" id="hint" hidden>Sticker: tap Copy, open your Instagram story, long-press and Paste. It lands as a see-through sticker you can move and resize. Full card: Share → Instagram → Story.</p>
+  <p class="hint" id="hint" hidden>The sticker is a transparent PNG. Download it, then in your Instagram story add it from your photos as a sticker and it sits see-through on top of your picture. The full card is a normal image: Share → Instagram → Story.</p>
 
   <div id="error" class="error" hidden>
     <strong>This link is missing its numbers.</strong><br>
@@ -358,23 +357,12 @@ async function main() {
     document.getElementById("card").classList.toggle("checker", m === "sticker");
     document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("is-on", b.dataset.mode === m));
     save.href = URL.createObjectURL(blobs[m]); save.download = files[m].name;
+    save.textContent = m === "sticker" ? "Download sticker" : "Download card";
   };
   document.querySelectorAll(".mode").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
   setMode("sticker");
   const status = document.getElementById("status");
   const shareBtn = document.getElementById("share");
-  const copyBtn = document.getElementById("copy");
-  const canShareFiles = navigator.canShare && navigator.canShare({ files: [files.card] });
-  if (!navigator.share) { shareBtn.textContent = "Save image to share"; }
-  copyBtn.addEventListener("click", async () => {
-    try {
-      if (!navigator.clipboard || !window.ClipboardItem) throw new Error("no clipboard");
-      await navigator.clipboard.write([new ClipboardItem({ "image/png": blobs[mode] })]);
-      status.textContent = mode === "sticker" ? "Copied. Open your story and paste." : "Copied.";
-    } catch (e) {
-      status.textContent = "Copy is not available here. Save the image instead.";
-    }
-  });
   shareBtn.addEventListener("click", async () => {
     try {
       const file = files[mode];
