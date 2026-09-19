@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Personal share cards: never indexed. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#140e08">
+  <title>Earn Your Beer · Cheers!</title>
+  <link rel="icon" href="../../assets/cd-circle-v2.ico" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #140e08; --paper: #1f150b; --line: #3a2a14; --text: #fff4dc; --muted: #c9b48a; --amber: #f5b800; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 520px; margin: 0 auto; padding: 18px 16px 40px; }
+    .eyebrow { margin: 0 0 6px; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    h1 { margin: 0 0 14px; font-size: 1.35rem; font-weight: 900; }
+    .card-wrap { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+    canvas { display: block; width: 100%; height: auto; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .button { appearance: none; border: 0; border-radius: 14px; padding: 15px 14px; font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; text-align: center; text-decoration: none; }
+    .button-primary { background: var(--amber); color: #1a1000; grid-column: 1 / -1; }
+    .button-secondary { background: #2b1f10; color: var(--text); border: 1px solid var(--line); }
+    .hint { margin: 14px 0 0; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .status { margin: 10px 0 0; font-size: 0.85rem; color: var(--amber); min-height: 1.2em; }
+    .error { padding: 26px 20px; border-radius: 18px; border: 1px solid var(--line); background: var(--paper); line-height: 1.6; }
+    .foot { margin-top: 28px; font-size: 0.78rem; color: var(--muted); text-align: center; line-height: 1.6; }
+    .foot a { color: var(--amber); text-decoration: none; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Earn Your Beer · share card</p>
+  <h1 id="headline">Cheers!</h1>
+
+  <div id="card" class="card-wrap" hidden>
+    <canvas id="canvas" width="1080" height="1920" aria-label="Earn Your Beer share card"></canvas>
+  </div>
+  <div class="actions" id="actions" hidden>
+    <button class="button button-primary" id="share">Share</button>
+    <a class="button button-secondary" id="save" download="earn-your-beer.png">Save image</a>
+    <a class="button button-secondary" href="../../">Chan Digital</a>
+  </div>
+  <p class="status" id="status"></p>
+  <p class="hint" id="hint" hidden>Tip: on iPhone, Share → Instagram → Story. On Android, Share → Instagram.</p>
+
+  <div id="error" class="error" hidden>
+    <strong>This link is missing its numbers.</strong><br>
+    Open Earn Your Beer on your Garmin, press MENU and pick <em>Share card</em> to make a fresh one.
+  </div>
+
+  <p class="foot">For laughs. Drink responsibly.<br>
+    <a href="../../">chandigital.in</a> · a Garmin Connect IQ widget by Chan Digital</p>
+</main>
+
+<script>
+// ---------------------------------------------------------------------------
+// Decoder for the watch's share payload. Mirrors BeerShare.buildCode() in the
+// widget source (beer app/source/BeerShare.mc) — keep both in lockstep.
+//   1_ts_beersX10_kcal_style_reward_rank_weekX10_lifetimeX10_badges_mode
+// ---------------------------------------------------------------------------
+const STYLES = ["Lager", "Light lager", "Wheat beer", "Pale ale", "IPA", "Stout / Porter", "Imperial / Double IPA", "Non-alcoholic", "Custom"];
+const STYLE_KCAL = [150, 100, 160, 175, 200, 210, 300, 70, 0];
+const REWARDS = ["Beer", "Red wine", "White wine", "Champagne", "Aperol spritz", "Negroni", "Espresso martini", "Croissant", "Truffle fries"];
+const REWARD_UNITS = ["beers", "glasses of red", "glasses of white", "flutes of champagne", "Aperol spritzes", "negronis", "espresso martinis", "croissants", "portions of truffle fries"];
+const REWARD_KCAL = [0, 125, 120, 90, 170, 200, 240, 300, 420];
+const RANKS = ["Designated Driver", "Half Pint", "One and Done", "Two-fer", "Session Pace", "Round's On You", "Six-Pack Hero", "Oktoberfest", "Kegend"];
+const BADGES = [[1, "Six-Pack"], [2, "Case"], [4, "Keg"], [8, "Early Bird"], [16, "Happy Hour"], [32, "Seven-Day Session"]];
+// Liquid colour per style, then per reward (index 1..7).
+const STYLE_COLORS = ["#f5b800", "#ffe066", "#f0c040", "#e08a00", "#d97a00", "#3b1f0e", "#2a1205", "#f5c542", "#f5b800"];
+const REWARD_COLORS = ["#f5b800", "#8b1a3a", "#f3e5a0", "#f2dc9b", "#ff7a1a", "#c8301e", "#5a3a22", "#e0a23a", "#f5c542"];
+
+function decode(d) {
+  if (!d) return null;
+  const p = String(d).split("_");
+  if (p.length < 11 || p[0] !== "1") return null;
+  const n = p.slice(1).map((x) => Number(x));
+  if (n.some((x) => !Number.isFinite(x) || x < 0)) return null;
+  const [ts, beersX10, kcal, style, reward, rank, weekX10, lifetimeX10, badges, mode] = n;
+  return {
+    ts, beers: beersX10 / 10, kcal, style: Math.min(style, 8), reward: Math.min(reward, 8),
+    rank: Math.min(rank, 8), week: weekX10 / 10, lifetime: lifetimeX10 / 10, badges, mode: mode === 1 ? 1 : 0
+  };
+}
+
+function fmt(x) { return (Math.round(x * 10) / 10).toFixed(1); }
+function whole(x) { return String(Math.floor(x)); }
+function unitFor(data) { return (data.reward === 0 && Math.floor(data.beers) === 1) ? "beer" : REWARD_UNITS[data.reward]; }
+
+function drawCard(c, data) {
+  const ctx = c.getContext("2d");
+  const W = c.width, H = c.height;
+  const liquid = data.reward ? REWARD_COLORS[data.reward] : STYLE_COLORS[data.style];
+  const dark = ["#3b1f0e", "#2a1205", "#8b1a3a", "#5a3a22", "#c8301e"].includes(liquid);
+
+  // Background: warm dark gradient with a soft glow behind the glass.
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, "#1c130a"); g.addColorStop(1, "#0d0905");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const glow = ctx.createRadialGradient(W / 2, H * 0.5, 40, W / 2, H * 0.5, 620);
+  glow.addColorStop(0, "rgba(245,184,0,0.22)"); glow.addColorStop(1, "rgba(245,184,0,0)");
+  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+
+  ctx.textAlign = "center"; ctx.fillStyle = "#c9b48a";
+  ctx.font = "700 44px Inter, sans-serif"; ctx.letterSpacing = "8px";
+  ctx.fillText("EARN YOUR BEER", W / 2, 150);
+  ctx.letterSpacing = "0px";
+
+  // Rank title.
+  ctx.fillStyle = "#f5b800"; ctx.font = "900 92px Inter, sans-serif";
+  fitText(ctx, RANKS[data.rank], W / 2, 290, W - 140);
+
+  // The vessel, mirrored from Vessel.mc on the watch (same profiles).
+  drawVessel(ctx, data.reward, 230, 400, 340, 660, data.beers, liquid, dark);
+
+  // Big number and unit, right of the glass.
+  const cx = 800;
+  ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
+  ctx.font = "900 190px Inter, sans-serif";
+  ctx.fillText(whole(data.beers), cx, 720);
+  ctx.fillStyle = "#c9b48a"; ctx.font = "700 46px Inter, sans-serif";
+  fitText(ctx, unitFor(data), cx, 800, 420);
+  ctx.font = "500 40px Inter, sans-serif";
+  ctx.fillText("earned today", cx, 860);
+  ctx.fillStyle = "#8d7a56"; ctx.font = "500 36px Inter, sans-serif";
+  ctx.fillText(`${Math.round(data.kcal)} ${data.mode === 1 ? "kcal" : "active kcal"}`, cx, 930);
+
+  // Serve line.
+  const serve = data.reward ? `${REWARDS[data.reward]} · ${REWARD_KCAL[data.reward]} kcal`
+    : (data.style === 8 ? "Custom brew" : `${STYLES[data.style]} · ${STYLE_KCAL[data.style]} kcal per pint`);
+  ctx.fillStyle = "#c9b48a"; ctx.font = "500 40px Inter, sans-serif";
+  ctx.fillText(serve, W / 2, 1150);
+
+  // Tabs.
+  ctx.fillStyle = "rgba(255,255,255,0.05)"; roundRect(ctx, 90, 1220, W - 180, 190, 32); ctx.fill();
+  stat(ctx, 300, "This week", fmt(data.week));
+  stat(ctx, W / 2, "Lifetime", fmt(data.lifetime));
+  stat(ctx, W - 300, "Rank", `${data.rank + 1}/9`);
+
+  // Badges.
+  const earned = BADGES.filter(([bit]) => data.badges & bit).map(([, name]) => name);
+  ctx.fillStyle = "#c9b48a"; ctx.font = "700 34px Inter, sans-serif";
+  ctx.fillText(earned.length ? "BADGES" : "NO BADGES YET", W / 2, 1500);
+  ctx.fillStyle = "#f5b800"; ctx.font = "700 42px Inter, sans-serif";
+  wrapText(ctx, earned.length ? earned.join("  ·  ") : "Six-pack is 6 beers in a day. Get after it.", W / 2, 1560, W - 160, 56);
+
+  // Watermark.
+  ctx.fillStyle = "#8d7a56"; ctx.font = "500 34px Inter, sans-serif";
+  ctx.fillText("For laughs. Drink responsibly.", W / 2, 1780);
+  ctx.fillStyle = "#c9b48a"; ctx.font = "700 36px Inter, sans-serif";
+  ctx.fillText("Earn Your Beer for Garmin · chandigital.in", W / 2, 1840);
+}
+
+
+// ---------------------------------------------------------------------------
+// Vessels: same lathe profiles as the watch (beer app/source/Vessel.mc), so
+// the card shows the glass the wearer actually has on the wrist.
+// ---------------------------------------------------------------------------
+const PROFILES = {
+  1: [[0.00, 0.66], [0.05, 0.75], [0.12, 0.82], [0.22, 0.86], [0.32, 0.85], [0.42, 0.76], [0.50, 0.58], [0.56, 0.34], [0.60, 0.12]],
+  2: [[0.00, 0.58], [0.05, 0.66], [0.12, 0.72], [0.22, 0.73], [0.30, 0.68], [0.38, 0.56], [0.45, 0.36], [0.50, 0.12]],
+  3: [[0.00, 0.58], [0.04, 0.64], [0.10, 0.70], [0.30, 0.72], [0.46, 0.68], [0.55, 0.52], [0.61, 0.30], [0.64, 0.14]],
+  4: [[0.00, 0.70], [0.05, 0.80], [0.14, 0.88], [0.26, 0.90], [0.38, 0.84], [0.48, 0.66], [0.55, 0.36], [0.60, 0.12]],
+  5: [[0.10, 0.86], [0.98, 0.78]],
+  6: [[0.00, 0.98], [0.54, 0.06]]
+};
+const FULL_LINE = { 1: 0.18, 2: 0.14, 3: 0.08, 4: 0.14, 5: 0.34, 6: 0.07 };
+const EMPTY_LINE = { 1: 0.55, 2: 0.45, 3: 0.60, 4: 0.53, 6: 0.50 };
+const WIDTH_FRAC = [0.24, 0.32, 0.26, 0.20, 0.34, 0.30, 0.34, 0.40, 0.30];
+
+function profilePath(prof, cx, by, bw, bh, inset) {
+  const p = new Path2D();
+  prof.forEach(([yf, hf], i) => { const y = by + bh * yf + (i === 0 ? inset : 0); const hw = Math.max(1, hf * bw / 2 - inset); i ? p.lineTo(cx - hw, y) : p.moveTo(cx - hw, y); });
+  for (let i = prof.length - 1; i >= 0; i--) { const [yf, hf] = prof[i]; const y = by + bh * yf + (i === 0 ? inset : 0); const hw = Math.max(1, hf * bw / 2 - inset); p.lineTo(cx + hw, y); }
+  p.closePath(); return p;
+}
+function circle(ctx, x, y, r, fill) { ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+function ring(ctx, x, y, r, stroke, w) { ctx.strokeStyle = stroke; ctx.lineWidth = w; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke(); }
+function citrus(ctx, x, y, r, rind, flesh) {
+  circle(ctx, x, y, r, rind); circle(ctx, x, y, r - 4, flesh); ctx.strokeStyle = rind; ctx.lineWidth = 2; const d = r * 0.7;
+  ctx.beginPath(); ctx.moveTo(x - r, y); ctx.lineTo(x + r, y); ctx.moveTo(x, y - r); ctx.lineTo(x, y + r); ctx.moveTo(x - d, y - d); ctx.lineTo(x + d, y + d); ctx.moveTo(x - d, y + d); ctx.lineTo(x + d, y - d); ctx.stroke();
+}
+
+function drawVessel(ctx, kind, bx, by, boxW, bh, beers, liquid, dark) {
+  // The card shows the completed item: 2.5 beers is "2 beers" and a full
+  // glass. Under one, the partial pour is shown so the card is never empty.
+  const frac = beers >= 1 ? 1 : Math.min(1, Math.max(0, beers));
+  const bw = boxW * WIDTH_FRAC[kind] / WIDTH_FRAC[0] * 0.9;
+  bx = bx + (boxW - bw) / 2;
+  const cx = bx + bw / 2;
+  const GLASS = "#e9dcc0";
+  ctx.save(); ctx.lineJoin = "round"; ctx.lineCap = "round";
+  if (kind === 0) {
+    const r = bw * 0.12, inset = 8, innerH = bh - inset * 2, lh = frac > 0 ? Math.max(r, innerH * frac) : 0, lt = by + inset + innerH - lh;
+    if (lh > 0) {
+      ctx.fillStyle = liquid; roundRect(ctx, bx + inset, lt, bw - inset * 2, lh, r); ctx.fill();
+      ctx.fillStyle = dark ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.55)";
+      [[0.25, 0.85, 9], [0.55, 0.6, 11], [0.75, 0.35, 8], [0.4, 0.2, 12], [0.65, 0.78, 7]].forEach(([x, y, br]) => { const yy = lt + lh * y; if (yy > lt + br + 4 && yy < lt + lh - br) circle(ctx, bx + inset + (bw - inset * 2) * x, yy, br, ctx.fillStyle); });
+      const foamH = bh * 0.07; ctx.fillStyle = "#fffaf0"; roundRect(ctx, bx - 4, lt - foamH / 2, bw + 8, foamH, foamH / 2); ctx.fill();
+      circle(ctx, bx + bw * 0.25, lt - foamH * 0.75, foamH / 2, "#fffaf0"); circle(ctx, bx + bw * 0.72, lt - foamH * 0.65, foamH * 0.4, "#fffaf0");
+    }
+    const hr = bh * 0.20, hpen = bw * 0.13, hcx = bx + 2, hcy = by + bh * 0.44;
+    ctx.strokeStyle = GLASS; ctx.lineWidth = hpen; ctx.beginPath(); ctx.arc(hcx, hcy, hr, Math.PI / 2, Math.PI * 1.5); ctx.stroke();
+    ctx.strokeStyle = "#1c130a"; ctx.lineWidth = hpen - 12; ctx.beginPath(); ctx.arc(hcx, hcy, hr, Math.PI / 2, Math.PI * 1.5); ctx.stroke();
+    ctx.lineWidth = 8; ctx.strokeStyle = GLASS; roundRect(ctx, bx, by, bw, bh, r); ctx.stroke();
+  } else if (kind === 5) {
+    const prof = PROFILES[5], glassTop = by + bh * 0.10, glassBottom = by + bh * 0.98, slabH = bh * 0.07, fullLine = by + bh * 0.34, liquidBottom = glassBottom - slabH;
+    const lt = fullLine + (liquidBottom - fullLine) * (1 - frac);
+    if (frac > 0.01) {
+      ctx.save(); ctx.beginPath(); ctx.rect(bx - 10, lt, bw + 20, liquidBottom - lt + 2); ctx.clip(); ctx.fillStyle = liquid; ctx.fill(profilePath(prof, cx, by, bw, bh, 5)); ctx.restore();
+      let cube = bw * 0.42, cubeTop = Math.max(glassTop + 4, lt - bh * 0.05); if (cubeTop + cube > liquidBottom - 4) cube = liquidBottom - 4 - cubeTop;
+      if (cube > 8) { ctx.strokeStyle = "#ffe6e0"; ctx.lineWidth = 5; roundRect(ctx, cx - cube / 2 + 6, cubeTop, cube, cube, 8); ctx.stroke(); }
+    }
+    const slabHalf = prof[1][1] * bw / 2; ctx.fillStyle = GLASS; ctx.fillRect(cx - slabHalf, glassBottom - slabH, slabHalf * 2, slabH);
+    ctx.lineWidth = 6; ctx.strokeStyle = GLASS; ctx.stroke(profilePath(prof, cx, by, bw, bh, 0));
+    const rim = prof[0][1] * bw / 2, tx = cx + rim - bw * 0.12, tr = bw * 0.10; ctx.strokeStyle = "#ff8c1a"; ctx.lineWidth = 7;
+    ctx.beginPath(); ctx.arc(tx, glassTop - tr, tr, Math.PI * 0.1, Math.PI * 1.1); ctx.stroke(); ctx.beginPath(); ctx.arc(tx + tr, glassTop - 2 * tr, tr, Math.PI * 1.1, Math.PI * 2.1); ctx.stroke();
+  } else if (kind === 7) {
+    const cy = by + bh * 0.98, R = bw * 0.40, lobes = [];
+    for (let i = 0; i <= 10; i++) { const a = (200 + 14 * i) * Math.PI / 180, t = Math.abs(i - 5) / 5; lobes.push([cx + Math.cos(a) * R, cy + Math.sin(a) * R * 1.05, bw * (0.16 - 0.10 * t * t)]); }
+    lobes.forEach(([x, y, r]) => ring(ctx, x, y, r, GLASS, 4)); lobes.forEach(([x, y, r]) => circle(ctx, x, y, r - 4, "#1c130a"));
+    if (frac > 0.01) {
+      ctx.save(); ctx.beginPath(); ctx.rect(bx - 10, by - 10, Math.max(4, bw * frac) + 10, bh + 20); ctx.clip();
+      lobes.forEach(([x, y, r]) => circle(ctx, x, y, r, "#e0a23a"));
+      lobes.filter((_, i) => i % 2 === 1).forEach(([x, y, r]) => ring(ctx, x, y, r, "#b8752a", 4));
+      lobes.filter((_, i) => i % 2 === 1).forEach(([x, y, r]) => circle(ctx, x, y, r - 4, "#e0a23a"));
+      [3, 5, 7].forEach((i) => { const [x, y, r] = lobes[i]; circle(ctx, x, y - r / 3 - 2, r / 3, "#f6d28a"); }); ctx.restore();
+    }
+  } else if (kind === 8) {
+    const cupTop = by + bh * 0.50, cupBottom = by + bh * 0.98, topHalf = bw * 0.42, botHalf = bw * 0.30, count = frac > 0 ? Math.max(1, Math.round(frac * 9)) : 0, fryW = bw * 0.075;
+    const slots = [[0.0, 0.50], [-0.45, 0.42], [0.45, 0.40], [-0.22, 0.46], [0.22, 0.44], [-0.68, 0.34], [0.68, 0.36], [-0.10, 0.38], [0.34, 0.32]];
+    for (let i = 0; i < Math.min(count, 9); i++) { const x = cx + topHalf * slots[i][0] - fryW / 2, hgt = bh * slots[i][1], top = cupTop - hgt + bh * 0.06; ctx.fillStyle = "#f5c542"; roundRect(ctx, x, top, fryW, hgt, 4); ctx.fill(); ctx.strokeStyle = "#d99a1e"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x + fryW - 2, top + 4); ctx.lineTo(x + fryW - 2, top + hgt - 4); ctx.stroke(); }
+    if (frac > 0.85) [[-topHalf / 3, 0.30], [topHalf / 4, 0.22], [2, 0.36]].forEach(([dx, dy]) => circle(ctx, cx + dx, cupTop - bh * dy, 5, "#3b2a1a"));
+    if (frac > 0.95) [[-topHalf / 2, 0.16], [topHalf / 2, 0.28]].forEach(([dx, dy]) => circle(ctx, cx + dx, cupTop - bh * dy, 5, "#5fbf5f"));
+    ctx.fillStyle = "#c9a27a"; ctx.beginPath(); ctx.moveTo(cx - topHalf, cupTop); ctx.lineTo(cx + topHalf, cupTop); ctx.lineTo(cx + botHalf, cupBottom); ctx.lineTo(cx - botHalf, cupBottom); ctx.closePath(); ctx.fill(); ctx.strokeStyle = "#8f6b45"; ctx.lineWidth = 5; ctx.stroke();
+    ctx.fillStyle = "#2b1d12"; roundRect(ctx, cx - bw * 0.15, cupTop + bh * 0.16, bw * 0.30, bh * 0.09, 4); ctx.fill();
+  } else {
+    const prof = PROFILES[kind] || PROFILES[1], stemTop = by + bh * prof[prof.length - 1][0], bowlBottom = by + bh * (EMPTY_LINE[kind] || 1), fullLine = by + bh * (FULL_LINE[kind] || 0);
+    const lt = fullLine + (bowlBottom - fullLine) * (1 - frac), lh = bowlBottom - lt;
+    const baseY = by + bh * 0.95, baseHalf = bw * (kind === 3 ? 0.28 : kind === 4 ? 0.32 : kind === 6 ? 0.36 : 0.30);
+    ctx.strokeStyle = GLASS; ctx.lineWidth = Math.max(8, bw * 0.07); ctx.beginPath(); ctx.moveTo(cx, stemTop); ctx.lineTo(cx, baseY); ctx.stroke();
+    ctx.fillStyle = GLASS; roundRect(ctx, cx - baseHalf, baseY - 6, baseHalf * 2, 12, 6); ctx.fill();
+    if (frac > 0.01 && lh > 2) {
+      ctx.save(); ctx.beginPath(); ctx.rect(bx - 10, lt, bw + 20, lh + 4); ctx.clip();
+      const inner = profilePath(prof, cx, by, bw, bh, 5); ctx.fillStyle = liquid; ctx.fill(inner);
+      if (kind === 3) { [[0.3, 0.9], [0.6, 0.65], [0.45, 0.4], [0.7, 0.2], [0.35, 0.15], [0.55, 0.8]].forEach(([x, y]) => { const yy = lt + lh * y, hw = halfWidthAt(prof, (yy - by) / bh, bw) - 12; if (hw > 2 && yy > lt + 8 && yy < bowlBottom - 8) circle(ctx, cx + (x * 2 - 1) * hw, yy, 5, "rgba(255,255,255,0.6)"); }); }
+      if (kind === 4 && lh > bw * 0.16 * 1.8) { const cube = bw * 0.16; ctx.strokeStyle = "#ffe0c0"; ctx.lineWidth = 4; roundRect(ctx, cx - cube - 4, lt + 6, cube, cube, 5); ctx.stroke(); roundRect(ctx, cx + 6, lt + cube * 0.55, cube, cube, 5); ctx.stroke(); }
+      if (kind === 6) { const cremaH = bh * 0.05; ctx.save(); ctx.beginPath(); ctx.rect(bx - 10, lt, bw + 20, cremaH); ctx.clip(); ctx.fillStyle = "#c8a165"; ctx.fill(inner); ctx.restore(); [-3, 0, 3].forEach((k, i) => circle(ctx, cx + k * 9, lt + cremaH / 2 - (i === 1 ? 2 : 0), 8, "#3b1f0e")); }
+      ctx.restore();
+    }
+    ctx.lineWidth = 6; ctx.strokeStyle = GLASS; ctx.stroke(profilePath(prof, cx, by, bw, bh, 0));
+    if (kind === 4) { const rim = prof[0][1] * bw / 2; citrus(ctx, cx + rim - bw * 0.05, by, bw * 0.11, "#ff8c1a", "#ffc27a"); }
+  }
+  ctx.restore();
+}
+
+function halfWidthAt(prof, yf, bw) {
+  const half = bw / 2; if (yf <= prof[0][0]) return prof[0][1] * half;
+  for (let i = 1; i < prof.length; i++) { const [y0, h0] = prof[i - 1], [y1, h1] = prof[i]; if (yf <= y1) { const t = (yf - y0) / (y1 - y0); return (h0 + (h1 - h0) * t) * half; } }
+  return prof[prof.length - 1][1] * half;
+}
+
+function stat(ctx, x, label, value) {
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#ffffff"; ctx.font = "900 74px Inter, sans-serif"; ctx.fillText(value, x, 1330);
+  ctx.fillStyle = "#c9b48a"; ctx.font = "500 32px Inter, sans-serif"; ctx.fillText(label, x, 1380);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+
+function fitText(ctx, text, x, y, maxW) {
+  const m = ctx.font.match(/(\d+)px/); let size = m ? Number(m[1]) : 40;
+  while (ctx.measureText(text).width > maxW && size > 20) { size -= 4; ctx.font = ctx.font.replace(/\d+px/, `${size}px`); }
+  ctx.fillText(text, x, y);
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(" "); let line = "";
+  for (const w of words) {
+    const test = line ? `${line} ${w}` : w;
+    if (ctx.measureText(test).width > maxW && line) { ctx.fillText(line, x, y); line = w; y += lineH; } else { line = test; }
+  }
+  if (line) ctx.fillText(line, x, y);
+}
+
+async function main() {
+  const params = new URLSearchParams(location.search);
+  const data = decode(params.get("d"));
+  if (!data) { document.getElementById("error").hidden = false; return; }
+  try { await document.fonts.load("900 100px Inter"); await document.fonts.load("700 40px Inter"); await document.fonts.load("500 40px Inter"); } catch (e) {}
+  const c = document.getElementById("canvas");
+  drawCard(c, data);
+  document.getElementById("headline").textContent = `${whole(data.beers)} ${unitFor(data)} earned. ${RANKS[data.rank]}.`;
+  document.getElementById("card").hidden = false;
+  document.getElementById("actions").hidden = false;
+  document.getElementById("hint").hidden = false;
+  document.title = `Earn Your Beer · ${whole(data.beers)} ${unitFor(data)} earned`;
+
+  const blob = await new Promise((res) => c.toBlob(res, "image/png"));
+  const file = new File([blob], "earn-your-beer.png", { type: "image/png" });
+  const url = URL.createObjectURL(blob);
+  document.getElementById("save").href = url;
+  const status = document.getElementById("status");
+  const shareBtn = document.getElementById("share");
+  const canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
+  if (!navigator.share) { shareBtn.textContent = "Save image to share"; }
+  shareBtn.addEventListener("click", async () => {
+    try {
+      if (canShareFiles) {
+        await navigator.share({ files: [file], title: "Earn Your Beer", text: `${whole(data.beers)} ${unitFor(data)} earned today. ${RANKS[data.rank]}. 🍺` });
+      } else if (navigator.share) {
+        await navigator.share({ title: "Earn Your Beer", text: `${whole(data.beers)} ${unitFor(data)} earned today. ${RANKS[data.rank]}. 🍺`, url: location.href });
+      } else {
+        document.getElementById("save").click();
+      }
+      status.textContent = "";
+    } catch (e) {
+      if (e && e.name !== "AbortError") { status.textContent = "Sharing was blocked here — use Save image instead."; }
+    }
+  });
+}
+main();
+</script>
+</body>
+</html>
