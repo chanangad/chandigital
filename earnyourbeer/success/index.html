@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <title>Tennis Go Purchase Complete</title>
-  <link rel="canonical" href="https://chandigital.in/tennis/">
+  <title>Earn Your Beer Purchase Complete</title>
+  <link rel="canonical" href="https://chandigital.in/earnyourbeer/">
   <link rel="icon" href="../../assets/cd-circle-v2.ico" sizes="32x32">
   <link rel="icon" href="../../assets/cd-circle-v2.svg" type="image/svg+xml">
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/cd-circle-v2-32.png">
@@ -44,19 +44,6 @@
     }
     .success-status--ok   { border-color: #b7e0c5; background: #f0faf4; color: #1a7a3c; }
     .success-status--warn { border-color: #f5c0bc; background: #fdf4f3; color: #c0392b; }
-      .success-follow {
-      margin-top: 28px;
-      padding-top: 22px;
-      border-top: 1px solid var(--line);
-    }
-    .success-follow p { margin: 0 0 12px; font-size: 0.92rem; }
-    .success-follow a.ig {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-weight: 600; color: var(--ink); text-decoration: none;
-      padding: 9px 14px; border: 1px solid var(--line); border-radius: var(--radius-pill); background: var(--surface);
-    }
-    .success-follow a.ig:hover { border-color: var(--ink); }
-    .success-follow a.ig svg { width: 16px; height: 16px; }
   </style>
 </head>
 <body>
@@ -71,14 +58,14 @@
       <span>Chan Digital</span>
     </a>
     <nav class="site-nav" aria-label="Page navigation">
-      <a href="../">Tennis Go</a>
+      <a href="../">Earn Your Beer</a>
       <div class="lang-picker" data-lang-picker></div>
     </nav>
   </header>
 
     <nav class="nav-drawer" id="nav-drawer" hidden aria-label="Menu">
       <a href="../../">Chan Digital</a>
-      <a href="../">Tennis Go</a>
+      <a href="../">Earn Your Beer</a>
     </nav>
 
   <main class="success-shell">
@@ -87,11 +74,7 @@
       <h1 id="success-title">Finalizing payment…</h1>
       <p id="success-copy">Confirming your payment with our servers. Please keep this page open for a moment.</p>
       <div id="success-status" class="success-status">Finalizing checkout…</div>
-      <a class="button button-primary" href="../" style="display:inline-flex;">Back to Tennis Go</a>
-      <div id="success-follow" class="success-follow" hidden>
-        <p>Loving Tennis Go? Follow us on Instagram and tell a friend - word of mouth is what keeps a one-person studio going.</p>
-        <a class="ig" href="https://www.instagram.com/chandigital.in/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>@chandigital.in</a>
-      </div>
+      <a class="button button-primary" href="../" style="display:inline-flex;">Back to Earn Your Beer</a>
     </div>
   </main>
 
@@ -99,7 +82,7 @@
     <p>&copy; 2026 Chan Digital. All rights reserved.</p>
     <div class="footer-links">
       <a href="../../">Chan Digital</a>
-      <a href="../privacy/">Privacy</a>
+      <a href="../../privacy/">Privacy</a>
       <a href="../../terms/">Terms</a>
       <a href="../../refund/">Refund</a>
     </div>
@@ -126,15 +109,14 @@
       titleEl.textContent = title;
       copyEl.innerHTML = copy;
       statusEl.textContent = status;
-      statusEl.className = "success-status" + (kind ? " success-status--" + kind : "");      var followEl = document.getElementById("success-follow");
-      if (followEl) followEl.hidden = kind !== "ok";
+      statusEl.className = "success-status" + (kind ? " success-status--" + kind : "");
     }
 
     // Auto-unlock: a current build polls while the unlock menu is open and
     // lets itself in. Older builds still need the one manual tap, so both
     // paths are described.
-    const PAID_COPY = "Open Tennis Go on your watch with your phone nearby - it unlocks itself within a few seconds. On older versions, choose <strong>Refresh License</strong> once.";
-    const NOT_CHARGED_COPY = "We couldn't complete your payment - <strong>you have not been charged</strong>. Return to the store to try again, or email <button type=\"button\" class=\"copy-email-inline copy-email-btn\" data-email=\"contact@chandigital.in\" data-label=\"contact@chandigital.in\">contact@chandigital.in</button>.";
+    const PAID_COPY = "Open Earn Your Beer on your watch with your phone nearby - it unlocks itself within a few seconds. On older versions, choose <strong>Refresh License</strong> once.";
+    const NOT_CHARGED_COPY = "We couldn't complete your payment - <strong>you have not been charged</strong>. Return to the store to try again, or email <button type=\"button\" class=\"copy-email-inline copy-email-btn\" data-email=\"chanangadhere@gmail.com\" data-label=\"chanangadhere@gmail.com\">chanangadhere@gmail.com</button>.";
 
     async function pollPaid(code) {
       for (let i = 0; i < 10; i++) {
@@ -179,7 +161,7 @@
         return;
       }
       setMessage("Status unknown", "Nothing to confirm here",
-        "This page works best when opened after a checkout redirect. Visit the <a href=\"../\">Tennis Go store</a> to purchase.",
+        "This page works best when opened after a checkout redirect. Visit the <a href=\"../\">Earn Your Beer store</a> to purchase.",
         "No payment reference found in the URL.", "warn");
     }
 
