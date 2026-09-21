@@ -168,6 +168,9 @@ async function drawSticker(c, data) {
     ctx.font = "700 44px Goldman, sans-serif"; ctx.fillText(v, x, sy + sh * 0.46);
     ctx.font = "400 26px Goldman, sans-serif"; ctx.fillText(l, x, sy + sh * 0.82);
   });
+  // Watermark under the strip: the sticker travels, the name goes with it.
+  ctx.fillStyle = MOCK_GOLD; ctx.font = "700 26px Goldman, sans-serif";
+  ctx.fillText("EARN YOUR BEER · GARMIN", W / 2, sy + sh + 52);
   ctx.restore();
 }
 
