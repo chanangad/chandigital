@@ -168,6 +168,32 @@
       display: block;
     } 
     /* Padel Go-specific additions - unlock form, feature grid, tabs */
+    .rp-spotlight {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      padding: 40px;
+      margin-bottom: 96px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+    .rp-spotlight h2 { margin: 6px 0 12px; }
+    .rp-spotlight p { margin: 0; color: var(--muted); line-height: 1.6; max-width: 46ch; }
+    .rp-spotlight-points { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+    .rp-spotlight-points li {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--bg, transparent);
+    }
+    .rp-spotlight-points strong { display: block; margin-bottom: 4px; letter-spacing: -0.01em; color: var(--ink); }
+    .rp-spotlight-points span { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+    .rp-spotlight .rp-cta-group { margin-top: 20px; }
+    @media (max-width: 860px) {
+      .rp-spotlight { grid-template-columns: 1fr; padding: 28px 22px; gap: 24px; }
+    }
     .rp-features {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -617,6 +643,34 @@
         <span>One-time purchase</span>
       </div>
     </div>
+
+    <!-- Americano spotlight -->
+    <section class="section rp-spotlight" id="americano">
+      <div>
+        <p class="eyebrow">New in 1.3.13</p>
+        <h2>Americano and Mexicano, scored on your wrist</h2>
+        <p>
+          Pick the <span class="notranslate" translate="no" data-mode-name="americano">Americano</span> format and the watch counts rallies 1, 2, 3 - no games, no sets. Set the <span class="notranslate" translate="no" data-mode-name="pointsperround">Points per round</span> and each round ends itself at the agreed total, ready for the next pairing.
+        </p>
+        <div class="rp-cta-group">
+          <a class="button button-primary" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noreferrer">Get Padel Go on Connect IQ</a>
+        </div>
+      </div>
+      <ul class="rp-spotlight-points">
+        <li>
+          <strong>Points per round, your club's way</strong>
+          <span>24, 32, or any total up to 99 on a quick wheel picker - a 24-point round can finish 15-9, and a level finish is a tie, exactly as the organiser scores it.</span>
+        </li>
+        <li>
+          <strong>Every round in one activity</strong>
+          <span>Next Match rolls straight into the next round. The summary lists Round 1, Round 2, Round 3 with each score, and the totals land in Garmin Connect.</span>
+        </li>
+        <li>
+          <strong>Timed rounds too</strong>
+          <span>Playing by the clock instead? <span class="notranslate" translate="no" data-mode-name="freeplay">Free Play</span> counts games with no set to finish, and <span class="notranslate" translate="no" data-mode-name="endmatch">End Match</span> closes the round at any score when the horn goes.</span>
+        </li>
+      </ul>
+    </section>
 
     <!-- Features -->
     <section class="section" id="features">
