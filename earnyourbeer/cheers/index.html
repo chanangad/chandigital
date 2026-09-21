@@ -20,7 +20,7 @@
     h1 { margin: 0 0 14px; font-size: 1.35rem; font-weight: 900; }
     .card-wrap { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--paper); box-shadow: 0 20px 50px rgba(0,0,0,.5); }
     canvas { display: block; width: 100%; height: auto; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .actions { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
     .modes { display: flex; gap: 6px; margin: 0 0 12px; padding: 4px; border-radius: 14px; background: #2b1f10; border: 1px solid var(--line); }
     .mode { flex: 1; appearance: none; border: 0; border-radius: 10px; padding: 10px; font: inherit; font-weight: 700; color: var(--muted); background: transparent; cursor: pointer; }
     .mode.is-on { background: var(--amber); color: #1a1000; }
@@ -41,20 +41,14 @@
   <p class="eyebrow">Earn Your Beer · share card</p>
   <h1 id="headline">Cheers!</h1>
 
-  <div class="modes" id="modes" hidden>
-    <button class="mode is-on" data-mode="sticker">Sticker</button>
-    <button class="mode" data-mode="card">Full card</button>
-  </div>
   <div id="card" class="card-wrap checker" hidden>
     <canvas id="sticker" width="1080" height="1080" aria-label="Earn Your Beer sticker"></canvas>
-    <canvas id="canvas" width="1080" height="1920" aria-label="Earn Your Beer share card" hidden></canvas>
   </div>
   <div class="actions" id="actions" hidden>
     <a class="button button-primary" id="save" download="earn-your-beer-sticker.png">Download sticker</a>
-    <button class="button button-secondary" id="share">Share</button>
   </div>
   <p class="status" id="status"></p>
-  <p class="hint" id="hint" hidden>The sticker is a transparent PNG made to sit on your own photo: download it, then in your Instagram story add it from your photos as a sticker and drag it where you like. The full card is a normal image: Share → Instagram → Story.</p>
+  <p class="hint" id="hint" hidden>A transparent PNG made to sit on your own photo: download it, then in your Instagram story add it from your photos as a sticker and drag it where you like.</p>
 
   <div id="error" class="error" hidden>
     <strong>This link is missing its numbers.</strong><br>
@@ -129,123 +123,43 @@ function unitFor(data) { return (data.reward === 0 && Math.floor(data.beers) ===
 // on the left, "x2" and the stacked label in Goldman gold on the right,
 // the tabs along the bottom. Falls back to the drawn vessel if the art
 // fails to load.
-async function drawCard(c, data) {
-  const img = await loadArt(data.reward);
-  if (!img) { drawCardVector(c, data); return; }
-  const ctx = c.getContext("2d"), W = c.width, H = c.height;
-  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
-  // Top 300 / bottom 230 stay clear for Instagram's own overlays.
-  fitImage(ctx, img, 40, 420, 600, 900);
-  const cx = 830;
-  ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = GOLD; ctx.font = "700 92px Goldman, sans-serif";
-  ctx.fillText("x", cx - 150, 760);
-  ctx.font = "700 300px Goldman, sans-serif";
-  ctx.fillText(whole(data.beers), cx + 40, 780);
-  ctx.font = "700 60px Goldman, sans-serif";
-  const lines = wrapLabel(ctx, earnedLabel(data), 420);
-  stackLines(ctx, lines, cx, 880, 72, 420);
-  ctx.fillStyle = GOLD_DIM; ctx.font = "400 40px Goldman, sans-serif";
-  fitText(ctx, RANKS[data.rank].toUpperCase(), cx, 880 + lines.length * 72 + 30, 420);
-  // Tabs.
-  const badges = BADGES.filter(([bit]) => data.badges & bit).length;
-  [[270, fmt(data.week), "THIS WEEK"], [540, fmt(data.lifetime), "LIFETIME"], [810, String(badges), "BADGES"]].forEach(([x, v, l]) => {
-    ctx.fillStyle = GOLD; ctx.font = "700 72px Goldman, sans-serif"; ctx.fillText(v, x, 1480);
-    ctx.fillStyle = GOLD_DIM; ctx.font = "400 30px Goldman, sans-serif"; ctx.fillText(l, x, 1530);
-  });
-  ctx.fillStyle = INK_DIM; ctx.font = "400 30px Goldman, sans-serif";
-  ctx.fillText(`${Math.round(data.kcal)} KCAL · EARN YOUR BEER · GARMIN`, W / 2, 1620);
-  ctx.font = "400 24px Goldman, sans-serif";
-  ctx.fillText("FOR LAUGHS. DRINK RESPONSIBLY.", W / 2, 1665);
-}
 
-// Sticker: the art plus "x2" and the label, transparent, cropped to content.
-// Gold type with a soft dark shadow so it holds on any photo.
+// The sticker, laid out from the designer's mockup: the art large on the
+// left, "x2" and the stacked "GLASSES OF BUBBLY EARNED" in Goldman gold on
+// the right, and a stats row along the bottom with the calories, the week,
+// the lifetime tab and the badges. Transparent, so it sits on the wearer's
+// own photo; the type carries a soft shadow to hold on a light one.
+const STICKER_PLATE = null; // e.g. "#ffffff" to ship on a white plate instead
 async function drawSticker(c, data) {
   const img = await loadArt(data.reward);
   if (!img) { drawStickerVector(c, data); return; }
   const ctx = c.getContext("2d"), W = c.width, H = c.height;
   ctx.clearRect(0, 0, W, H);
-  fitImage(ctx, img, 20, 60, 560, 960);
-  const cx = 810;
+  if (STICKER_PLATE) { ctx.fillStyle = STICKER_PLATE; ctx.fillRect(0, 0, W, H); }
+  fitImage(ctx, img, 30, 30, 560, 880);
+  const cx = 820;
+  const badges = BADGES.filter(([bit]) => data.badges & bit).length;
   const paint = () => {
-    ctx.save(); ctx.shadowColor = "rgba(0,0,0,0.6)"; ctx.shadowBlur = 24; ctx.shadowOffsetY = 5;
+    ctx.save(); ctx.shadowColor = "rgba(0,0,0,0.45)"; ctx.shadowBlur = 22; ctx.shadowOffsetY = 4;
     ctx.textAlign = "center"; ctx.fillStyle = GOLD;
-    ctx.font = "700 84px Goldman, sans-serif"; ctx.fillText("x", cx - 140, 440);
-    ctx.font = "700 270px Goldman, sans-serif"; ctx.fillText(whole(data.beers), cx + 40, 460);
-    ctx.font = "700 54px Goldman, sans-serif";
-    stackLines(ctx, wrapLabel(ctx, earnedLabel(data), 440), cx, 560, 66, 440);
-    ctx.fillStyle = "#fff3cf"; ctx.font = "400 28px Goldman, sans-serif";
-    ctx.fillText("EARN YOUR BEER · GARMIN", cx, 830);
+    ctx.font = "700 88px Goldman, sans-serif"; ctx.fillText("x", cx - 150, 470);
+    ctx.font = "700 290px Goldman, sans-serif"; ctx.fillText(whole(data.beers), cx + 40, 490);
+    ctx.font = "700 58px Goldman, sans-serif";
+    const lines = wrapLabel(ctx, earnedLabel(data), 440);
+    stackLines(ctx, lines, cx, 590, 70, 440);
+    // Stats row: calories, week, lifetime, badges.
+    const stats = [[Math.round(data.kcal), "KCAL"], [fmt(data.week), "THIS WEEK"], [fmt(data.lifetime), "LIFETIME"], [badges, "BADGES"]];
+    stats.forEach(([v, l], i) => {
+      const x = 135 + i * 270;
+      ctx.fillStyle = GOLD; ctx.font = "700 70px Goldman, sans-serif"; ctx.fillText(String(v), x, 960);
+      ctx.font = "700 28px Goldman, sans-serif"; ctx.fillText(l, x, 1002);
+    });
+    ctx.fillStyle = GOLD; ctx.font = "400 24px Goldman, sans-serif";
+    ctx.fillText("EARN YOUR BEER · GARMIN", W / 2, 1060);
     ctx.restore();
   };
   paint(); paint();
 }
-
-function drawCardVector(c, data) {
-  const ctx = c.getContext("2d");
-  const W = c.width, H = c.height;
-  const liquid = data.reward ? REWARD_COLORS[data.reward] : STYLE_COLORS[data.style];
-  const dark = ["#3b1f0e", "#2a1205", "#8b1a3a", "#5a3a22", "#c8301e"].includes(liquid);
-
-  // Background: warm dark gradient with a soft glow behind the glass.
-  const g = ctx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0, "#1c130a"); g.addColorStop(1, "#0d0905");
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  const glow = ctx.createRadialGradient(W / 2, H * 0.5, 40, W / 2, H * 0.5, 620);
-  glow.addColorStop(0, "rgba(245,184,0,0.22)"); glow.addColorStop(1, "rgba(245,184,0,0)");
-  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
-
-  ctx.textAlign = "center"; ctx.fillStyle = "#c9b48a";
-  ctx.font = "700 44px Inter, sans-serif"; ctx.letterSpacing = "8px";
-  ctx.fillText("EARN YOUR BEER", W / 2, 150);
-  ctx.letterSpacing = "0px";
-
-  // Rank title.
-  ctx.fillStyle = "#f5b800"; ctx.font = "900 92px Inter, sans-serif";
-  fitText(ctx, RANKS[data.rank], W / 2, 290, W - 140);
-
-  // The vessel, mirrored from Vessel.mc on the watch (same profiles).
-  drawVessel(ctx, data.reward, 230, 400, 340, 660, data.beers, liquid, dark);
-
-  // Big number and unit, right of the glass.
-  const cx = 800;
-  ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
-  ctx.font = "900 190px Inter, sans-serif";
-  ctx.fillText(whole(data.beers), cx, 720);
-  ctx.fillStyle = "#c9b48a"; ctx.font = "700 46px Inter, sans-serif";
-  fitText(ctx, unitFor(data), cx, 800, 420);
-  ctx.font = "500 40px Inter, sans-serif";
-  ctx.fillText("earned today", cx, 860);
-  ctx.fillStyle = "#8d7a56"; ctx.font = "500 36px Inter, sans-serif";
-  ctx.fillText(`${Math.round(data.kcal)} ${data.mode === 1 ? "kcal" : "active kcal"}`, cx, 930);
-
-  // Serve line.
-  const serve = data.reward ? `${REWARDS[data.reward]} · ${REWARD_KCAL[data.reward]} kcal`
-    : (data.style === 8 ? "Custom brew" : `${STYLES[data.style]} · ${STYLE_KCAL[data.style]} kcal per pint`);
-  ctx.fillStyle = "#c9b48a"; ctx.font = "500 40px Inter, sans-serif";
-  ctx.fillText(serve, W / 2, 1150);
-
-  // Tabs.
-  ctx.fillStyle = "rgba(255,255,255,0.05)"; roundRect(ctx, 90, 1220, W - 180, 190, 32); ctx.fill();
-  stat(ctx, 300, "This week", fmt(data.week));
-  stat(ctx, W / 2, "Lifetime", fmt(data.lifetime));
-  stat(ctx, W - 300, "Rank", `${data.rank + 1}/9`);
-
-  // Badges.
-  const earned = BADGES.filter(([bit]) => data.badges & bit).map(([, name]) => name);
-  ctx.fillStyle = "#c9b48a"; ctx.font = "700 34px Inter, sans-serif";
-  ctx.fillText(earned.length ? "BADGES" : "NO BADGES YET", W / 2, 1500);
-  ctx.fillStyle = "#f5b800"; ctx.font = "700 42px Inter, sans-serif";
-  wrapText(ctx, earned.length ? earned.join("  ·  ") : "Six-pack is 6 beers in a day. Get after it.", W / 2, 1560, W - 160, 56);
-
-  // Watermark.
-  ctx.fillStyle = "#8d7a56"; ctx.font = "500 34px Inter, sans-serif";
-  ctx.fillText("For laughs. Drink responsibly.", W / 2, 1780);
-  ctx.fillStyle = "#c9b48a"; ctx.font = "700 36px Inter, sans-serif";
-  ctx.fillText("Earn Your Beer for Garmin · chandigital.in", W / 2, 1840);
-}
-
 
 // ---------------------------------------------------------------------------
 // Vessels: same lathe profiles as the watch (beer app/source/Vessel.mc), so
@@ -389,12 +303,6 @@ function drawStickerVector(c, data) {
   paint(); paint();
 }
 
-function stat(ctx, x, label, value) {
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#ffffff"; ctx.font = "900 74px Inter, sans-serif"; ctx.fillText(value, x, 1330);
-  ctx.fillStyle = "#c9b48a"; ctx.font = "500 32px Inter, sans-serif"; ctx.fillText(label, x, 1380);
-}
-
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
   ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
@@ -420,57 +328,17 @@ async function main() {
   const data = decode(params.get("d"));
   if (!data) { document.getElementById("error").hidden = false; return; }
   try { await Promise.all(["700 100px Goldman", "400 40px Goldman", "900 100px Inter", "700 40px Inter", "500 40px Inter"].map((f) => document.fonts.load(f))); } catch (e) {}
-  const c = document.getElementById("canvas");
   const st = document.getElementById("sticker");
-  await drawCard(c, data);
   await drawSticker(st, data);
   document.getElementById("headline").textContent = `${whole(data.beers)} ${unitFor(data)} earned. ${RANKS[data.rank]}.`;
   document.getElementById("card").hidden = false;
   document.getElementById("actions").hidden = false;
   document.getElementById("hint").hidden = false;
-  document.getElementById("modes").hidden = false;
   document.title = `Earn Your Beer · ${whole(data.beers)} ${unitFor(data)} earned`;
-
-  const blobs = {
-    card: await new Promise((res) => c.toBlob(res, "image/png")),
-    sticker: await new Promise((res) => st.toBlob(res, "image/png"))
-  };
-  const files = {
-    card: new File([blobs.card], "earn-your-beer.png", { type: "image/png" }),
-    sticker: new File([blobs.sticker], "earn-your-beer-sticker.png", { type: "image/png" })
-  };
-  let mode = "sticker";
-  const save = document.getElementById("save");
-  const setMode = (m) => {
-    mode = m;
-    st.hidden = m !== "sticker"; c.hidden = m !== "card";
-    document.getElementById("card").classList.toggle("checker", m === "sticker");
-    document.querySelectorAll(".mode").forEach((b) => b.classList.toggle("is-on", b.dataset.mode === m));
-    save.href = URL.createObjectURL(blobs[m]); save.download = files[m].name;
-    save.textContent = m === "sticker" ? "Download sticker" : "Download card";
-    // Stickers are download-only: the share sheet can hand a transparent PNG
-    // to an app that flattens the alpha onto black.
-    document.getElementById("share").hidden = m === "sticker";
-  };
-  document.querySelectorAll(".mode").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
-  setMode("sticker");
-  const status = document.getElementById("status");
-  const shareBtn = document.getElementById("share");
-  shareBtn.addEventListener("click", async () => {
-    try {
-      const file = files[mode];
-      if (canShareFiles) {
-        await navigator.share({ files: [file], title: "Earn Your Beer", text: `${whole(data.beers)} ${unitFor(data)} earned today. ${RANKS[data.rank]}. 🍺` });
-      } else if (navigator.share) {
-        await navigator.share({ title: "Earn Your Beer", text: `${whole(data.beers)} ${unitFor(data)} earned today. ${RANKS[data.rank]}. 🍺`, url: location.href });
-      } else {
-        document.getElementById("save").click();
-      }
-      status.textContent = "";
-    } catch (e) {
-      if (e && e.name !== "AbortError") { status.textContent = "Sharing was blocked here — use Save image instead."; }
-    }
-  });
+  // Download only: the share sheet can hand a transparent PNG to an app
+  // that flattens the alpha onto black.
+  const blob = await new Promise((res) => st.toBlob(res, "image/png"));
+  document.getElementById("save").href = URL.createObjectURL(blob);
 }
 main();
 </script>
