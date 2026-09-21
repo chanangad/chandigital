@@ -148,13 +148,23 @@ async function drawSticker(c, data) {
   ctx.font = "700 46px Goldman, sans-serif";
   const lines = wrapLabel(ctx, earnedLabel(data), W * 0.27);
   stackLines(ctx, lines, tx, H * 0.425, 56, W * 0.30);
-  // Stats row, faint, under the base of the art.
-  ctx.globalAlpha = 0.78;
-  const stats = [[fmt(data.week), "THIS WEEK"], [fmt(data.lifetime), "LIFETIME"], [String(Math.round(data.kcal)), "KCAL"]];
+  ctx.restore();
+  // Stats strip: a frosted band that fades out at both ends, white type on
+  // it, like the mockup. The shadow keeps it legible on a light photo too.
+  const badges = BADGES.filter(([bit]) => data.badges & bit).length;
+  const sy = H * 0.70, sh = H * 0.14;
+  const band = ctx.createLinearGradient(0, 0, W, 0);
+  band.addColorStop(0, "rgba(255,255,255,0)"); band.addColorStop(0.18, "rgba(255,255,255,0.28)");
+  band.addColorStop(0.82, "rgba(255,255,255,0.28)"); band.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = band; ctx.fillRect(0, sy, W, sh);
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
+  ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
+  const stats = [[fmt(data.week), "This week"], [fmt(data.lifetime), "Lifetime"], [String(badges), "Badges"], [String(Math.round(data.kcal)), "Kcal"]];
   stats.forEach(([v, l], i) => {
-    const x = W * (0.32 + i * 0.18);
-    ctx.font = "700 40px Goldman, sans-serif"; ctx.fillText(v, x, H * 0.745);
-    ctx.font = "400 20px Goldman, sans-serif"; ctx.fillText(l, x, H * 0.782);
+    const x = W * (0.20 + i * 0.20);
+    ctx.font = "700 44px Goldman, sans-serif"; ctx.fillText(v, x, sy + sh * 0.46);
+    ctx.font = "400 26px Goldman, sans-serif"; ctx.fillText(l, x, sy + sh * 0.82);
   });
   ctx.restore();
 }
