@@ -154,8 +154,10 @@ async function drawSticker(c, data) {
   const badges = BADGES.filter(([bit]) => data.badges & bit).length;
   const sy = H * 0.70, sh = H * 0.14;
   const band = ctx.createLinearGradient(0, 0, W, 0);
-  band.addColorStop(0, "rgba(255,255,255,0)"); band.addColorStop(0.18, "rgba(255,255,255,0.28)");
-  band.addColorStop(0.82, "rgba(255,255,255,0.28)"); band.addColorStop(1, "rgba(255,255,255,0)");
+  // Long fades: solid only across the middle third, gone well before the edges.
+  band.addColorStop(0, "rgba(255,255,255,0)"); band.addColorStop(0.12, "rgba(255,255,255,0.04)");
+  band.addColorStop(0.36, "rgba(255,255,255,0.28)"); band.addColorStop(0.64, "rgba(255,255,255,0.28)");
+  band.addColorStop(0.88, "rgba(255,255,255,0.04)"); band.addColorStop(1, "rgba(255,255,255,0)");
   ctx.fillStyle = band; ctx.fillRect(0, sy, W, sh);
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
