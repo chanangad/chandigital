@@ -124,41 +124,39 @@ function unitFor(data) { return (data.reward === 0 && Math.floor(data.beers) ===
 // the tabs along the bottom. Falls back to the drawn vessel if the art
 // fails to load.
 
-// The sticker, laid out from the designer's mockup: the art large on the
-// left, "x2" and the stacked "GLASSES OF BUBBLY EARNED" in Goldman gold on
-// the right, and a stats row along the bottom with the calories, the week,
-// the lifetime tab and the badges. Transparent, so it sits on the wearer's
-// own photo; the type carries a soft shadow to hold on a light one.
+// The sticker, matched to the designer's mockup: the art large and a little
+// left of centre, "x2" to its right about a third of the way down, the
+// stacked "GLASSES OF BUBBLY EARNED" under it, and a faint three-column
+// stats row along the bottom. Transparent, for the wearer's own photo.
 const STICKER_PLATE = null; // e.g. "#ffffff" to ship on a white plate instead
+const MOCK_GOLD = "#f9dc8a";
 async function drawSticker(c, data) {
   const img = await loadArt(data.reward);
   if (!img) { drawStickerVector(c, data); return; }
   const ctx = c.getContext("2d"), W = c.width, H = c.height;
   ctx.clearRect(0, 0, W, H);
   if (STICKER_PLATE) { ctx.fillStyle = STICKER_PLATE; ctx.fillRect(0, 0, W, H); }
-  fitImage(ctx, img, 30, 30, 560, 880);
-  const cx = 820;
-  const badges = BADGES.filter(([bit]) => data.badges & bit).length;
-  const paint = () => {
-    ctx.save(); ctx.shadowColor = "rgba(0,0,0,0.45)"; ctx.shadowBlur = 22; ctx.shadowOffsetY = 4;
-    ctx.textAlign = "center"; ctx.fillStyle = GOLD;
-    ctx.font = "700 88px Goldman, sans-serif"; ctx.fillText("x", cx - 150, 470);
-    ctx.font = "700 290px Goldman, sans-serif"; ctx.fillText(whole(data.beers), cx + 40, 490);
-    ctx.font = "700 58px Goldman, sans-serif";
-    const lines = wrapLabel(ctx, earnedLabel(data), 440);
-    stackLines(ctx, lines, cx, 590, 70, 440);
-    // Stats row: calories, week, lifetime, badges.
-    const stats = [[Math.round(data.kcal), "KCAL"], [fmt(data.week), "THIS WEEK"], [fmt(data.lifetime), "LIFETIME"], [badges, "BADGES"]];
-    stats.forEach(([v, l], i) => {
-      const x = 135 + i * 270;
-      ctx.fillStyle = GOLD; ctx.font = "700 70px Goldman, sans-serif"; ctx.fillText(String(v), x, 960);
-      ctx.font = "700 28px Goldman, sans-serif"; ctx.fillText(l, x, 1002);
-    });
-    ctx.fillStyle = GOLD; ctx.font = "400 24px Goldman, sans-serif";
-    ctx.fillText("EARN YOUR BEER · GARMIN", W / 2, 1060);
-    ctx.restore();
-  };
-  paint(); paint();
+  // Art: 58% of the height, centred at 36% of the width, like the mockup.
+  const ah = H * 0.58, aw = ah * img.width / img.height, ax = W * 0.36 - aw / 2, ay = H * 0.115;
+  ctx.drawImage(img, ax, ay, aw, ah);
+  const tx = W * 0.70;
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.22)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 3;
+  ctx.textAlign = "center"; ctx.fillStyle = MOCK_GOLD;
+  ctx.font = "700 72px Goldman, sans-serif"; ctx.fillText("x", W * 0.625, H * 0.345);
+  ctx.font = "700 225px Goldman, sans-serif"; ctx.fillText(whole(data.beers), W * 0.745, H * 0.355);
+  ctx.font = "700 46px Goldman, sans-serif";
+  const lines = wrapLabel(ctx, earnedLabel(data), W * 0.27);
+  stackLines(ctx, lines, tx, H * 0.425, 56, W * 0.30);
+  // Stats row, faint, under the base of the art.
+  ctx.globalAlpha = 0.78;
+  const stats = [[fmt(data.week), "THIS WEEK"], [fmt(data.lifetime), "LIFETIME"], [String(Math.round(data.kcal)), "KCAL"]];
+  stats.forEach(([v, l], i) => {
+    const x = W * (0.32 + i * 0.18);
+    ctx.font = "700 40px Goldman, sans-serif"; ctx.fillText(v, x, H * 0.745);
+    ctx.font = "400 20px Goldman, sans-serif"; ctx.fillText(l, x, H * 0.782);
+  });
+  ctx.restore();
 }
 
 // ---------------------------------------------------------------------------
