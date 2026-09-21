@@ -10,7 +10,7 @@
   <link rel="icon" href="../../assets/cd-circle-v2.ico" sizes="32x32">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
     :root { --bg: #140e08; --paper: #1f150b; --line: #3a2a14; --text: #fff4dc; --muted: #c9b48a; --amber: #f5b800; }
     * { box-sizing: border-box; }
@@ -46,7 +46,7 @@
     <button class="mode" data-mode="card">Full card</button>
   </div>
   <div id="card" class="card-wrap checker" hidden>
-    <canvas id="sticker" width="1080" height="800" aria-label="Earn Your Beer sticker"></canvas>
+    <canvas id="sticker" width="1080" height="1080" aria-label="Earn Your Beer sticker"></canvas>
     <canvas id="canvas" width="1080" height="1920" aria-label="Earn Your Beer share card" hidden></canvas>
   </div>
   <div class="actions" id="actions" hidden>
@@ -97,9 +97,92 @@ function decode(d) {
 
 function fmt(x) { return (Math.round(x * 10) / 10).toFixed(1); }
 function whole(x) { return String(Math.floor(x)); }
+// Stacked label under the count, in the mockup's voice: "GLASSES OF BUBBLY EARNED".
+const EARNED_ONE = ["BEER", "GLASS OF RED", "GLASS OF WHITE", "GLASS OF BUBBLY", "APEROL SPRITZ", "NEGRONI", "ESPRESSO MARTINI", "CROISSANT", "PORTION OF FRIES"];
+const EARNED_MANY = ["BEERS", "GLASSES OF RED", "GLASSES OF WHITE", "GLASSES OF BUBBLY", "APEROL SPRITZES", "NEGRONIS", "ESPRESSO MARTINIS", "CROISSANTS", "PORTIONS OF FRIES"];
+function earnedLabel(data) { const n = Math.floor(data.beers); return (n === 1 ? EARNED_ONE : EARNED_MANY)[data.reward] + " EARNED"; }
+const GOLD = "#f2c766", GOLD_DIM = "#c9a24a", INK = "#1a1408", INK_DIM = "#7a6a45";
+const ART = {};
+function loadArt(kind) {
+  if (ART[kind]) return ART[kind];
+  ART[kind] = new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = `art/${kind}.webp`; });
+  return ART[kind];
+}
+// Draws `img` scaled to fit the box, centred.
+function fitImage(ctx, img, x, y, w, h) {
+  const s = Math.min(w / img.width, h / img.height), dw = img.width * s, dh = img.height * s;
+  ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+}
+// Stacked uppercase lines, each fitted to maxW, bottom-aligned upward from y.
+function stackLines(ctx, lines, cx, y, lineH, maxW) {
+  lines.forEach((ln, i) => { fitText(ctx, ln, cx, y + i * lineH, maxW); });
+}
+// Splits "GLASSES OF BUBBLY EARNED" into up to three lines that fit.
+function wrapLabel(ctx, text, maxW) {
+  const words = text.split(" "), lines = []; let line = "";
+  for (const w of words) { const t = line ? `${line} ${w}` : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+  if (line) lines.push(line); return lines;
+}
 function unitFor(data) { return (data.reward === 0 && Math.floor(data.beers) === 1) ? "beer" : REWARD_UNITS[data.reward]; }
 
-function drawCard(c, data) {
+// Story card, from the designer's mockup: white ground, the photoreal art
+// on the left, "x2" and the stacked label in Goldman gold on the right,
+// the tabs along the bottom. Falls back to the drawn vessel if the art
+// fails to load.
+async function drawCard(c, data) {
+  const img = await loadArt(data.reward);
+  if (!img) { drawCardVector(c, data); return; }
+  const ctx = c.getContext("2d"), W = c.width, H = c.height;
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
+  // Top 300 / bottom 230 stay clear for Instagram's own overlays.
+  fitImage(ctx, img, 40, 420, 600, 900);
+  const cx = 830;
+  ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = GOLD; ctx.font = "700 92px Goldman, sans-serif";
+  ctx.fillText("x", cx - 150, 760);
+  ctx.font = "700 300px Goldman, sans-serif";
+  ctx.fillText(whole(data.beers), cx + 40, 780);
+  ctx.font = "700 60px Goldman, sans-serif";
+  const lines = wrapLabel(ctx, earnedLabel(data), 420);
+  stackLines(ctx, lines, cx, 880, 72, 420);
+  ctx.fillStyle = GOLD_DIM; ctx.font = "400 40px Goldman, sans-serif";
+  fitText(ctx, RANKS[data.rank].toUpperCase(), cx, 880 + lines.length * 72 + 30, 420);
+  // Tabs.
+  const badges = BADGES.filter(([bit]) => data.badges & bit).length;
+  [[270, fmt(data.week), "THIS WEEK"], [540, fmt(data.lifetime), "LIFETIME"], [810, String(badges), "BADGES"]].forEach(([x, v, l]) => {
+    ctx.fillStyle = GOLD; ctx.font = "700 72px Goldman, sans-serif"; ctx.fillText(v, x, 1480);
+    ctx.fillStyle = GOLD_DIM; ctx.font = "400 30px Goldman, sans-serif"; ctx.fillText(l, x, 1530);
+  });
+  ctx.fillStyle = INK_DIM; ctx.font = "400 30px Goldman, sans-serif";
+  ctx.fillText(`${Math.round(data.kcal)} KCAL · EARN YOUR BEER · GARMIN`, W / 2, 1620);
+  ctx.font = "400 24px Goldman, sans-serif";
+  ctx.fillText("FOR LAUGHS. DRINK RESPONSIBLY.", W / 2, 1665);
+}
+
+// Sticker: the art plus "x2" and the label, transparent, cropped to content.
+// Gold type with a soft dark shadow so it holds on any photo.
+async function drawSticker(c, data) {
+  const img = await loadArt(data.reward);
+  if (!img) { drawStickerVector(c, data); return; }
+  const ctx = c.getContext("2d"), W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+  fitImage(ctx, img, 20, 60, 560, 960);
+  const cx = 810;
+  const paint = () => {
+    ctx.save(); ctx.shadowColor = "rgba(0,0,0,0.6)"; ctx.shadowBlur = 24; ctx.shadowOffsetY = 5;
+    ctx.textAlign = "center"; ctx.fillStyle = GOLD;
+    ctx.font = "700 84px Goldman, sans-serif"; ctx.fillText("x", cx - 140, 440);
+    ctx.font = "700 270px Goldman, sans-serif"; ctx.fillText(whole(data.beers), cx + 40, 460);
+    ctx.font = "700 54px Goldman, sans-serif";
+    stackLines(ctx, wrapLabel(ctx, earnedLabel(data), 440), cx, 560, 66, 440);
+    ctx.fillStyle = "#fff3cf"; ctx.font = "400 28px Goldman, sans-serif";
+    ctx.fillText("EARN YOUR BEER · GARMIN", cx, 830);
+    ctx.restore();
+  };
+  paint(); paint();
+}
+
+function drawCardVector(c, data) {
   const ctx = c.getContext("2d");
   const W = c.width, H = c.height;
   const liquid = data.reward ? REWARD_COLORS[data.reward] : STYLE_COLORS[data.style];
@@ -277,7 +360,7 @@ function halfWidthAt(prof, yf, bw) {
 // with a soft shadow, painted twice so the shadow is dense enough to hold
 // against a bright sky or a white wall; the vessel keeps its colours because
 // it is the brand, and gets the same shadow so it sits on the picture.
-function drawSticker(c, data) {
+function drawStickerVector(c, data) {
   const ctx = c.getContext("2d");
   const W = c.width, H = c.height;
   ctx.clearRect(0, 0, W, H);
@@ -336,11 +419,11 @@ async function main() {
   const params = new URLSearchParams(location.search);
   const data = decode(params.get("d"));
   if (!data) { document.getElementById("error").hidden = false; return; }
-  try { await document.fonts.load("900 100px Inter"); await document.fonts.load("700 40px Inter"); await document.fonts.load("500 40px Inter"); } catch (e) {}
+  try { await Promise.all(["700 100px Goldman", "400 40px Goldman", "900 100px Inter", "700 40px Inter", "500 40px Inter"].map((f) => document.fonts.load(f))); } catch (e) {}
   const c = document.getElementById("canvas");
   const st = document.getElementById("sticker");
-  drawCard(c, data);
-  drawSticker(st, data);
+  await drawCard(c, data);
+  await drawSticker(st, data);
   document.getElementById("headline").textContent = `${whole(data.beers)} ${unitFor(data)} earned. ${RANKS[data.rank]}.`;
   document.getElementById("card").hidden = false;
   document.getElementById("actions").hidden = false;
