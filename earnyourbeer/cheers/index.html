@@ -161,8 +161,12 @@ async function drawSticker(c, data) {
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
   ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
-  // Three columns as in the mockup, calories in the third slot.
-  const stats = [[fmt(data.week), "This week"], [fmt(data.lifetime), "Lifetime"], [String(Math.round(data.kcal)), "Calories"]];
+  // Calories on their own line just above the strip, as in the mockup.
+  ctx.fillStyle = MOCK_GOLD; ctx.font = "700 30px Goldman, sans-serif";
+  ctx.fillText(`${Math.round(data.kcal)} CALORIES BURNED`, W / 2, sy - 22);
+  ctx.fillStyle = "#ffffff";
+  const badges = BADGES.filter(([bit]) => data.badges & bit).length;
+  const stats = [[fmt(data.week), "This week"], [fmt(data.lifetime), "Lifetime"], [String(badges), "Badges"]];
   stats.forEach(([v, l], i) => {
     const x = W * (0.32 + i * 0.18);
     ctx.font = "700 44px Goldman, sans-serif"; ctx.fillText(v, x, sy + sh * 0.46);
