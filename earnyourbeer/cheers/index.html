@@ -136,24 +136,30 @@ async function drawSticker(c, data) {
   const ctx = c.getContext("2d"), W = c.width, H = c.height;
   ctx.clearRect(0, 0, W, H);
   if (STICKER_PLATE) { ctx.fillStyle = STICKER_PLATE; ctx.fillRect(0, 0, W, H); }
-  // Art: 58% of the height, centred at 36% of the width, like the mockup.
-  const ah = H * 0.58, aw = ah * img.width / img.height, ax = W * 0.36 - aw / 2, ay = H * 0.115;
+  // Proportions measured off the designer's final mockup.
+  const ah = H * 0.645, aw = ah * img.width / img.height, ax = W * 0.34 - aw / 2, ay = H * 0.055;
   ctx.drawImage(img, ax, ay, aw, ah);
-  const tx = W * 0.70;
+  const tx = W * 0.71;
   ctx.save();
-  ctx.shadowColor = "rgba(0,0,0,0.22)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 3;
-  ctx.textAlign = "center"; ctx.fillStyle = MOCK_GOLD;
-  ctx.font = "700 72px Goldman, sans-serif"; ctx.fillText("x", W * 0.625, H * 0.345);
-  ctx.font = "700 225px Goldman, sans-serif"; ctx.fillText(whole(data.beers), W * 0.745, H * 0.355);
-  ctx.font = "700 46px Goldman, sans-serif";
-  const lines = wrapLabel(ctx, earnedLabel(data), W * 0.27);
-  stackLines(ctx, lines, tx, H * 0.425, 56, W * 0.30);
+  ctx.shadowColor = "rgba(0,0,0,0.35)"; ctx.shadowBlur = 16; ctx.shadowOffsetY = 3;
+  ctx.textAlign = "center";
+  // x2
+  ctx.fillStyle = MOCK_GOLD;
+  ctx.font = "700 74px Goldman, sans-serif"; ctx.fillText("x", W * 0.655, H * 0.30);
+  ctx.font = "700 200px Goldman, sans-serif"; ctx.fillText(whole(data.beers), W * 0.765, H * 0.305);
+  // GLASSES / OF BUBBLY / EARNED
+  ctx.font = "700 50px Goldman, sans-serif";
+  const lines = wrapLabel(ctx, earnedLabel(data), W * 0.30);
+  stackLines(ctx, lines, tx, H * 0.385, H * 0.05, W * 0.32);
+  // 520 / active kcal, white, under the label
+  const ky = H * 0.385 + lines.length * H * 0.05 + H * 0.045;
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "700 66px Goldman, sans-serif"; ctx.fillText(String(Math.round(data.kcal)), tx, ky);
+  ctx.font = "400 34px Goldman, sans-serif"; ctx.fillText(data.mode === 1 ? "total kcal" : "active kcal", tx, ky + H * 0.045);
   ctx.restore();
-  // Stats strip: a frosted band that fades out at both ends, white type on
-  // it, like the mockup. The shadow keeps it legible on a light photo too.
-  const sy = H * 0.70, sh = H * 0.14;
+  // Stats strip: a frosted band that fades out over a long run at both ends.
+  const sy = H * 0.72, sh = H * 0.13;
   const band = ctx.createLinearGradient(0, 0, W, 0);
-  // Long fades: solid only across the middle third, gone well before the edges.
   band.addColorStop(0, "rgba(255,255,255,0)"); band.addColorStop(0.12, "rgba(255,255,255,0.04)");
   band.addColorStop(0.36, "rgba(255,255,255,0.28)"); band.addColorStop(0.64, "rgba(255,255,255,0.28)");
   band.addColorStop(0.88, "rgba(255,255,255,0.04)"); band.addColorStop(1, "rgba(255,255,255,0)");
@@ -161,20 +167,15 @@ async function drawSticker(c, data) {
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
   ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
-  // Calories on their own line just above the strip, as in the mockup.
-  ctx.fillStyle = MOCK_GOLD; ctx.font = "700 30px Goldman, sans-serif";
-  ctx.fillText(`${Math.round(data.kcal)} CALORIES BURNED`, W / 2, sy - 22);
-  ctx.fillStyle = "#ffffff";
   const badges = BADGES.filter(([bit]) => data.badges & bit).length;
-  const stats = [[fmt(data.week), "This week"], [fmt(data.lifetime), "Lifetime"], [String(badges), "Badges"]];
-  stats.forEach(([v, l], i) => {
-    const x = W * (0.32 + i * 0.18);
-    ctx.font = "700 44px Goldman, sans-serif"; ctx.fillText(v, x, sy + sh * 0.46);
-    ctx.font = "400 26px Goldman, sans-serif"; ctx.fillText(l, x, sy + sh * 0.82);
+  [[whole(data.week), "This week"], [whole(data.lifetime), "Lifetime"], [String(badges), "Badges"]].forEach(([v, l], i) => {
+    const x = W * (0.29 + i * 0.205);
+    ctx.font = "700 44px Goldman, sans-serif"; ctx.fillText(v, x, sy + sh * 0.44);
+    ctx.font = "400 27px Goldman, sans-serif"; ctx.fillText(l, x, sy + sh * 0.82);
   });
-  // Watermark under the strip: the sticker travels, the name goes with it.
-  ctx.fillStyle = MOCK_GOLD; ctx.font = "700 26px Goldman, sans-serif";
-  ctx.fillText("EARN YOUR BEER · GARMIN", W / 2, sy + sh + 52);
+  // Footer: the disclaimer and the name.
+  ctx.font = "400 24px Goldman, sans-serif"; ctx.fillText("For laughs only, please drink responsibly.", W / 2, H * 0.905);
+  ctx.font = "700 24px Goldman, sans-serif"; ctx.fillText("Earn your Beer by chandigital.in", W / 2, H * 0.94);
   ctx.restore();
 }
 
