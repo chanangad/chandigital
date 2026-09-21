@@ -28,169 +28,211 @@ const LANGUAGES = [
 // marked notranslate; applyModeNames() swaps them per selected language.
 const MODE_NAMES = {
   "cs": {
+    "americano": "Americano",
     "endmatch": "Ukončit zápas",
     "freeplay": "Volná hra",
     "golden": "Zlatý míček",
+    "pointsperround": "Bodů na kolo",
     "silver": "Stříbrný míček",
     "standard": "Standard",
     "star": "Hvězdný míček"
   },
   "da": {
+    "americano": "Americano",
     "endmatch": "Afslut kamp",
     "freeplay": "Frit spil",
     "golden": "Guldbold",
+    "pointsperround": "Point pr. runde",
     "silver": "Sølvbold",
     "standard": "Standard",
     "star": "Stjernebold"
   },
   "de": {
+    "americano": "Americano",
     "endmatch": "Match beenden",
     "freeplay": "Freies Spiel",
     "golden": "Goldpunkt",
+    "pointsperround": "Punkte pro Runde",
     "silver": "Silberpunkt",
     "standard": "Standard",
     "star": "Sternpunkt"
   },
   "en": {
+    "americano": "Americano",
     "endmatch": "End Match",
     "freeplay": "Free Play",
     "golden": "Golden Point",
+    "pointsperround": "Points per round",
     "silver": "Silver Point",
     "standard": "Standard",
     "star": "Star Point"
   },
   "es": {
+    "americano": "Americano",
     "endmatch": "Finalizar partido",
     "freeplay": "Juego libre",
     "golden": "Punto de oro",
+    "pointsperround": "Puntos por ronda",
     "silver": "Punto de plata",
     "standard": "Estándar",
     "star": "Punto estrella"
   },
   "fi": {
+    "americano": "Americano",
     "endmatch": "Lopeta ottelu",
     "freeplay": "Vapaa peli",
     "golden": "Kultapiste",
+    "pointsperround": "Pisteet / kierros",
     "silver": "Hopeapiste",
     "standard": "Vakio",
     "star": "Tähtipiste"
   },
   "fr": {
+    "americano": "Americano",
     "endmatch": "Terminer le match",
     "freeplay": "Jeu libre",
     "golden": "Point en or",
+    "pointsperround": "Points par manche",
     "silver": "Point en argent",
     "standard": "Standard",
     "star": "Point étoile"
   },
   "hu": {
+    "americano": "Americano",
     "endmatch": "Meccs befejezése",
     "freeplay": "Szabad játék",
     "golden": "Arany pont",
+    "pointsperround": "Pont körönként",
     "silver": "Ezüst pont",
     "standard": "Standard",
     "star": "Csillag pont"
   },
   "id": {
+    "americano": "Americano",
     "endmatch": "Akhiri pertandingan",
     "freeplay": "Main bebas",
     "golden": "Poin emas",
+    "pointsperround": "Poin per ronde",
     "silver": "Poin perak",
     "standard": "Standar",
     "star": "Poin bintang"
   },
   "it": {
+    "americano": "Americana",
     "endmatch": "Termina partita",
     "freeplay": "Gioco libero",
     "golden": "Punto d'oro",
+    "pointsperround": "Punti per round",
     "silver": "Punto d'argento",
     "standard": "Standard",
     "star": "Punto stella"
   },
   "ja": {
+    "americano": "アメリカーノ",
     "endmatch": "試合を終了",
     "freeplay": "フリープレー",
     "golden": "ゴールデンポイント",
+    "pointsperround": "ラウンドの点数",
     "silver": "シルバーポイント",
     "standard": "スタンダード",
     "star": "スターポイント"
   },
   "ko": {
+    "americano": "아메리카노",
     "endmatch": "경기 종료",
     "freeplay": "자유 플레이",
     "golden": "골든 포인트",
+    "pointsperround": "라운드당 포인트",
     "silver": "실버 포인트",
     "standard": "스탠다드",
     "star": "스타 포인트"
   },
   "nl": {
+    "americano": "Americano",
     "endmatch": "Partij beëindigen",
     "freeplay": "Vrij spel",
     "golden": "Gouden punt",
+    "pointsperround": "Punten per ronde",
     "silver": "Zilveren punt",
     "standard": "Standaard",
     "star": "Sterpunt"
   },
   "no": {
+    "americano": "Americano",
     "endmatch": "Avslutt kamp",
     "freeplay": "Fritt spill",
     "golden": "Gullpoeng",
+    "pointsperround": "Poeng per runde",
     "silver": "Sølvpoeng",
     "standard": "Standard",
     "star": "Stjernepoeng"
   },
   "pl": {
+    "americano": "Americano",
     "endmatch": "Zakończ mecz",
     "freeplay": "Gra dowolna",
     "golden": "Złoty punkt",
+    "pointsperround": "Punkty na rundę",
     "silver": "Srebrny punkt",
     "standard": "Standard",
     "star": "Gwiezdny punkt"
   },
   "pt-BR": {
+    "americano": "Americano",
     "endmatch": "Encerrar partida",
     "freeplay": "Jogo livre",
     "golden": "Ponto de ouro",
+    "pointsperround": "Pontos por rodada",
     "silver": "Ponto de prata",
     "standard": "Padrão",
     "star": "Ponto estrela"
   },
   "pt-PT": {
+    "americano": "Americano",
     "endmatch": "Terminar partida",
     "freeplay": "Jogo livre",
     "golden": "Ponto de oro",
+    "pointsperround": "Pontos por ronda",
     "silver": "Ponto de prata",
     "standard": "Padrão",
     "star": "Ponto estrela"
   },
   "sv": {
+    "americano": "Americano",
     "endmatch": "Avsluta match",
     "freeplay": "Fritt spel",
     "golden": "Guldpoäng",
+    "pointsperround": "Poäng per omgång",
     "silver": "Silverpoäng",
     "standard": "Standard",
     "star": "Stjärnpoäng"
   },
   "th": {
+    "americano": "อเมริกาโน",
     "endmatch": "จบแมตช์",
     "freeplay": "เล่นอิสระ",
     "golden": "โกลเดนพอยต์",
+    "pointsperround": "แต้มต่อรอบ",
     "silver": "ซิลเวอร์พอยต์",
     "standard": "มาตรฐาน",
     "star": "สตาร์พอยต์"
   },
   "zh-CN": {
+    "americano": "美式 Americano",
     "endmatch": "结束比赛",
     "freeplay": "自由模式",
     "golden": "黄金分",
+    "pointsperround": "每轮分数",
     "silver": "白银分",
     "standard": "标准",
     "star": "星点"
   },
   "zh-TW": {
+    "americano": "美式 Americano",
     "endmatch": "結束比賽",
     "freeplay": "自由模式",
     "golden": "黃金分",
+    "pointsperround": "每輪分數",
     "silver": "白銀分",
     "standard": "標準",
     "star": "星點"
