@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://chandigital.in/qrganiser/add/">
+<link rel="icon" href="../../assets/cd-circle-v2.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/cd-mark-180.png">
+<title>QRganiser · Add cards</title>
+<meta name="description" content="Scan your loyalty, gym and access cards with your phone and send them to QRganiser on your Garmin watch. End-to-end encrypted.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000;
+    --surface: #111214;
+    --surface-2: #1b1c20;
+    --line: #2a2b31;
+    --text: #f5f6f7;
+    --muted: #9a9ca5;
+    --accent: #00c8aa;
+    --accent-ink: #00221d;
+    --danger: #ff6b5a;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font: 16px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: env(safe-area-inset-top) 16px calc(32px + env(safe-area-inset-bottom));
+  }
+  main { max-width: 520px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 12px; padding: 20px 0 8px; }
+  .mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); display: grid; place-items: center; }
+  .mark svg { width: 22px; height: 22px; }
+  header h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+  header .about { margin-left: auto; color: var(--muted); font-size: 13px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
+
+  h2 { font-size: 15px; font-weight: 600; margin: 28px 0 12px; display: flex; align-items: center; gap: 10px; }
+  h2 .step { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-2); color: var(--accent); display: grid; place-items: center; font-size: 13px; }
+
+  .viewfinder {
+    position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden;
+    background: var(--surface); border: 1px solid var(--line);
+  }
+  .viewfinder video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .viewfinder .idle { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 24px; }
+  .viewfinder .frame { position: absolute; inset: 18% 12%; border-radius: 14px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.35); pointer-events: none; }
+  .viewfinder .frame::after {
+    content: ""; position: absolute; left: 6%; right: 6%; height: 2px; top: 50%;
+    background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: scan 2.2s ease-in-out infinite;
+  }
+  @keyframes scan { 0%, 100% { transform: translateY(-60px); opacity: .4; } 50% { transform: translateY(60px); opacity: 1; } }
+  .viewfinder.hit { animation: hit .35s ease-out; }
+  @keyframes hit { 50% { box-shadow: 0 0 0 4px var(--accent); } }
+  [hidden] { display: none !important; }
+
+  .row { display: flex; gap: 8px; margin-top: 12px; }
+  button, .btn {
+    appearance: none; border: 0; font: inherit; font-weight: 600; cursor: pointer;
+    border-radius: 14px; padding: 12px 16px; color: var(--text); background: var(--surface-2);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-height: 48px;
+  }
+  button.primary { background: var(--accent); color: var(--accent-ink); }
+  button:disabled { opacity: .45; cursor: default; }
+  button.ghost { background: transparent; border: 1px solid var(--line); }
+  input[type=file] { display: none; }
+
+  .manual { margin-top: 12px; padding: 16px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); display: grid; gap: 10px; }
+  label { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+  input[type=text], select {
+    font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px; width: 100%; min-height: 48px;
+  }
+  input[type=text]:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .cards { display: grid; gap: 10px; }
+  .empty { color: var(--muted); font-size: 14px; padding: 18px; border: 1px dashed var(--line); border-radius: var(--radius); text-align: center; }
+  .card {
+    position: relative; overflow: hidden; border-radius: var(--radius); padding: 14px 14px 12px;
+    background: var(--c); color: #fff; min-height: 112px; display: grid; grid-template-rows: auto 1fr auto; gap: 8px;
+  }
+  .card::before {
+    content: ""; position: absolute; width: 180px; height: 180px; right: -50px; top: -80px;
+    border-radius: 50%; background: var(--s); opacity: .9;
+  }
+  .card > * { position: relative; }
+  .card input.name {
+    background: transparent; border: 0; color: inherit; font: 600 18px/1.2 Inter, sans-serif; padding: 0; min-height: 0; width: calc(100% - 40px);
+  }
+  .card input.name:focus { outline: none; border-bottom: 1px solid rgba(255,255,255,.6); }
+  .card .meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .pill { background: var(--s); border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+  .tail { font: 500 13px "JetBrains Mono", monospace; opacity: .9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
+  .card .remove { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; min-height: 0; padding: 0; border-radius: 50%; background: rgba(0,0,0,.25); flex: none; }
+  .note { font-size: 12px; opacity: .9; }
+
+  .code-input {
+    font: 700 26px/1 "JetBrains Mono", monospace; letter-spacing: .18em; text-align: center; text-transform: uppercase;
+    padding: 16px 8px; border-radius: var(--radius);
+  }
+  .hint { color: var(--muted); font-size: 14px; margin: 0 0 10px; }
+  .status { margin-top: 12px; min-height: 24px; font-size: 14px; color: var(--muted); }
+  .status.ok { color: var(--accent); }
+  .status.err { color: var(--danger); }
+  .done { text-align: center; padding: 28px 16px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); }
+  .done .tick { width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; margin: 0 auto 12px; font-size: 28px; font-weight: 700; }
+  footer { margin-top: 32px; color: var(--muted); font-size: 13px; display: flex; gap: 10px; align-items: flex-start; }
+  footer svg { flex: none; margin-top: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="#fff"><path d="M3 3h7v7H3zm2 2v3h3V5zm9-2h7v7h-7zm2 2v3h3V5zM3 14h7v7H3zm2 2v3h3v-3zm9-2h2v2h-2zm4 0h3v2h-3zm-2 2h2v2h-2zm2 2h3v3h-3zm-4 1h2v2h-2z"/></svg>
+    </div>
+    <div>
+      <h1>QRganiser</h1>
+      <p>Put your cards on your Garmin watch</p>
+    </div>
+    <a class="about" href="../">About the app</a>
+  </header>
+
+  <h2><span class="step">1</span>Scan your cards</h2>
+  <div class="viewfinder" id="vf">
+    <video id="video" playsinline muted hidden></video>
+    <div class="frame" id="frame" hidden></div>
+    <div class="idle" id="idle">Point your camera at a loyalty card, gym pass or ticket.<br>QR codes and barcodes both work.</div>
+  </div>
+  <div class="row">
+    <button class="primary" id="camBtn">Camera</button>
+    <button id="photoBtn">Photo</button>
+    <button id="typeBtn">Type</button>
+    <input type="file" id="photo" accept="image/*">
+  </div>
+
+  <form class="manual" id="manual" hidden>
+    <label>Name <input type="text" id="mName" maxlength="24" placeholder="e.g. Gym" autocomplete="off"></label>
+    <label>Card number or code content <input type="text" id="mData" maxlength="300" placeholder="e.g. 4006381333931" autocomplete="off"></label>
+    <label>Format
+      <select id="mFmt">
+        <option value="0">Auto</option>
+        <option value="1">QR code</option>
+        <option value="2">Code 128 barcode</option>
+        <option value="3">EAN-13 / UPC-A barcode</option>
+      </select>
+    </label>
+    <button class="primary" type="submit">Add card</button>
+  </form>
+
+  <h2><span class="step">2</span>Check names</h2>
+  <div class="cards" id="cards"><div class="empty">Scanned cards appear here. Tap a name to rename it.</div></div>
+
+  <h2><span class="step">3</span>Send to your watch</h2>
+  <p class="hint">On your watch open <b>QRganiser</b>, scroll to <b>Add from phone</b> and type the code it shows.</p>
+  <input type="text" class="code-input" id="code" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="11" placeholder="XXXXX XXXXX" aria-label="Watch code">
+  <div class="row"><button class="primary" id="sendBtn" disabled>Send to watch</button></div>
+  <div class="status" id="status" role="status"></div>
+  <div class="done" id="done" hidden>
+    <div class="tick">✓</div>
+    <b>Sent</b>
+    <p class="hint" style="margin:6px 0 0">Your watch picks the cards up within a few seconds.<br>Keep the Garmin Connect app running on this phone.</p>
+    <div class="row"><button class="ghost" id="againBtn">Add more cards</button></div>
+  </div>
+
+  <footer>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    <span>Cards are encrypted on this phone with the code your watch shows. Our server only passes the encrypted parcel along and deletes it after 10 minutes. Nothing is stored in this browser.</span>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
+<script type="module">
+import { encryptCards, relayId, normaliseCode } from "./relay-crypto.js";
+
+// Same origin in production (chandigital.in/qrganiser/). ?api= is for local
+// testing against `wrangler dev` only.
+const params = new URLSearchParams(location.search);
+const API = (location.hostname === "localhost" || location.hostname === "127.0.0.1") && params.get("api")
+  ? params.get("api") : "/api/qrganiser/relay/";
+
+const ALPHABET = /^[ABCDEFGHJKMNPQRSTVWXYZ23456789]{10}$/;
+const ACCENTS = [["#00C8AA", "#007A68"], ["#6C63FF", "#3C3799"], ["#FF6B5A", "#9E3A30"], ["#FFB020", "#9E6A00"],
+                 ["#2ECC71", "#1A7A42"], ["#F0508C", "#962E56"], ["#2EA8FF", "#1A6699"], ["#8A97AA", "#4E5766"]];
+const FMT_LABEL = ["AUTO", "QR", "CODE 128", "EAN"];
+
+// Mirrors CardCodec.resolve on the watch: valid EAN/UPC digits -> EAN, else QR.
+function eanValid(s) {
+  let d = s.replace(/[ -]/g, "");
+  if (!/^\d{11,13}$/.test(d)) return false;
+  const chk = (x) => (10 - [...x.slice(0, 12)].reduce((a, v, i) => a + +v * (i % 2 ? 3 : 1), 0) % 10) % 10;
+  if (d.length === 11) d = "0" + d;
+  if (d.length === 12) return true;   // UPC-A with check, or EAN-13 without one
+  return chk(d) === +d[12];
+}
+const shownFormat = (c) => c.fmt || (eanValid(c.data) ? 3 : 1);
+const MAX_CARDS = 20;
+
+const $ = (id) => document.getElementById(id);
+const cards = [];
+let reader = null, controls = null;
+
+// FNV-1a over the name, matching the watch's default colour pick.
+function colourIndex(name) {
+  let h = 0x811c9dc5;
+  for (const b of new TextEncoder().encode(name)) h = Math.imul(h ^ b, 16777619);
+  return (h & 0x7fffffff) % 8;
+}
+
+// UPC-E is shown by the watch as its UPC-A expansion.
+function upcEtoA(s) {
+  if (!/^\d{8}$/.test(s)) return null;
+  const [ns, a, b, c, d, e, f, chk] = s;
+  let body;
+  if ("012".includes(f)) body = a + b + f + "0000" + c + d + e;
+  else if (f === "3") body = a + b + c + "00000" + d + e;
+  else if (f === "4") body = a + b + c + d + "00000" + e;
+  else body = a + b + c + d + e + "0000" + f;
+  return ns + body + chk;
+}
+
+// ZXing format -> [watch format, value, note]
+function mapFormat(fmt, text) {
+  const F = ZXingBrowser.BarcodeFormat;
+  if (fmt === F.QR_CODE || fmt === F.MICRO_QR_CODE) return [1, text, null];
+  if (fmt === F.CODE_128) return [2, text, null];
+  if (fmt === F.EAN_13 || fmt === F.UPC_A) return [3, text, null];
+  if (fmt === F.UPC_E) {
+    const a = upcEtoA(text);
+    if (a) return [3, a, "Shown as UPC-A, which reads the same at the till."];
+  }
+  const name = (F[fmt] || "this format").replace(/_/g, "-");
+  const oneD = [F.CODE_39, F.CODE_93, F.CODABAR, F.ITF, F.EAN_8, F.RSS_14, F.RSS_EXPANDED].includes(fmt);
+  return oneD
+    ? [2, text, `The card uses ${name}; the watch shows it as Code 128. Most scanners accept it, but try it once at the counter.`]
+    : [1, text, `The card uses ${name}; the watch shows it as a QR code.`];
+}
+
+function addCard(name, data, fmt, note) {
+  data = data.trim();
+  if (!data) return;
+  const existing = cards.find((c) => c.data === data);
+  if (existing) { flash(`Already added as “${existing.name}”`); return; }
+  if (cards.length >= MAX_CARDS) { flash(`Up to ${MAX_CARDS} cards per send.`, true); return; }
+  cards.push({ name: name || `Card ${cards.length + 1}`, data, fmt, note });
+  render();
+  if (navigator.vibrate) navigator.vibrate(40);
+  $("vf").classList.remove("hit"); void $("vf").offsetWidth; $("vf").classList.add("hit");
+  const inputs = document.querySelectorAll(".card input.name");
+  const last = inputs[inputs.length - 1];
+  if (last && !name) { last.select(); last.focus({ preventScroll: true }); }
+}
+
+function render() {
+  const box = $("cards");
+  box.replaceChildren();
+  if (!cards.length) {
+    box.innerHTML = '<div class="empty">Scanned cards appear here. Tap a name to rename it.</div>';
+  }
+  cards.forEach((c, i) => {
+    const [col, shade] = ACCENTS[colourIndex(c.name)];
+    const el = document.createElement("div");
+    el.className = "card";
+    el.style.setProperty("--c", col);
+    el.style.setProperty("--s", shade);
+    const name = document.createElement("input");
+    name.className = "name"; name.type = "text"; name.maxLength = 24; name.value = c.name; name.setAttribute("aria-label", "Card name");
+    name.addEventListener("input", () => { c.name = name.value; });
+    name.addEventListener("change", render);
+    const rm = document.createElement("button");
+    rm.className = "remove"; rm.type = "button"; rm.setAttribute("aria-label", "Remove"); rm.textContent = "✕";
+    rm.addEventListener("click", () => { cards.splice(i, 1); render(); });
+    const note = document.createElement("div");
+    note.className = "note"; note.textContent = c.note || "";
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    const pill = document.createElement("span");
+    pill.className = "pill"; pill.textContent = FMT_LABEL[shownFormat(c)];
+    const tail = document.createElement("span");
+    tail.className = "tail"; tail.textContent = c.data.length > 18 ? "…" + c.data.slice(-16) : c.data;
+    meta.append(pill, tail);
+    el.append(name, note, meta, rm);
+    box.append(el);
+  });
+  updateSend();
+}
+
+function flash(msg, err) {
+  const s = $("status");
+  s.textContent = msg;
+  s.className = "status" + (err ? " err" : "");
+}
+
+// ---- scanning ----
+function getReader() {
+  if (!reader) {
+    reader = new ZXingBrowser.BrowserMultiFormatReader(undefined, { delayBetweenScanAttempts: 150 });
+  }
+  return reader;
+}
+
+let lastText = "", lastAt = 0;
+async function startCamera() {
+  if (controls) { stopCamera(); return; }
+  try {
+    $("video").hidden = false; $("frame").hidden = false; $("idle").hidden = true;
+    $("camBtn").textContent = "Stop";
+    controls = await getReader().decodeFromConstraints(
+      { video: { facingMode: "environment", width: { ideal: 1280 } } }, $("video"),
+      (result) => {
+        if (!result) return;
+        const text = result.getText();
+        // The same card stays in frame for a while; only take it once.
+        if (text === lastText && Date.now() - lastAt < 4000) return;
+        lastText = text; lastAt = Date.now();
+        const [fmt, value, note] = mapFormat(result.getBarcodeFormat(), text);
+        addCard("", value, fmt, note);
+      });
+  } catch (e) {
+    stopCamera();
+    flash(e && e.name === "NotAllowedError" ? "Camera permission was denied. Use Photo or Type instead." : "Couldn’t start the camera. Use Photo or Type instead.", true);
+  }
+}
+
+function stopCamera() {
+  if (controls) controls.stop();
+  controls = null;
+  $("video").hidden = true; $("frame").hidden = true; $("idle").hidden = false;
+  $("camBtn").textContent = "Camera";
+}
+
+$("camBtn").addEventListener("click", startCamera);
+$("photoBtn").addEventListener("click", () => $("photo").click());
+$("photo").addEventListener("change", async (ev) => {
+  const file = ev.target.files[0];
+  ev.target.value = "";
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  try {
+    const result = await getReader().decodeFromImageUrl(url);
+    const [fmt, value, note] = mapFormat(result.getBarcodeFormat(), result.getText());
+    addCard("", value, fmt, note);
+  } catch {
+    flash("No code found in that photo. Try a closer, sharper shot.", true);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+});
+$("typeBtn").addEventListener("click", () => { $("manual").hidden = !$("manual").hidden; if (!$("manual").hidden) $("mName").focus(); });
+$("manual").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  addCard($("mName").value.trim(), $("mData").value, parseInt($("mFmt").value, 10), null);
+  $("mName").value = ""; $("mData").value = "";
+});
+
+// ---- sending ----
+function codeValue() { return normaliseCode($("code").value); }
+
+function updateSend() {
+  $("sendBtn").disabled = !(cards.length && ALPHABET.test(codeValue()));
+}
+
+$("code").addEventListener("input", () => {
+  const raw = normaliseCode($("code").value).slice(0, 10);
+  $("code").value = raw.length > 5 ? raw.slice(0, 5) + " " + raw.slice(5) : raw;
+  const bad = raw.replace(/[ABCDEFGHJKMNPQRSTVWXYZ23456789]/g, "");
+  flash(bad ? `The watch code never contains ${[...new Set(bad)].join(", ")}. Check for look-alikes (0/O, 1/I).` : "", !!bad);
+  updateSend();
+});
+
+$("sendBtn").addEventListener("click", async () => {
+  const code = codeValue();
+  $("sendBtn").disabled = true;
+  flash("Encrypting and sending…");
+  try {
+    const parcel = await encryptCards(code, cards.map((c) => ({ name: c.name.trim() || "Card", data: c.data, fmt: c.fmt })));
+    const res = await fetch(API + (await relayId(code)), {
+      method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parcel)
+    });
+    if (res.status === 429) throw new Error("Too many sends from this network. Try again in an hour.");
+    if (res.status === 413) throw new Error("That’s too much at once. Send fewer cards per go.");
+    if (!res.ok) throw new Error("The relay didn’t accept it. Try again.");
+    stopCamera();
+    flash("", false);
+    $("done").hidden = false;
+    $("sendBtn").parentElement.hidden = true;
+    $("done").scrollIntoView({ behavior: "smooth", block: "center" });
+  } catch (e) {
+    flash(e.message && !e.message.startsWith("Failed") ? e.message : "No connection. Check your internet and try again.", true);
+    updateSend();
+  }
+});
+
+$("againBtn").addEventListener("click", () => {
+  cards.length = 0;
+  $("code").value = "";
+  $("done").hidden = true;
+  $("sendBtn").parentElement.hidden = false;
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+render();
+</script>
+</body>
+</html>
