@@ -97,6 +97,29 @@ const EARNED_MANY = ["BEERS", "GLASSES OF RED", "GLASSES OF WHITE", "GLASSES OF 
 function earnedLabel(data) { const n = Math.floor(data.beers); return (n === 1 ? EARNED_ONE : EARNED_MANY)[data.reward] + " EARNED"; }
 const GOLD = "#f2c766", GOLD_DIM = "#c9a24a", INK = "#1a1408", INK_DIM = "#7a6a45";
 const ART = {};
+// Garmin wordmark, the same white logo the Roxzone stickers use.
+let GARMIN_IMG = null;
+function loadGarmin() {
+  if (GARMIN_IMG) return GARMIN_IMG;
+  GARMIN_IMG = new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = "art/garmin.png"; });
+  return GARMIN_IMG;
+}
+// "Earn your Beer  for  GARMIN" centred on cx with its baseline at y, as in
+// the Roxzone brand line: bold name, small "for", then the logo sized to the
+// cap height. Falls back to the word GARMIN if the logo does not load.
+function brandLine(ctx, logo, cx, y, size) {
+  const small = size * 0.85, gap = size * 0.45;
+  ctx.font = `700 ${size}px Goldman, sans-serif`; const wName = ctx.measureText("Earn your Beer").width;
+  ctx.font = `400 ${small}px Goldman, sans-serif`; const wFor = ctx.measureText("for").width;
+  const logoH = size * 0.74, logoW = logo ? logoH * logo.width / logo.height : (ctx.font = `700 ${size}px Goldman, sans-serif`, ctx.measureText("GARMIN").width);
+  let x = cx - (wName + gap + wFor + gap + logoW) / 2;
+  ctx.textAlign = "left";
+  ctx.font = `700 ${size}px Goldman, sans-serif`; ctx.fillText("Earn your Beer", x, y); x += wName + gap;
+  ctx.font = `400 ${small}px Goldman, sans-serif`; ctx.fillText("for", x, y); x += wFor + gap;
+  if (logo) { ctx.drawImage(logo, x, y - logoH, logoW, logoH); }
+  else { ctx.font = `700 ${size}px Goldman, sans-serif`; ctx.fillText("GARMIN", x, y); }
+  ctx.textAlign = "center";
+}
 function loadArt(kind) {
   if (ART[kind]) return ART[kind];
   ART[kind] = new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = `art/${kind}.webp`; });
@@ -133,6 +156,7 @@ const MOCK_GOLD = "#f9dc8a";
 async function drawSticker(c, data) {
   const img = await loadArt(data.reward);
   if (!img) { drawStickerVector(c, data); return; }
+  const logo = await loadGarmin();
   const ctx = c.getContext("2d"), W = c.width, H = c.height;
   ctx.clearRect(0, 0, W, H);
   if (STICKER_PLATE) { ctx.fillStyle = STICKER_PLATE; ctx.fillRect(0, 0, W, H); }
@@ -175,7 +199,7 @@ async function drawSticker(c, data) {
   });
   // Footer: the disclaimer and the name.
   ctx.font = "400 24px Goldman, sans-serif"; ctx.fillText("For laughs only, please drink responsibly.", W / 2, H * 0.905);
-  ctx.font = "700 24px Goldman, sans-serif"; ctx.fillText("Earn your Beer by chandigital.in", W / 2, H * 0.94);
+  brandLine(ctx, logo, W / 2, H * 0.945, 28);
   ctx.restore();
 }
 
