@@ -51,7 +51,9 @@ export const STRINGS = {
   "offline": "No connection. Check your internet and try again.",
   "noteUpcE": "Shown as UPC-A, which reads the same at the till.",
   "noteAs128": "The card uses {format}; the watch shows it as Code 128. Most scanners accept it, but try it once at the counter.",
-  "noteAsQr": "The card uses {format}; the watch shows it as a QR code."
+  "noteAsQr": "The card uses {format}; the watch shows it as a QR code.",
+  "pillFlight": "Flight",
+  "noteBoarding": "Boarding pass: your watch shows it as a QR code, which gate scanners accept. Keep your airline’s pass as a backup."
  },
  "ces": {
   "title": "QRganiser · Přidat karty",
@@ -101,7 +103,9 @@ export const STRINGS = {
   "offline": "Žádné připojení. Zkontrolujte internet a zkuste to znovu.",
   "noteUpcE": "Zobrazeno jako UPC-A, které se na pokladně načte stejně.",
   "noteAs128": "Karta používá {format}; hodinky ji zobrazí jako Code 128. Většina čteček ho přijme, ale jednou to na pokladně vyzkoušejte.",
-  "noteAsQr": "Karta používá {format}; hodinky ji zobrazí jako QR kód."
+  "noteAsQr": "Karta používá {format}; hodinky ji zobrazí jako QR kód.",
+  "pillFlight": "Let",
+  "noteBoarding": "Palubní vstupenka: hodinky ji zobrazí jako QR kód, který čtečky u gate přijmou. Mějte palubní vstupenku od letecké společnosti jako zálohu."
  },
  "dan": {
   "title": "QRganiser · Tilføj kort",
@@ -151,7 +155,9 @@ export const STRINGS = {
   "offline": "Ingen forbindelse. Tjek din internetforbindelse, og prøv igen.",
   "noteUpcE": "Vises som UPC-A, som scannes ens ved kassen.",
   "noteAs128": "Kortet bruger {format}; uret viser det som Code 128. De fleste scannere godtager det, men prøv det én gang ved kassen.",
-  "noteAsQr": "Kortet bruger {format}; uret viser det som en QR-kode."
+  "noteAsQr": "Kortet bruger {format}; uret viser det som en QR-kode.",
+  "pillFlight": "Fly",
+  "noteBoarding": "Boardingkort: uret viser det som en QR-kode, som scannerne ved gaten godtager. Behold flyselskabets boardingkort som backup."
  },
  "deu": {
   "title": "QRganiser · Karten hinzufügen",
@@ -201,7 +207,9 @@ export const STRINGS = {
   "offline": "Keine Verbindung. Prüfe dein Internet und versuch es erneut.",
   "noteUpcE": "Wird als UPC-A angezeigt – an der Kasse liest sich das gleich.",
   "noteAs128": "Die Karte nutzt {format}; die Uhr zeigt sie als Code 128. Die meisten Scanner akzeptieren das, teste es aber einmal an der Kasse.",
-  "noteAsQr": "Die Karte nutzt {format}; die Uhr zeigt sie als QR-Code."
+  "noteAsQr": "Die Karte nutzt {format}; die Uhr zeigt sie als QR-Code.",
+  "pillFlight": "Flug",
+  "noteBoarding": "Bordkarte: Deine Uhr zeigt sie als QR-Code, den Scanner am Gate akzeptieren. Behalte die Bordkarte deiner Airline als Backup."
  },
  "spa": {
   "title": "QRganiser · Añadir tarjetas",
@@ -251,7 +259,9 @@ export const STRINGS = {
   "offline": "Sin conexión. Comprueba tu internet e inténtalo de nuevo.",
   "noteUpcE": "Se muestra como UPC-A, que se lee igual en caja.",
   "noteAs128": "La tarjeta usa {format}; el reloj la muestra como Code 128. La mayoría de lectores lo aceptan, pero pruébalo una vez en caja.",
-  "noteAsQr": "La tarjeta usa {format}; el reloj la muestra como código QR."
+  "noteAsQr": "La tarjeta usa {format}; el reloj la muestra como código QR.",
+  "pillFlight": "Vuelo",
+  "noteBoarding": "Tarjeta de embarque: tu reloj la muestra como código QR, que los lectores de la puerta aceptan. Guarda la tarjeta de tu aerolínea como respaldo."
  },
  "fin": {
   "title": "QRganiser · Lisää kortteja",
@@ -301,7 +311,9 @@ export const STRINGS = {
   "offline": "Ei yhteyttä. Tarkista internetyhteys ja yritä uudelleen.",
   "noteUpcE": "Näytetään UPC-A-muodossa, joka luetaan kassalla samoin.",
   "noteAs128": "Kortti käyttää muotoa {format}; kello näyttää sen Code 128 -koodina. Useimmat lukijat hyväksyvät sen, mutta kokeile kerran kassalla.",
-  "noteAsQr": "Kortti käyttää muotoa {format}; kello näyttää sen QR-koodina."
+  "noteAsQr": "Kortti käyttää muotoa {format}; kello näyttää sen QR-koodina.",
+  "pillFlight": "Lento",
+  "noteBoarding": "Tarkastuskortti: kello näyttää sen QR-koodina, jonka portin lukijat hyväksyvät. Pidä lentoyhtiön tarkastuskortti varalla."
  },
  "fre": {
   "title": "QRganiser · Ajouter des cartes",
@@ -351,7 +363,9 @@ export const STRINGS = {
   "offline": "Pas de connexion. Vérifiez votre accès Internet et réessayez.",
   "noteUpcE": "Affiché en UPC-A, qui se lit de la même façon en caisse.",
   "noteAs128": "La carte utilise {format} ; la montre l’affiche en Code 128. La plupart des lecteurs l’acceptent, mais testez-le une fois en caisse.",
-  "noteAsQr": "La carte utilise {format} ; la montre l’affiche en code QR."
+  "noteAsQr": "La carte utilise {format} ; la montre l’affiche en code QR.",
+  "pillFlight": "Vol",
+  "noteBoarding": "Carte d’embarquement : votre montre l’affiche en code QR, accepté par les lecteurs à la porte. Gardez la carte de votre compagnie aérienne en secours."
  },
  "hun": {
   "title": "QRganiser · Kártyák hozzáadása",
@@ -401,7 +415,9 @@ export const STRINGS = {
   "offline": "Nincs kapcsolat. Ellenőrizd az internetet, és próbáld újra.",
   "noteUpcE": "UPC-A-ként jelenik meg, amit a kasszánál ugyanúgy leolvasnak.",
   "noteAs128": "A kártya {format} formátumú; az óra Code 128-ként jeleníti meg. A legtöbb olvasó elfogadja, de egyszer próbáld ki a pultnál.",
-  "noteAsQr": "A kártya {format} formátumú; az óra QR-kódként jeleníti meg."
+  "noteAsQr": "A kártya {format} formátumú; az óra QR-kódként jeleníti meg.",
+  "pillFlight": "Járat",
+  "noteBoarding": "Beszállókártya: az óra QR-kódként jeleníti meg, amit a kapunál lévő olvasók elfogadnak. A légitársaság beszállókártyáját tartsd meg tartaléknak."
  },
  "ind": {
   "title": "QRganiser · Tambah kartu",
@@ -451,7 +467,9 @@ export const STRINGS = {
   "offline": "Tidak ada koneksi. Periksa internet Anda dan coba lagi.",
   "noteUpcE": "Ditampilkan sebagai UPC-A, yang terbaca sama di kasir.",
   "noteAs128": "Kartu ini memakai {format}; jam menampilkannya sebagai Code 128. Sebagian besar pemindai menerimanya, tetapi coba sekali di kasir.",
-  "noteAsQr": "Kartu ini memakai {format}; jam menampilkannya sebagai kode QR."
+  "noteAsQr": "Kartu ini memakai {format}; jam menampilkannya sebagai kode QR.",
+  "pillFlight": "Pesawat",
+  "noteBoarding": "Boarding pass: jam menampilkannya sebagai kode QR, yang diterima pemindai di gerbang. Simpan boarding pass dari maskapai sebagai cadangan."
  },
  "ita": {
   "title": "QRganiser · Aggiungi tessere",
@@ -501,7 +519,9 @@ export const STRINGS = {
   "offline": "Nessuna connessione. Controlla internet e riprova.",
   "noteUpcE": "Mostrato come UPC-A, che alla cassa si legge allo stesso modo.",
   "noteAs128": "La tessera usa {format}; l’orologio la mostra come Code 128. La maggior parte dei lettori lo accetta, ma provalo una volta alla cassa.",
-  "noteAsQr": "La tessera usa {format}; l’orologio la mostra come codice QR."
+  "noteAsQr": "La tessera usa {format}; l’orologio la mostra come codice QR.",
+  "pillFlight": "Volo",
+  "noteBoarding": "Carta d’imbarco: l’orologio la mostra come codice QR, accettato dai lettori al gate. Tieni la carta della compagnia aerea come riserva."
  },
  "kor": {
   "title": "QRganiser · 카드 추가",
@@ -551,7 +571,9 @@ export const STRINGS = {
   "offline": "연결되지 않았습니다. 인터넷을 확인하고 다시 시도하세요.",
   "noteUpcE": "UPC-A로 표시되며, 계산대에서 동일하게 인식됩니다.",
   "noteAs128": "이 카드는 {format}를 사용합니다. 워치에는 Code 128로 표시됩니다. 대부분의 스캐너에서 인식되지만 카운터에서 한 번 시험해 보세요.",
-  "noteAsQr": "이 카드는 {format}를 사용합니다. 워치에는 QR 코드로 표시됩니다."
+  "noteAsQr": "이 카드는 {format}를 사용합니다. 워치에는 QR 코드로 표시됩니다.",
+  "pillFlight": "항공편",
+  "noteBoarding": "탑승권: 워치에는 QR 코드로 표시되며, 탑승구 스캐너에서 인식됩니다. 항공사 탑승권도 예비용으로 꼭 챙기세요."
  },
  "dut": {
   "title": "QRganiser · Kaarten toevoegen",
@@ -601,7 +623,9 @@ export const STRINGS = {
   "offline": "Geen verbinding. Controleer je internet en probeer het opnieuw.",
   "noteUpcE": "Getoond als UPC-A; dat scant bij de kassa hetzelfde.",
   "noteAs128": "De kaart gebruikt {format}; het horloge toont hem als Code 128. De meeste scanners accepteren dat, maar probeer het één keer aan de balie.",
-  "noteAsQr": "De kaart gebruikt {format}; het horloge toont hem als QR-code."
+  "noteAsQr": "De kaart gebruikt {format}; het horloge toont hem als QR-code.",
+  "pillFlight": "Vlucht",
+  "noteBoarding": "Instapkaart: je horloge toont hem als QR-code, die scanners bij de gate accepteren. Houd de kaart van je luchtvaartmaatschappij als back-up."
  },
  "nob": {
   "title": "QRganiser · Legg til kort",
@@ -651,7 +675,9 @@ export const STRINGS = {
   "offline": "Ingen tilkobling. Sjekk internett og prøv igjen.",
   "noteUpcE": "Vises som UPC-A, som leses likt i kassen.",
   "noteAs128": "Kortet bruker {format}; klokken viser det som Code 128. De fleste skannere godtar det, men test det én gang i kassen.",
-  "noteAsQr": "Kortet bruker {format}; klokken viser det som en QR-kode."
+  "noteAsQr": "Kortet bruker {format}; klokken viser det som en QR-kode.",
+  "pillFlight": "Fly",
+  "noteBoarding": "Boardingkort: klokken viser det som en QR-kode, som skannerne ved gaten godtar. Behold flyselskapets boardingkort som reserve."
  },
  "jpn": {
   "title": "QRganiser · カードを追加",
@@ -701,7 +727,9 @@ export const STRINGS = {
   "offline": "接続されていません。インターネットを確認して、もう一度お試しください。",
   "noteUpcE": "UPC-A として表示されます。レジでは同じように読み取れます。",
   "noteAs128": "このカードは {format} です。ウォッチでは Code 128 で表示されます。ほとんどのスキャナーで読み取れますが、一度レジで試してください。",
-  "noteAsQr": "このカードは {format} です。ウォッチでは QR コードで表示されます。"
+  "noteAsQr": "このカードは {format} です。ウォッチでは QR コードで表示されます。",
+  "pillFlight": "フライト",
+  "noteBoarding": "搭乗券：ウォッチでは QR コードで表示され、搭乗口のスキャナーで読み取れます。航空会社の搭乗券も予備としてお持ちください。"
  },
  "pol": {
   "title": "QRganiser · Dodaj karty",
@@ -751,7 +779,9 @@ export const STRINGS = {
   "offline": "Brak połączenia. Sprawdź internet i spróbuj ponownie.",
   "noteUpcE": "Wyświetlany jako UPC-A, który przy kasie odczytuje się tak samo.",
   "noteAs128": "Karta używa {format}; zegarek wyświetla ją jako Code 128. Większość skanerów to akceptuje, ale sprawdź raz przy kasie.",
-  "noteAsQr": "Karta używa {format}; zegarek wyświetla ją jako kod QR."
+  "noteAsQr": "Karta używa {format}; zegarek wyświetla ją jako kod QR.",
+  "pillFlight": "Lot",
+  "noteBoarding": "Karta pokładowa: zegarek wyświetla ją jako kod QR, który akceptują skanery przy bramce. Zachowaj kartę od linii lotniczej jako zapas."
  },
  "pob": {
   "title": "QRganiser · Adicionar cartões",
@@ -801,7 +831,9 @@ export const STRINGS = {
   "offline": "Sem conexão. Verifique sua internet e tente de novo.",
   "noteUpcE": "Exibido como UPC-A, que é lido do mesmo jeito no caixa.",
   "noteAs128": "O cartão usa {format}; o relógio o exibe como Code 128. A maioria dos leitores aceita, mas teste uma vez no balcão.",
-  "noteAsQr": "O cartão usa {format}; o relógio o exibe como código QR."
+  "noteAsQr": "O cartão usa {format}; o relógio o exibe como código QR.",
+  "pillFlight": "Voo",
+  "noteBoarding": "Cartão de embarque: o relógio o exibe como código QR, que os leitores do portão aceitam. Guarde o cartão da companhia aérea como reserva."
  },
  "por": {
   "title": "QRganiser · Adicionar cartões",
@@ -851,7 +883,9 @@ export const STRINGS = {
   "offline": "Sem ligação. Verifique a internet e tente novamente.",
   "noteUpcE": "Apresentado como UPC-A, que é lido da mesma forma na caixa.",
   "noteAs128": "O cartão usa {format}; o relógio mostra-o como Code 128. A maioria dos leitores aceita-o, mas experimente uma vez no balcão.",
-  "noteAsQr": "O cartão usa {format}; o relógio mostra-o como código QR."
+  "noteAsQr": "O cartão usa {format}; o relógio mostra-o como código QR.",
+  "pillFlight": "Voo",
+  "noteBoarding": "Cartão de embarque: o relógio mostra-o como código QR, que os leitores da porta de embarque aceitam. Guarde o cartão da companhia aérea como reserva."
  },
  "swe": {
   "title": "QRganiser · Lägg till kort",
@@ -901,7 +935,9 @@ export const STRINGS = {
   "offline": "Ingen anslutning. Kontrollera internet och försök igen.",
   "noteUpcE": "Visas som UPC-A, som läses likadant i kassan.",
   "noteAs128": "Kortet använder {format}; klockan visar det som Code 128. De flesta skannrar godtar det, men testa en gång i kassan.",
-  "noteAsQr": "Kortet använder {format}; klockan visar det som en QR-kod."
+  "noteAsQr": "Kortet använder {format}; klockan visar det som en QR-kod.",
+  "pillFlight": "Flyg",
+  "noteBoarding": "Boardingkort: klockan visar det som en QR-kod, som skannrarna vid gaten godtar. Spara flygbolagets boardingkort som reserv."
  },
  "tha": {
   "title": "QRganiser · เพิ่มบัตร",
@@ -951,7 +987,9 @@ export const STRINGS = {
   "offline": "ไม่มีการเชื่อมต่อ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง",
   "noteUpcE": "แสดงเป็น UPC-A ซึ่งสแกนที่แคชเชียร์ได้ผลเหมือนกัน",
   "noteAs128": "บัตรนี้ใช้ {format} นาฬิกาจะแสดงเป็น Code 128 เครื่องสแกนส่วนใหญ่อ่านได้ แต่ควรลองที่เคาน์เตอร์ก่อนสักครั้ง",
-  "noteAsQr": "บัตรนี้ใช้ {format} นาฬิกาจะแสดงเป็น QR โค้ด"
+  "noteAsQr": "บัตรนี้ใช้ {format} นาฬิกาจะแสดงเป็น QR โค้ด",
+  "pillFlight": "เที่ยวบิน",
+  "noteBoarding": "บัตรขึ้นเครื่อง: นาฬิกาจะแสดงเป็น QR โค้ด ซึ่งเครื่องสแกนที่ประตูขึ้นเครื่องอ่านได้ ควรเก็บบัตรขึ้นเครื่องของสายการบินไว้สำรองด้วย"
  },
  "zhs": {
   "title": "QRganiser · 添加卡片",
@@ -1001,7 +1039,9 @@ export const STRINGS = {
   "offline": "无网络连接。请检查网络后重试。",
   "noteUpcE": "显示为 UPC-A，收银台扫描结果相同。",
   "noteAs128": "此卡片使用 {format}；手表会以 Code 128 显示。大多数扫描器都能识别，但请先在柜台试一次。",
-  "noteAsQr": "此卡片使用 {format}；手表会以 QR 码显示。"
+  "noteAsQr": "此卡片使用 {format}；手表会以 QR 码显示。",
+  "pillFlight": "航班",
+  "noteBoarding": "登机牌：手表会以 QR 码显示，登机口扫描器可以识别。请保留航空公司的登机牌作为备用。"
  },
  "zht": {
   "title": "QRganiser · 新增卡片",
@@ -1051,7 +1091,9 @@ export const STRINGS = {
   "offline": "沒有網路連線。請檢查網路後再試一次。",
   "noteUpcE": "顯示為 UPC-A，結帳時掃描結果相同。",
   "noteAs128": "此卡片使用 {format}；手錶會以 Code 128 顯示。多數掃描器都能讀取，但請先在櫃檯試一次。",
-  "noteAsQr": "此卡片使用 {format}；手錶會以 QR 碼顯示。"
+  "noteAsQr": "此卡片使用 {format}；手錶會以 QR 碼顯示。",
+  "pillFlight": "航班",
+  "noteBoarding": "登機證：手錶會以 QR 碼顯示，登機門掃描器可以讀取。請保留航空公司的登機證作為備用。"
  }
 };
 

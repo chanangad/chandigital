@@ -243,9 +243,25 @@ function upcEtoA(s) {
   return ns + body + chk;
 }
 
+// IATA boarding pass (BCBP, Resolution 792): fixed-width first 60 chars.
+// Mirrors source/Bcbp.mc on the watch.
+function parseBcbp(text) {
+  if (!text || text.length < 60 || text[0] !== "M" || !/[1-4]/.test(text[1])) return null;
+  const from = text.slice(30, 33), to = text.slice(33, 36);
+  if (!/^[A-Z]{3}$/.test(from) || !/^[A-Z]{3}$/.test(to)) return null;
+  const julian = +text.slice(44, 47);
+  if (!(julian >= 1 && julian <= 366)) return null;
+  const strip = (s) => s.trim().replace(/^0+(?=.)/, "");
+  return { from, to, carrier: text.slice(36, 39).trim(), flight: strip(text.slice(39, 44)), seat: strip(text.slice(48, 52)) };
+}
+const passName = (p) => `${p.carrier} ${p.flight} ${p.from}-${p.to}`;
+
 // ZXing format -> [watch format, value, note]
 function mapFormat(fmt, text) {
   const F = ZXingBrowser.BarcodeFormat;
+  // Paper passes are PDF417 and phone passes Aztec or QR; the watch shows
+  // any of them as QR, which IATA allows for passes on a device.
+  if (parseBcbp(text)) return [1, text, { key: "noteBoarding" }];
   if (fmt === F.QR_CODE || fmt === F.MICRO_QR_CODE) return [1, text, null];
   if (fmt === F.CODE_128) return [2, text, null];
   if (fmt === F.EAN_13 || fmt === F.UPC_A) return [3, text, null];
@@ -261,12 +277,16 @@ function mapFormat(fmt, text) {
 }
 
 function addCard(name, data, fmt, note) {
-  data = data.trim();
+  // A boarding pass is passed on byte for byte (its fields are fixed-width
+  // and the airline's system reads them); everything else is trimmed.
+  if (!parseBcbp(data)) data = data.trim();
   if (!data) return;
   const existing = cards.find((c) => c.data === data);
   if (existing) { flash(t("dupe", { name: existing.name })); return; }
   if (cards.length >= MAX_CARDS) { flash(t("tooMany", { n: MAX_CARDS }), true); return; }
-  cards.push({ name: name || t("defaultName", { n: cards.length + 1 }), data, fmt, note });
+  const pass = parseBcbp(data);
+  if (pass && !note) note = { key: "noteBoarding" };
+  cards.push({ name: name || (pass ? passName(pass) : t("defaultName", { n: cards.length + 1 })), data, fmt, note, pass });
   render();
   if (navigator.vibrate) navigator.vibrate(40);
   $("vf").classList.remove("hit"); void $("vf").offsetWidth; $("vf").classList.add("hit");
@@ -302,9 +322,11 @@ function render() {
     const meta = document.createElement("div");
     meta.className = "meta";
     const pill = document.createElement("span");
-    pill.className = "pill"; pill.textContent = FMT_LABEL[shownFormat(c)];
+    pill.className = "pill"; pill.textContent = c.pass ? "✈ " + t("pillFlight") : FMT_LABEL[shownFormat(c)];
     const tail = document.createElement("span");
-    tail.className = "tail"; tail.textContent = c.data.length > 18 ? "…" + c.data.slice(-16) : c.data;
+    tail.className = "tail";
+    tail.textContent = c.pass ? [c.pass.from + "→" + c.pass.to, c.pass.seat].filter(Boolean).join(" · ")
+      : c.data.length > 18 ? "…" + c.data.slice(-16) : c.data;
     meta.append(pill, tail);
     el.append(name, note, meta, rm);
     box.append(el);
@@ -321,7 +343,18 @@ function flash(msg, err) {
 // ---- scanning ----
 function getReader() {
   if (!reader) {
-    reader = new ZXingBrowser.BrowserMultiFormatReader(undefined, { delayBetweenScanAttempts: 150 });
+    // Name the formats to look for. Left to itself ZXing also tries Micro
+    // QR, which no card uses, and it misread an Aztec boarding pass as a
+    // 3-character Micro QR. The hint keys are @zxing/library's
+    // DecodeHintType values (the browser bundle doesn't export the enum):
+    // 2 = POSSIBLE_FORMATS, 3 = TRY_HARDER.
+    const F = ZXingBrowser.BarcodeFormat;
+    const hints = new Map([
+      [2, [F.QR_CODE, F.AZTEC, F.PDF_417, F.DATA_MATRIX, F.CODE_128, F.CODE_39, F.CODE_93, F.CODABAR,
+           F.ITF, F.EAN_13, F.EAN_8, F.UPC_A, F.UPC_E, F.RSS_14, F.RSS_EXPANDED]],
+      [3, true]
+    ]);
+    reader = new ZXingBrowser.BrowserMultiFormatReader(hints, { delayBetweenScanAttempts: 150 });
   }
   return reader;
 }
