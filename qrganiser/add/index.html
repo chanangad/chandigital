@@ -32,12 +32,15 @@
     padding: env(safe-area-inset-top) 16px calc(32px + env(safe-area-inset-bottom));
   }
   main { max-width: 520px; margin: 0 auto; }
-  header { display: flex; align-items: center; gap: 12px; padding: 20px 0 8px; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 20px 0 8px; }
+  header .tools { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .viewfinder .idle p { margin: 0; }
   .mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); display: grid; place-items: center; }
   .mark svg { width: 22px; height: 22px; }
   header h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
   header p { margin: 0; color: var(--muted); font-size: 13px; }
-  header .about { margin-left: auto; color: var(--muted); font-size: 13px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
+  header .lang { font: inherit; font-size: 13px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 8px; max-width: 120px; min-height: 0; width: auto; }
+  header .about { color: var(--muted); font-size: 13px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
 
   h2 { font-size: 15px; font-weight: 600; margin: 28px 0 12px; display: flex; align-items: center; gap: 10px; }
   h2 .step { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-2); color: var(--accent); display: grid; place-items: center; font-size: 13px; }
@@ -120,62 +123,82 @@
     </div>
     <div>
       <h1>QRganiser</h1>
-      <p>Put your cards on your Garmin watch</p>
+      <p data-i18n="tagline">Put your cards on your Garmin watch</p>
     </div>
-    <a class="about" href="../">About the app</a>
+    <div class="tools">
+      <select class="lang" id="lang" data-i18n-aria="language" aria-label="Language"></select>
+      <a class="about" href="../" data-i18n="about">About the app</a>
+    </div>
   </header>
 
-  <h2><span class="step">1</span>Scan your cards</h2>
+  <h2><span class="step">1</span><span data-i18n="step1">Scan your cards</span></h2>
   <div class="viewfinder" id="vf">
     <video id="video" playsinline muted hidden></video>
     <div class="frame" id="frame" hidden></div>
-    <div class="idle" id="idle">Point your camera at a loyalty card, gym pass or ticket.<br>QR codes and barcodes both work.</div>
+    <div class="idle" id="idle"><p><span data-i18n="idle1">Point your camera at a loyalty card, gym pass or ticket.</span><br><span data-i18n="idle2">QR codes and barcodes both work.</span></p></div>
   </div>
   <div class="row">
-    <button class="primary" id="camBtn">Camera</button>
-    <button id="photoBtn">Photo</button>
-    <button id="typeBtn">Type</button>
+    <button class="primary" id="camBtn" data-i18n="camera">Camera</button>
+    <button id="photoBtn" data-i18n="photo">Photo</button>
+    <button id="typeBtn" data-i18n="type">Type</button>
     <input type="file" id="photo" accept="image/*">
   </div>
 
   <form class="manual" id="manual" hidden>
-    <label>Name <input type="text" id="mName" maxlength="24" placeholder="e.g. Gym" autocomplete="off"></label>
-    <label>Card number or code content <input type="text" id="mData" maxlength="300" placeholder="e.g. 4006381333931" autocomplete="off"></label>
-    <label>Format
+    <label><span data-i18n="fieldName">Name</span> <input type="text" id="mName" maxlength="24" placeholder="e.g. Gym" data-i18n-placeholder="fieldNameHint" autocomplete="off"></label>
+    <label><span data-i18n="fieldData">Card number or code content</span> <input type="text" id="mData" maxlength="300" placeholder="e.g. 4006381333931" autocomplete="off"></label>
+    <label><span data-i18n="fieldFormat">Format</span>
       <select id="mFmt">
-        <option value="0">Auto</option>
-        <option value="1">QR code</option>
-        <option value="2">Code 128 barcode</option>
-        <option value="3">EAN-13 / UPC-A barcode</option>
+        <option value="0" data-i18n="fmtAuto">Auto</option>
+        <option value="1" data-i18n="fmtQr">QR code</option>
+        <option value="2" data-i18n="fmtC128">Code 128 barcode</option>
+        <option value="3" data-i18n="fmtEan">EAN-13 / UPC-A barcode</option>
       </select>
     </label>
-    <button class="primary" type="submit">Add card</button>
+    <button class="primary" type="submit" data-i18n="addCard">Add card</button>
   </form>
 
-  <h2><span class="step">2</span>Check names</h2>
-  <div class="cards" id="cards"><div class="empty">Scanned cards appear here. Tap a name to rename it.</div></div>
+  <h2><span class="step">2</span><span data-i18n="step2">Check names</span></h2>
+  <div class="cards" id="cards"></div>
 
-  <h2><span class="step">3</span>Send to your watch</h2>
-  <p class="hint">On your watch open <b>QRganiser</b>, scroll to <b>Add from phone</b> and type the code it shows.</p>
-  <input type="text" class="code-input" id="code" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="11" placeholder="XXXXX XXXXX" aria-label="Watch code">
-  <div class="row"><button class="primary" id="sendBtn" disabled>Send to watch</button></div>
+  <h2><span class="step">3</span><span data-i18n="step3">Send to your watch</span></h2>
+  <p class="hint" data-i18n-html="hint">On your watch open <b>QRganiser</b>, scroll to <b>Add from phone</b> and type the code it shows.</p>
+  <input type="text" class="code-input" id="code" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="11" placeholder="XXXXX XXXXX" aria-label="Watch code" data-i18n-aria="watchCode">
+  <div class="row"><button class="primary" id="sendBtn" disabled data-i18n="send">Send to watch</button></div>
   <div class="status" id="status" role="status"></div>
   <div class="done" id="done" hidden>
     <div class="tick">✓</div>
-    <b>Sent</b>
-    <p class="hint" style="margin:6px 0 0">Your watch picks the cards up within a few seconds.<br>Keep the Garmin Connect app running on this phone.</p>
-    <div class="row"><button class="ghost" id="againBtn">Add more cards</button></div>
+    <b data-i18n="sent">Sent</b>
+    <p class="hint" style="margin:6px 0 0"><span data-i18n="sentHint1">Your watch picks the cards up within a few seconds.</span><br><span data-i18n="sentHint2">Keep the Garmin Connect app running on this phone.</span></p>
+    <div class="row"><button class="ghost" id="againBtn" data-i18n="again">Add more cards</button></div>
   </div>
 
   <footer>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-    <span>Cards are encrypted on this phone with the code your watch shows. Our server only passes the encrypted parcel along and deletes it after 10 minutes. Nothing is stored in this browser.</span>
+    <span data-i18n="privacy">Cards are encrypted on this phone with the code your watch shows. Our server only passes the encrypted parcel along and deletes it after 10 minutes. Nothing is stored in this browser.</span>
   </footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
 <script type="module">
 import { encryptCards, relayId, normaliseCode } from "./relay-crypto.js";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js";
+
+let lang = pickLanguage();
+const t = (key, vars = {}) => {
+  const s = (STRINGS[lang] && STRINGS[lang][key]) || STRINGS.en[key] || key;
+  return s.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : `{${k}}`));
+};
+
+function applyLanguage() {
+  document.documentElement.lang = LANGUAGES.find((l) => l.id === lang).html;
+  document.title = t("title");
+  document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-html]").forEach((el) => { el.innerHTML = t(el.dataset.i18nHtml); });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  document.querySelectorAll("[data-i18n-aria]").forEach((el) => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
+  if (controls) $("camBtn").textContent = t("stop");
+}
 
 // Same origin in production (chandigital.in/qrganiser/). ?api= is for local
 // testing against `wrangler dev` only.
@@ -231,22 +254,22 @@ function mapFormat(fmt, text) {
   if (fmt === F.EAN_13 || fmt === F.UPC_A) return [3, text, null];
   if (fmt === F.UPC_E) {
     const a = upcEtoA(text);
-    if (a) return [3, a, "Shown as UPC-A, which reads the same at the till."];
+    if (a) return [3, a, { key: "noteUpcE" }];
   }
   const name = (F[fmt] || "this format").replace(/_/g, "-");
   const oneD = [F.CODE_39, F.CODE_93, F.CODABAR, F.ITF, F.EAN_8, F.RSS_14, F.RSS_EXPANDED].includes(fmt);
   return oneD
-    ? [2, text, `The card uses ${name}; the watch shows it as Code 128. Most scanners accept it, but try it once at the counter.`]
-    : [1, text, `The card uses ${name}; the watch shows it as a QR code.`];
+    ? [2, text, { key: "noteAs128", vars: { format: name } }]
+    : [1, text, { key: "noteAsQr", vars: { format: name } }];
 }
 
 function addCard(name, data, fmt, note) {
   data = data.trim();
   if (!data) return;
   const existing = cards.find((c) => c.data === data);
-  if (existing) { flash(`Already added as “${existing.name}”`); return; }
-  if (cards.length >= MAX_CARDS) { flash(`Up to ${MAX_CARDS} cards per send.`, true); return; }
-  cards.push({ name: name || `Card ${cards.length + 1}`, data, fmt, note });
+  if (existing) { flash(t("dupe", { name: existing.name })); return; }
+  if (cards.length >= MAX_CARDS) { flash(t("tooMany", { n: MAX_CARDS }), true); return; }
+  cards.push({ name: name || t("defaultName", { n: cards.length + 1 }), data, fmt, note });
   render();
   if (navigator.vibrate) navigator.vibrate(40);
   $("vf").classList.remove("hit"); void $("vf").offsetWidth; $("vf").classList.add("hit");
@@ -259,7 +282,10 @@ function render() {
   const box = $("cards");
   box.replaceChildren();
   if (!cards.length) {
-    box.innerHTML = '<div class="empty">Scanned cards appear here. Tap a name to rename it.</div>';
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = t("empty");
+    box.append(empty);
   }
   cards.forEach((c, i) => {
     const [col, shade] = ACCENTS[colourIndex(c.name)];
@@ -268,14 +294,14 @@ function render() {
     el.style.setProperty("--c", col);
     el.style.setProperty("--s", shade);
     const name = document.createElement("input");
-    name.className = "name"; name.type = "text"; name.maxLength = 24; name.value = c.name; name.setAttribute("aria-label", "Card name");
+    name.className = "name"; name.type = "text"; name.maxLength = 24; name.value = c.name; name.setAttribute("aria-label", t("cardName"));
     name.addEventListener("input", () => { c.name = name.value; });
     name.addEventListener("change", render);
     const rm = document.createElement("button");
-    rm.className = "remove"; rm.type = "button"; rm.setAttribute("aria-label", "Remove"); rm.textContent = "✕";
+    rm.className = "remove"; rm.type = "button"; rm.setAttribute("aria-label", t("remove")); rm.textContent = "✕";
     rm.addEventListener("click", () => { cards.splice(i, 1); render(); });
     const note = document.createElement("div");
-    note.className = "note"; note.textContent = c.note || "";
+    note.className = "note"; note.textContent = c.note ? t(c.note.key, c.note.vars) : "";
     const meta = document.createElement("div");
     meta.className = "meta";
     const pill = document.createElement("span");
@@ -308,7 +334,7 @@ async function startCamera() {
   if (controls) { stopCamera(); return; }
   try {
     $("video").hidden = false; $("frame").hidden = false; $("idle").hidden = true;
-    $("camBtn").textContent = "Stop";
+    $("camBtn").textContent = t("stop");
     controls = await getReader().decodeFromConstraints(
       { video: { facingMode: "environment", width: { ideal: 1280 } } }, $("video"),
       (result) => {
@@ -322,7 +348,7 @@ async function startCamera() {
       });
   } catch (e) {
     stopCamera();
-    flash(e && e.name === "NotAllowedError" ? "Camera permission was denied. Use Photo or Type instead." : "Couldn’t start the camera. Use Photo or Type instead.", true);
+    flash(t(e && e.name === "NotAllowedError" ? "camDenied" : "camFailed"), true);
   }
 }
 
@@ -330,7 +356,7 @@ function stopCamera() {
   if (controls) controls.stop();
   controls = null;
   $("video").hidden = true; $("frame").hidden = true; $("idle").hidden = false;
-  $("camBtn").textContent = "Camera";
+  $("camBtn").textContent = t("camera");
 }
 
 $("camBtn").addEventListener("click", startCamera);
@@ -345,7 +371,7 @@ $("photo").addEventListener("change", async (ev) => {
     const [fmt, value, note] = mapFormat(result.getBarcodeFormat(), result.getText());
     addCard("", value, fmt, note);
   } catch {
-    flash("No code found in that photo. Try a closer, sharper shot.", true);
+    flash(t("noCode"), true);
   } finally {
     URL.revokeObjectURL(url);
   }
@@ -368,29 +394,29 @@ $("code").addEventListener("input", () => {
   const raw = normaliseCode($("code").value).slice(0, 10);
   $("code").value = raw.length > 5 ? raw.slice(0, 5) + " " + raw.slice(5) : raw;
   const bad = raw.replace(/[ABCDEFGHJKMNPQRSTVWXYZ23456789]/g, "");
-  flash(bad ? `The watch code never contains ${[...new Set(bad)].join(", ")}. Check for look-alikes (0/O, 1/I).` : "", !!bad);
+  flash(bad ? t("badChars", { chars: [...new Set(bad)].join(", ") }) : "", !!bad);
   updateSend();
 });
 
 $("sendBtn").addEventListener("click", async () => {
   const code = codeValue();
   $("sendBtn").disabled = true;
-  flash("Encrypting and sending…");
+  flash(t("sending"));
   try {
-    const parcel = await encryptCards(code, cards.map((c) => ({ name: c.name.trim() || "Card", data: c.data, fmt: c.fmt })));
+    const parcel = await encryptCards(code, cards.map((c) => ({ name: c.name.trim() || t("defaultName", { n: "" }).trim(), data: c.data, fmt: c.fmt })));
     const res = await fetch(API + (await relayId(code)), {
       method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parcel)
     });
-    if (res.status === 429) throw new Error("Too many sends from this network. Try again in an hour.");
-    if (res.status === 413) throw new Error("That’s too much at once. Send fewer cards per go.");
-    if (!res.ok) throw new Error("The relay didn’t accept it. Try again.");
+    if (res.status === 429) throw new SendError("rateLimited");
+    if (res.status === 413) throw new SendError("tooLarge");
+    if (!res.ok) throw new SendError("rejected");
     stopCamera();
     flash("", false);
     $("done").hidden = false;
     $("sendBtn").parentElement.hidden = true;
     $("done").scrollIntoView({ behavior: "smooth", block: "center" });
   } catch (e) {
-    flash(e.message && !e.message.startsWith("Failed") ? e.message : "No connection. Check your internet and try again.", true);
+    flash(t(e instanceof SendError ? e.key : "offline"), true);
     updateSend();
   }
 });
@@ -404,6 +430,26 @@ $("againBtn").addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+class SendError extends Error {
+  constructor(key) { super(key); this.key = key; }
+}
+
+// Language picker: same list and saved choice as the rest of chandigital.in.
+const picker = $("lang");
+for (const l of LANGUAGES) {
+  const o = document.createElement("option");
+  o.value = l.id; o.textContent = l.label;
+  picker.append(o);
+}
+picker.value = lang;
+picker.addEventListener("change", () => {
+  lang = picker.value;
+  rememberLanguage(lang);
+  applyLanguage();
+  render();
+});
+
+applyLanguage();
 render();
 </script>
 </body>
