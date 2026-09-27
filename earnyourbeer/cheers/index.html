@@ -63,7 +63,7 @@
 // ---------------------------------------------------------------------------
 // Decoder for the watch's share payload. Mirrors BeerShare.buildCode() in the
 // widget source (beer app/source/BeerShare.mc) — keep both in lockstep.
-//   1_ts_beersX10_kcal_style_reward_rank_weekX10_lifetimeX10_badges_mode
+//   1_ts_beersX10_kcal_style_reward_rank_weekX10_lifetimeX10_streak_mode
 // ---------------------------------------------------------------------------
 const STYLES = ["Lager", "Light lager", "Wheat beer", "Pale ale", "IPA", "Stout / Porter", "Imperial / Double IPA", "Non-alcoholic", "Custom"];
 const STYLE_KCAL = [215, 140, 225, 250, 290, 250, 430, 100, 0];
@@ -71,7 +71,6 @@ const REWARDS = ["Beer", "Red wine", "White wine", "Champagne", "Aperol spritz",
 const REWARD_UNITS = ["beers", "glasses of red", "glasses of white", "flutes of champagne", "Aperol spritzes", "negronis", "espresso martinis", "croissants", "portions of truffle fries"];
 const REWARD_KCAL = [0, 125, 120, 90, 170, 200, 240, 300, 420];
 const RANKS = ["Designated Driver", "Half Pint", "One and Done", "Two-fer", "Session Pace", "Round's On You", "Six-Pack Hero", "Oktoberfest", "Kegend"];
-const BADGES = [[1, "Six-Pack"], [2, "Case"], [4, "Keg"], [8, "Early Bird"], [16, "Happy Hour"], [32, "Seven-Day Session"]];
 // Liquid colour per style, then per reward (index 1..7).
 const STYLE_COLORS = ["#f5b800", "#ffe066", "#f0c040", "#e08a00", "#d97a00", "#3b1f0e", "#2a1205", "#f5c542", "#f5b800"];
 const REWARD_COLORS = ["#f5b800", "#8b1a3a", "#f3e5a0", "#f2dc9b", "#ff7a1a", "#c8301e", "#5a3a22", "#e0a23a", "#f5c542"];
@@ -82,10 +81,10 @@ function decode(d) {
   if (p.length < 11 || p[0] !== "1") return null;
   const n = p.slice(1).map((x) => Number(x));
   if (n.some((x) => !Number.isFinite(x) || x < 0)) return null;
-  const [ts, beersX10, kcal, style, reward, rank, weekX10, lifetimeX10, badges, mode] = n;
+  const [ts, beersX10, kcal, style, reward, rank, weekX10, lifetimeX10, streak, mode] = n;
   return {
     ts, beers: beersX10 / 10, kcal, style: Math.min(style, 8), reward: Math.min(reward, 8),
-    rank: Math.min(rank, 8), week: weekX10 / 10, lifetime: lifetimeX10 / 10, badges, mode: mode === 1 ? 1 : 0
+    rank: Math.min(rank, 8), week: weekX10 / 10, lifetime: lifetimeX10 / 10, streak, mode: mode === 1 ? 1 : 0
   };
 }
 
@@ -192,8 +191,8 @@ async function drawSticker(c, data) {
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 10; ctx.shadowOffsetY = 2;
   ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
-  const badges = BADGES.filter(([bit]) => data.badges & bit).length;
-  [[whole(data.week), "This week"], [whole(data.lifetime), "Lifetime"], [String(badges), "Badges"]].forEach(([v, l], i) => {
+  // Third slot is the day streak (the watch sends it where badges used to go).
+  [[whole(data.week), "This week"], [whole(data.lifetime), "Lifetime"], [String(data.streak), "Day streak"]].forEach(([v, l], i) => {
     const x = W * (0.29 + i * 0.205);
     ctx.font = "700 44px Goldman, sans-serif"; ctx.fillText(v, x, sy + sh * 0.44);
     ctx.font = "400 27px Goldman, sans-serif"; ctx.fillText(l, x, sy + sh * 0.82);
