@@ -116,7 +116,8 @@ function brandLine(ctx, logo, cx, y, size) {
   ctx.textAlign = "left";
   ctx.font = `700 ${size}px Goldman, sans-serif`; ctx.fillText("Earn your Beer", x, y); x += wName + gap;
   ctx.font = `400 ${small}px Goldman, sans-serif`; ctx.fillText("for", x, y); x += wFor + gap;
-  if (logo) { ctx.drawImage(logo, x, y - logoH, logoW, logoH); }
+  // +1 px: the logo art sits a pixel above the text baseline otherwise.
+  if (logo) { ctx.drawImage(logo, x, y - logoH + 1, logoW, logoH); }
   else { ctx.font = `700 ${size}px Goldman, sans-serif`; ctx.fillText("GARMIN", x, y); }
   ctx.textAlign = "center";
 }
