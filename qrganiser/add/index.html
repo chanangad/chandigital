@@ -35,8 +35,7 @@
   header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 20px 0 8px; }
   header .tools { margin-left: auto; display: flex; gap: 8px; align-items: center; }
   .viewfinder .idle p { margin: 0; }
-  .mark { width: 36px; height: 36px; border-radius: 10px; background: var(--accent); display: grid; place-items: center; }
-  .mark svg { width: 22px; height: 22px; }
+  .mark { width: 40px; height: 40px; }
   header h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
   header p { margin: 0; color: var(--muted); font-size: 13px; }
   header .lang { font: inherit; font-size: 13px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 8px; max-width: 120px; min-height: 0; width: auto; }
@@ -118,9 +117,7 @@
 <body>
 <main>
   <header>
-    <div class="mark" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="#fff"><path d="M3 3h7v7H3zm2 2v3h3V5zm9-2h7v7h-7zm2 2v3h3V5zM3 14h7v7H3zm2 2v3h3v-3zm9-2h2v2h-2zm4 0h3v2h-3zm-2 2h2v2h-2zm2 2h3v3h-3zm-4 1h2v2h-2z"/></svg>
-    </div>
+    <img class="mark" src="../../assets/qrganiser-icon.png" alt="" width="40" height="40">
     <div>
       <h1>QRganiser</h1>
       <p data-i18n="tagline">Put your cards on your Garmin watch</p>
