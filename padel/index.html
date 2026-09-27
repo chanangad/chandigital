@@ -285,28 +285,6 @@
     }
     .plat-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
     .plat-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-    .rp-tabs {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 24px;
-    }
-    .rp-tab {
-      flex: 1;
-      padding: 9px 14px;
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius-pill);
-      background: var(--paper);
-      color: var(--muted);
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: border-color 150ms, color 150ms, background 150ms;
-    }
-    .rp-tab--active {
-      border-color: var(--ink);
-      background: var(--ink);
-      color: var(--paper);
-    }
     .rp-panel { display: none; }
     .rp-panel--active { display: block; }
     .rp-field {
@@ -825,13 +803,9 @@
           <p class="eyebrow">Checkout</p>
           <h3>Unlock Padel Go</h3>
 
-          <div class="rp-tabs" role="tablist">
-            <button class="rp-tab rp-tab--active" id="tab-unlock" data-tab="unlock" role="tab" aria-selected="true">Purchase</button>
-            <button class="rp-tab" id="tab-restore" data-tab="restore" role="tab" aria-selected="false">Restore</button>
-          </div>
 
           <!-- Purchase panel -->
-          <div class="rp-panel rp-panel--active" id="panel-unlock" role="tabpanel" aria-labelledby="tab-unlock">
+          <div class="rp-panel rp-panel--active" id="panel-unlock">
             <form id="unlock-form">
               <div class="rp-field">
                 <label for="claim-code-input">Claim code from watch</label>
@@ -915,31 +889,6 @@
             </div>
 
 <p id="unlock-status" class="rp-status"></p>
-          </div>
-
-          <!-- Restore panel -->
-          <div class="rp-panel" id="panel-restore" role="tabpanel" aria-labelledby="tab-restore" hidden>
-            <form id="restore-form">
-              <div class="rp-field">
-                <label for="restore-claim-code-input">Claim code from watch</label>
-                <div class="rp-prefix-wrap">
-                  <span class="rp-prefix" aria-hidden="true">PD-</span>
-                  <input id="restore-claim-code-input" name="restore-claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
-                         inputmode="numeric" pattern="[0-9 -]*" aria-describedby="restore-claim-code-hint">
-                </div>
-                <p class="rp-field-hint" id="restore-claim-code-hint">Use the code from your new watch: <span data-only="garmin">Unlock App in the pre-game menu, or the lock screen.</span><span data-only="amazfit">About in the Padel Go main menu.</span></p>
-              </div>
-              <div class="rp-field">
-                <label for="restore-email">Email used at purchase</label>
-                <input id="restore-email" name="email" type="email" required placeholder="original-email@example.com">
-              </div>
-              <div class="rp-pay-group">
-                <div class="rp-pay-buttons">
-                  <button type="submit" form="restore-form" class="rp-pay-btn rp-pay-btn--primary">Restore Previous License</button>
-                </div>
-              </div>
-            </form>
-            <p id="restore-status" class="rp-status">After restore, open the app on the watch - it picks up the license by itself within a minute.<span data-only="amazfit"> Keep the Zepp app connected, or choose Refresh License.</span></p>
           </div>
         </div>
 
@@ -1134,11 +1083,8 @@
   <script src="./app.js"></script>
   <script src="./i18n.js"></script>
   <script>
-    const tabButtons = Array.from(document.querySelectorAll(".rp-tab"));
     const unlockStatus = document.getElementById("unlock-status");
-    const restoreStatus = document.getElementById("restore-status");
     const claimCodeInput = document.getElementById("claim-code-input");
-    const restoreClaimCodeInput = document.getElementById("restore-claim-code-input");
     // The watch formats an integer, so the part after "PD-" is always digits.
     // Length is deliberately NOT enforced here: the code is generated once and
     // kept in Application.Storage forever, so watches first run under the old
@@ -1175,11 +1121,8 @@
 
     const rawCode = query("code").trim().toUpperCase();
     const initialClaimCode = claimCodeDigits(rawCode);
-    const initialTab = query("tab") === "restore" ? "restore" : "unlock";
 
     claimCodeInput.value = groupClaimDigits(initialClaimCode);
-    restoreClaimCodeInput.value = groupClaimDigits(initialClaimCode);
-    activateTab(initialTab, false);
 
     function setPanelStatus(node, message, kind) {
       node.textContent = message;
@@ -1190,39 +1133,14 @@
       var suffix = claimCodeDigits(value);
       var display = groupClaimDigits(suffix);
       claimCodeInput.value = display;
-      restoreClaimCodeInput.value = display;
       const params = new URLSearchParams(window.location.search);
       if (suffix) { params.set("code", "PD-" + suffix); } else { params.delete("code"); }
-      if (!params.get("tab")) { params.set("tab", initialTab); }
+      params.delete("tab");
       window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
     }
 
-    function activateTab(name, pushState) {
-      tabButtons.forEach(function(btn) {
-        var active = btn.dataset.tab === name;
-        btn.classList.toggle("rp-tab--active", active);
-        btn.setAttribute("aria-selected", active ? "true" : "false");
-      });
-      ["unlock", "restore"].forEach(function(id) {
-        var panel = document.getElementById("panel-" + id);
-        var active = id === name;
-        panel.classList.toggle("rp-panel--active", active);
-        panel.hidden = !active;
-      });
-      if (pushState !== false) {
-        var params = new URLSearchParams(window.location.search);
-        params.set("tab", name);
-        var s = claimCodeDigits(claimCodeInput.value);
-        if (s) { params.set("code", "PD-" + s); } else { params.delete("code"); }
-        window.history.replaceState({}, "", window.location.pathname + "?" + params.toString());
-      }
-    }
 
-    tabButtons.forEach(function(btn) {
-      btn.addEventListener("click", function() { activateTab(btn.dataset.tab); });
-    });
     claimCodeInput.addEventListener("input", function() { syncClaimCode(claimCodeInput.value); });
-    restoreClaimCodeInput.addEventListener("input", function() { syncClaimCode(restoreClaimCodeInput.value); });
 
     async function beginCheckout(provider, currency) {
       var rawSuffix = claimCodeInput.value.trim().toUpperCase();
@@ -1296,25 +1214,6 @@
     document.getElementById("unlock-form").addEventListener("submit", async function(e) { e.preventDefault(); if (isIndia) { await beginCheckout("razorpay", "INR"); } else { await beginCheckout("dodo"); } });
     document.getElementById("dodo-button").addEventListener("click", async function() { await beginCheckout("dodo"); });
     document.getElementById("razorpay-button").addEventListener("click", async function() { await beginCheckout("razorpay", "INR"); });
-
-    document.getElementById("restore-form").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      var email = document.getElementById("restore-email").value.trim();
-      // Deliberately permissive: restore resolves a row that already exists,
-      // so it must keep matching legacy codes, including the negative ones.
-      var s = claimCodeDigits(restoreClaimCodeInput.value);
-      var claimCode = s ? "PD-" + s : "";
-      if (!claimCode) { setPanelStatus(restoreStatus, "Missing claim code.", "warn"); return; }
-      setPanelStatus(restoreStatus, "Checking your purchase…");
-      try {
-        var req = await postJson("/api/restore/request", {claimCode, email});
-        if (!req.canRestore) { setPanelStatus(restoreStatus, "No paid purchase found for that email.", "warn"); return; }
-        var data = await postJson("/api/restore/complete", {claimCode, email});
-        setPanelStatus(restoreStatus, data.message || "Purchase restored. Refresh the watch app now.", "ok");
-      } catch (err) {
-        setPanelStatus(restoreStatus, err.message, "warn");
-      }
-    });
   </script>
   <script>
     // Sticky purchase bar. Shows once the hero scrolls away, and hides whenever
