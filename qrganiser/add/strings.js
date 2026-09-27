@@ -4,7 +4,7 @@ export const LANGUAGES = [{"id": "en", "html": "en", "label": "English", "site":
 
 export const STRINGS = {
  "en": {
-  "title": "QRganiser · Add cards",
+  "title": "QRGANISER · Add cards",
   "tagline": "Put your cards on your Garmin watch",
   "about": "About the app",
   "language": "Language",
@@ -30,7 +30,7 @@ export const STRINGS = {
   "remove": "Remove",
   "defaultName": "Card {n}",
   "step3": "Send to your watch",
-  "hint": "On your watch open <b>QRganiser</b>, scroll to <b>Add from phone</b> and type the code it shows.",
+  "hint": "On your watch open <b>QRGANISER</b>, scroll to <b>Add from phone</b> and type the code it shows.",
   "watchCode": "Watch code",
   "send": "Send to watch",
   "sent": "Sent",
@@ -56,7 +56,7 @@ export const STRINGS = {
   "noteBoarding": "Boarding pass: your watch shows it as a QR code, which gate scanners accept. Keep your airline’s pass as a backup."
  },
  "ces": {
-  "title": "QRganiser · Přidat karty",
+  "title": "QRGANISER · Přidat karty",
   "tagline": "Mějte své karty v hodinkách Garmin",
   "about": "O aplikaci",
   "language": "Jazyk",
@@ -82,7 +82,7 @@ export const STRINGS = {
   "remove": "Odebrat",
   "defaultName": "Karta {n}",
   "step3": "Odeslat do hodinek",
-  "hint": "V hodinkách otevřete <b>QRganiser</b>, přejděte na <b>Přidat z telefonu</b> a zadejte zobrazený kód.",
+  "hint": "V hodinkách otevřete <b>QRGANISER</b>, přejděte na <b>Přidat z telefonu</b> a zadejte zobrazený kód.",
   "watchCode": "Kód z hodinek",
   "send": "Odeslat",
   "sent": "Odesláno",
@@ -108,7 +108,7 @@ export const STRINGS = {
   "noteBoarding": "Palubní vstupenka: hodinky ji zobrazí jako QR kód, který čtečky u gate přijmou. Mějte palubní vstupenku od letecké společnosti jako zálohu."
  },
  "dan": {
-  "title": "QRganiser · Tilføj kort",
+  "title": "QRGANISER · Tilføj kort",
   "tagline": "Få dine kort på dit Garmin-ur",
   "about": "Om appen",
   "language": "Sprog",
@@ -134,7 +134,7 @@ export const STRINGS = {
   "remove": "Fjern",
   "defaultName": "Kort {n}",
   "step3": "Send til dit ur",
-  "hint": "Åbn <b>QRganiser</b> på dit ur, rul til <b>Tilføj fra telefon</b>, og indtast koden, der vises.",
+  "hint": "Åbn <b>QRGANISER</b> på dit ur, rul til <b>Tilføj fra telefon</b>, og indtast koden, der vises.",
   "watchCode": "Kode fra uret",
   "send": "Send til ur",
   "sent": "Sendt",
@@ -160,7 +160,7 @@ export const STRINGS = {
   "noteBoarding": "Boardingkort: uret viser det som en QR-kode, som scannerne ved gaten godtager. Behold flyselskabets boardingkort som backup."
  },
  "deu": {
-  "title": "QRganiser · Karten hinzufügen",
+  "title": "QRGANISER · Karten hinzufügen",
   "tagline": "Deine Karten auf deiner Garmin-Uhr",
   "about": "Über die App",
   "language": "Sprache",
@@ -186,7 +186,7 @@ export const STRINGS = {
   "remove": "Entfernen",
   "defaultName": "Karte {n}",
   "step3": "An die Uhr senden",
-  "hint": "Öffne auf deiner Uhr <b>QRganiser</b>, scrolle zu <b>Vom Handy hinzufügen</b> und gib den angezeigten Code ein.",
+  "hint": "Öffne auf deiner Uhr <b>QRGANISER</b>, scrolle zu <b>Vom Handy hinzufügen</b> und gib den angezeigten Code ein.",
   "watchCode": "Code der Uhr",
   "send": "An Uhr senden",
   "sent": "Gesendet",
@@ -212,7 +212,7 @@ export const STRINGS = {
   "noteBoarding": "Bordkarte: Deine Uhr zeigt sie als QR-Code, den Scanner am Gate akzeptieren. Behalte die Bordkarte deiner Airline als Backup."
  },
  "spa": {
-  "title": "QRganiser · Añadir tarjetas",
+  "title": "QRGANISER · Añadir tarjetas",
   "tagline": "Lleva tus tarjetas en tu reloj Garmin",
   "about": "Acerca de la app",
   "language": "Idioma",
@@ -238,7 +238,7 @@ export const STRINGS = {
   "remove": "Quitar",
   "defaultName": "Tarjeta {n}",
   "step3": "Envía a tu reloj",
-  "hint": "En tu reloj abre <b>QRganiser</b>, ve a <b>Añadir desde móvil</b> e introduce el código que aparece.",
+  "hint": "En tu reloj abre <b>QRGANISER</b>, ve a <b>Añadir desde móvil</b> e introduce el código que aparece.",
   "watchCode": "Código del reloj",
   "send": "Enviar al reloj",
   "sent": "Enviado",
@@ -264,7 +264,7 @@ export const STRINGS = {
   "noteBoarding": "Tarjeta de embarque: tu reloj la muestra como código QR, que los lectores de la puerta aceptan. Guarda la tarjeta de tu aerolínea como respaldo."
  },
  "fin": {
-  "title": "QRganiser · Lisää kortteja",
+  "title": "QRGANISER · Lisää kortteja",
   "tagline": "Siirrä korttisi Garmin-kelloosi",
   "about": "Tietoja sovelluksesta",
   "language": "Kieli",
@@ -290,7 +290,7 @@ export const STRINGS = {
   "remove": "Poista",
   "defaultName": "Kortti {n}",
   "step3": "Lähetä kelloon",
-  "hint": "Avaa kellossa <b>QRganiser</b>, vieritä kohtaan <b>Lisää puhelimesta</b> ja kirjoita näkyvä koodi.",
+  "hint": "Avaa kellossa <b>QRGANISER</b>, vieritä kohtaan <b>Lisää puhelimesta</b> ja kirjoita näkyvä koodi.",
   "watchCode": "Kellon koodi",
   "send": "Lähetä kelloon",
   "sent": "Lähetetty",
@@ -316,7 +316,7 @@ export const STRINGS = {
   "noteBoarding": "Tarkastuskortti: kello näyttää sen QR-koodina, jonka portin lukijat hyväksyvät. Pidä lentoyhtiön tarkastuskortti varalla."
  },
  "fre": {
-  "title": "QRganiser · Ajouter des cartes",
+  "title": "QRGANISER · Ajouter des cartes",
   "tagline": "Vos cartes sur votre montre Garmin",
   "about": "À propos de l’app",
   "language": "Langue",
@@ -342,7 +342,7 @@ export const STRINGS = {
   "remove": "Retirer",
   "defaultName": "Carte {n}",
   "step3": "Envoyez vers votre montre",
-  "hint": "Sur votre montre, ouvrez <b>QRganiser</b>, allez à <b>Ajout via téléphone</b> et saisissez le code affiché.",
+  "hint": "Sur votre montre, ouvrez <b>QRGANISER</b>, allez à <b>Ajout via téléphone</b> et saisissez le code affiché.",
   "watchCode": "Code de la montre",
   "send": "Envoyer",
   "sent": "Envoyé",
@@ -368,7 +368,7 @@ export const STRINGS = {
   "noteBoarding": "Carte d’embarquement : votre montre l’affiche en code QR, accepté par les lecteurs à la porte. Gardez la carte de votre compagnie aérienne en secours."
  },
  "hun": {
-  "title": "QRganiser · Kártyák hozzáadása",
+  "title": "QRGANISER · Kártyák hozzáadása",
   "tagline": "Vidd a kártyáidat a Garmin órádra",
   "about": "Az alkalmazásról",
   "language": "Nyelv",
@@ -394,7 +394,7 @@ export const STRINGS = {
   "remove": "Eltávolítás",
   "defaultName": "Kártya {n}",
   "step3": "Küldés az órára",
-  "hint": "Az órán nyisd meg a <b>QRganiser</b> appot, görgess a <b>Hozzáadás telefonról</b> menüpontig, és írd be a megjelenő kódot.",
+  "hint": "Az órán nyisd meg a <b>QRGANISER</b> appot, görgess a <b>Hozzáadás telefonról</b> menüpontig, és írd be a megjelenő kódot.",
   "watchCode": "Óra kódja",
   "send": "Küldés az órára",
   "sent": "Elküldve",
@@ -420,7 +420,7 @@ export const STRINGS = {
   "noteBoarding": "Beszállókártya: az óra QR-kódként jeleníti meg, amit a kapunál lévő olvasók elfogadnak. A légitársaság beszállókártyáját tartsd meg tartaléknak."
  },
  "ind": {
-  "title": "QRganiser · Tambah kartu",
+  "title": "QRGANISER · Tambah kartu",
   "tagline": "Simpan kartu Anda di jam Garmin",
   "about": "Tentang aplikasi",
   "language": "Bahasa",
@@ -446,7 +446,7 @@ export const STRINGS = {
   "remove": "Hapus",
   "defaultName": "Kartu {n}",
   "step3": "Kirim ke jam",
-  "hint": "Di jam, buka <b>QRganiser</b>, gulir ke <b>Tambah dari ponsel</b>, lalu ketik kode yang ditampilkan.",
+  "hint": "Di jam, buka <b>QRGANISER</b>, gulir ke <b>Tambah dari ponsel</b>, lalu ketik kode yang ditampilkan.",
   "watchCode": "Kode jam",
   "send": "Kirim ke jam",
   "sent": "Terkirim",
@@ -472,7 +472,7 @@ export const STRINGS = {
   "noteBoarding": "Boarding pass: jam menampilkannya sebagai kode QR, yang diterima pemindai di gerbang. Simpan boarding pass dari maskapai sebagai cadangan."
  },
  "ita": {
-  "title": "QRganiser · Aggiungi tessere",
+  "title": "QRGANISER · Aggiungi tessere",
   "tagline": "Le tue tessere sul tuo orologio Garmin",
   "about": "Info sull’app",
   "language": "Lingua",
@@ -498,7 +498,7 @@ export const STRINGS = {
   "remove": "Rimuovi",
   "defaultName": "Tessera {n}",
   "step3": "Invia all’orologio",
-  "hint": "Sull’orologio apri <b>QRganiser</b>, scorri fino ad <b>Aggiungi da telefono</b> e inserisci il codice mostrato.",
+  "hint": "Sull’orologio apri <b>QRGANISER</b>, scorri fino ad <b>Aggiungi da telefono</b> e inserisci il codice mostrato.",
   "watchCode": "Codice orologio",
   "send": "Invia all’orologio",
   "sent": "Inviato",
@@ -524,7 +524,7 @@ export const STRINGS = {
   "noteBoarding": "Carta d’imbarco: l’orologio la mostra come codice QR, accettato dai lettori al gate. Tieni la carta della compagnia aerea come riserva."
  },
  "kor": {
-  "title": "QRganiser · 카드 추가",
+  "title": "QRGANISER · 카드 추가",
   "tagline": "카드를 Garmin 워치에 담으세요",
   "about": "앱 정보",
   "language": "언어",
@@ -550,7 +550,7 @@ export const STRINGS = {
   "remove": "삭제",
   "defaultName": "카드 {n}",
   "step3": "워치로 보내기",
-  "hint": "워치에서 <b>QRganiser</b>를 열고 <b>휴대폰에서 추가</b>로 스크롤한 다음 표시된 코드를 입력하세요.",
+  "hint": "워치에서 <b>QRGANISER</b>를 열고 <b>휴대폰에서 추가</b>로 스크롤한 다음 표시된 코드를 입력하세요.",
   "watchCode": "워치 코드",
   "send": "워치로 보내기",
   "sent": "전송 완료",
@@ -576,7 +576,7 @@ export const STRINGS = {
   "noteBoarding": "탑승권: 워치에는 QR 코드로 표시되며, 탑승구 스캐너에서 인식됩니다. 항공사 탑승권도 예비용으로 꼭 챙기세요."
  },
  "dut": {
-  "title": "QRganiser · Kaarten toevoegen",
+  "title": "QRGANISER · Kaarten toevoegen",
   "tagline": "Zet je kaarten op je Garmin-horloge",
   "about": "Over de app",
   "language": "Taal",
@@ -602,7 +602,7 @@ export const STRINGS = {
   "remove": "Verwijderen",
   "defaultName": "Kaart {n}",
   "step3": "Naar je horloge sturen",
-  "hint": "Open <b>QRganiser</b> op je horloge, scrol naar <b>Kaart toevoegen</b> en typ de code die je ziet.",
+  "hint": "Open <b>QRGANISER</b> op je horloge, scrol naar <b>Kaart toevoegen</b> en typ de code die je ziet.",
   "watchCode": "Horlogecode",
   "send": "Naar horloge",
   "sent": "Verzonden",
@@ -628,7 +628,7 @@ export const STRINGS = {
   "noteBoarding": "Instapkaart: je horloge toont hem als QR-code, die scanners bij de gate accepteren. Houd de kaart van je luchtvaartmaatschappij als back-up."
  },
  "nob": {
-  "title": "QRganiser · Legg til kort",
+  "title": "QRGANISER · Legg til kort",
   "tagline": "Legg kortene dine på Garmin-klokken",
   "about": "Om appen",
   "language": "Språk",
@@ -654,7 +654,7 @@ export const STRINGS = {
   "remove": "Fjern",
   "defaultName": "Kort {n}",
   "step3": "Send til klokken",
-  "hint": "Åpne <b>QRganiser</b> på klokken, bla til <b>Legg til fra telefon</b> og skriv inn koden som vises.",
+  "hint": "Åpne <b>QRGANISER</b> på klokken, bla til <b>Legg til fra telefon</b> og skriv inn koden som vises.",
   "watchCode": "Klokkekode",
   "send": "Send til klokken",
   "sent": "Sendt",
@@ -680,7 +680,7 @@ export const STRINGS = {
   "noteBoarding": "Boardingkort: klokken viser det som en QR-kode, som skannerne ved gaten godtar. Behold flyselskapets boardingkort som reserve."
  },
  "jpn": {
-  "title": "QRganiser · カードを追加",
+  "title": "QRGANISER · カードを追加",
   "tagline": "カードを Garmin ウォッチに入れよう",
   "about": "アプリについて",
   "language": "言語",
@@ -706,7 +706,7 @@ export const STRINGS = {
   "remove": "削除",
   "defaultName": "カード {n}",
   "step3": "ウォッチに送信",
-  "hint": "ウォッチで <b>QRganiser</b> を開き、<b>スマホから追加</b>までスクロールして、表示されたコードを入力してください。",
+  "hint": "ウォッチで <b>QRGANISER</b> を開き、<b>スマホから追加</b>までスクロールして、表示されたコードを入力してください。",
   "watchCode": "ウォッチのコード",
   "send": "ウォッチに送信",
   "sent": "送信しました",
@@ -732,7 +732,7 @@ export const STRINGS = {
   "noteBoarding": "搭乗券：ウォッチでは QR コードで表示され、搭乗口のスキャナーで読み取れます。航空会社の搭乗券も予備としてお持ちください。"
  },
  "pol": {
-  "title": "QRganiser · Dodaj karty",
+  "title": "QRGANISER · Dodaj karty",
   "tagline": "Twoje karty na zegarku Garmin",
   "about": "O aplikacji",
   "language": "Język",
@@ -758,7 +758,7 @@ export const STRINGS = {
   "remove": "Usuń",
   "defaultName": "Karta {n}",
   "step3": "Wyślij na zegarek",
-  "hint": "Na zegarku otwórz <b>QRganiser</b>, przewiń do <b>Dodaj z telefonu</b> i wpisz wyświetlony kod.",
+  "hint": "Na zegarku otwórz <b>QRGANISER</b>, przewiń do <b>Dodaj z telefonu</b> i wpisz wyświetlony kod.",
   "watchCode": "Kod z zegarka",
   "send": "Wyślij na zegarek",
   "sent": "Wysłano",
@@ -784,7 +784,7 @@ export const STRINGS = {
   "noteBoarding": "Karta pokładowa: zegarek wyświetla ją jako kod QR, który akceptują skanery przy bramce. Zachowaj kartę od linii lotniczej jako zapas."
  },
  "pob": {
-  "title": "QRganiser · Adicionar cartões",
+  "title": "QRGANISER · Adicionar cartões",
   "tagline": "Coloque seus cartões no relógio Garmin",
   "about": "Sobre o app",
   "language": "Idioma",
@@ -810,7 +810,7 @@ export const STRINGS = {
   "remove": "Remover",
   "defaultName": "Cartão {n}",
   "step3": "Envie para o relógio",
-  "hint": "No relógio, abra o <b>QRganiser</b>, role até <b>Adicionar do celular</b> e digite o código exibido.",
+  "hint": "No relógio, abra o <b>QRGANISER</b>, role até <b>Adicionar do celular</b> e digite o código exibido.",
   "watchCode": "Código do relógio",
   "send": "Enviar ao relógio",
   "sent": "Enviado",
@@ -836,7 +836,7 @@ export const STRINGS = {
   "noteBoarding": "Cartão de embarque: o relógio o exibe como código QR, que os leitores do portão aceitam. Guarde o cartão da companhia aérea como reserva."
  },
  "por": {
-  "title": "QRganiser · Adicionar cartões",
+  "title": "QRGANISER · Adicionar cartões",
   "tagline": "Coloque os seus cartões no relógio Garmin",
   "about": "Sobre a app",
   "language": "Idioma",
@@ -862,7 +862,7 @@ export const STRINGS = {
   "remove": "Remover",
   "defaultName": "Cartão {n}",
   "step3": "Enviar para o relógio",
-  "hint": "No relógio, abra <b>QRganiser</b>, desloque-se até <b>Adicionar cartão</b> e introduza o código apresentado.",
+  "hint": "No relógio, abra <b>QRGANISER</b>, desloque-se até <b>Adicionar cartão</b> e introduza o código apresentado.",
   "watchCode": "Código do relógio",
   "send": "Enviar ao relógio",
   "sent": "Enviado",
@@ -888,7 +888,7 @@ export const STRINGS = {
   "noteBoarding": "Cartão de embarque: o relógio mostra-o como código QR, que os leitores da porta de embarque aceitam. Guarde o cartão da companhia aérea como reserva."
  },
  "swe": {
-  "title": "QRganiser · Lägg till kort",
+  "title": "QRGANISER · Lägg till kort",
   "tagline": "Lägg in dina kort i din Garmin-klocka",
   "about": "Om appen",
   "language": "Språk",
@@ -914,7 +914,7 @@ export const STRINGS = {
   "remove": "Ta bort",
   "defaultName": "Kort {n}",
   "step3": "Skicka till klockan",
-  "hint": "Öppna <b>QRganiser</b> på klockan, bläddra till <b>Lägg till kort</b> och skriv in koden som visas.",
+  "hint": "Öppna <b>QRGANISER</b> på klockan, bläddra till <b>Lägg till kort</b> och skriv in koden som visas.",
   "watchCode": "Klockans kod",
   "send": "Skicka till klockan",
   "sent": "Skickat",
@@ -940,7 +940,7 @@ export const STRINGS = {
   "noteBoarding": "Boardingkort: klockan visar det som en QR-kod, som skannrarna vid gaten godtar. Spara flygbolagets boardingkort som reserv."
  },
  "tha": {
-  "title": "QRganiser · เพิ่มบัตร",
+  "title": "QRGANISER · เพิ่มบัตร",
   "tagline": "ใส่บัตรของคุณไว้ในนาฬิกา Garmin",
   "about": "เกี่ยวกับแอป",
   "language": "ภาษา",
@@ -966,7 +966,7 @@ export const STRINGS = {
   "remove": "ลบ",
   "defaultName": "บัตร {n}",
   "step3": "ส่งไปยังนาฬิกา",
-  "hint": "บนนาฬิกา เปิด <b>QRganiser</b> เลื่อนไปที่ <b>เพิ่มจากโทรศัพท์</b> แล้วพิมพ์รหัสที่แสดง",
+  "hint": "บนนาฬิกา เปิด <b>QRGANISER</b> เลื่อนไปที่ <b>เพิ่มจากโทรศัพท์</b> แล้วพิมพ์รหัสที่แสดง",
   "watchCode": "รหัสจากนาฬิกา",
   "send": "ส่งไปนาฬิกา",
   "sent": "ส่งแล้ว",
@@ -992,7 +992,7 @@ export const STRINGS = {
   "noteBoarding": "บัตรขึ้นเครื่อง: นาฬิกาจะแสดงเป็น QR โค้ด ซึ่งเครื่องสแกนที่ประตูขึ้นเครื่องอ่านได้ ควรเก็บบัตรขึ้นเครื่องของสายการบินไว้สำรองด้วย"
  },
  "zhs": {
-  "title": "QRganiser · 添加卡片",
+  "title": "QRGANISER · 添加卡片",
   "tagline": "把卡片放进你的 Garmin 手表",
   "about": "关于应用",
   "language": "语言",
@@ -1018,7 +1018,7 @@ export const STRINGS = {
   "remove": "移除",
   "defaultName": "卡片 {n}",
   "step3": "发送到手表",
-  "hint": "在手表上打开 <b>QRganiser</b>，滚动到<b>从手机添加</b>，然后输入手表上显示的代码。",
+  "hint": "在手表上打开 <b>QRGANISER</b>，滚动到<b>从手机添加</b>，然后输入手表上显示的代码。",
   "watchCode": "手表代码",
   "send": "发送到手表",
   "sent": "已发送",
@@ -1044,7 +1044,7 @@ export const STRINGS = {
   "noteBoarding": "登机牌：手表会以 QR 码显示，登机口扫描器可以识别。请保留航空公司的登机牌作为备用。"
  },
  "zht": {
-  "title": "QRganiser · 新增卡片",
+  "title": "QRGANISER · 新增卡片",
   "tagline": "把卡片放進你的 Garmin 手錶",
   "about": "關於 App",
   "language": "語言",
@@ -1070,7 +1070,7 @@ export const STRINGS = {
   "remove": "移除",
   "defaultName": "卡片 {n}",
   "step3": "傳送到手錶",
-  "hint": "在手錶上開啟 <b>QRganiser</b>，捲動到<b>從手機新增</b>，然後輸入手錶上顯示的代碼。",
+  "hint": "在手錶上開啟 <b>QRGANISER</b>，捲動到<b>從手機新增</b>，然後輸入手錶上顯示的代碼。",
   "watchCode": "手錶代碼",
   "send": "傳送到手錶",
   "sent": "已傳送",
