@@ -115,6 +115,19 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-geo", geo);
     })();
+    // Garmin or Amazfit, also decided before paint: #amazfit in the link, or
+    // the visitor's last choice, else Garmin. CSS hides the other platform.
+    (function () {
+      var plat = "garmin";
+      try {
+        if (location.hash === "#amazfit") { plat = "amazfit"; }
+        else {
+          var saved = localStorage.getItem("padelgo.platform");
+          if (saved === "amazfit" || saved === "garmin") { plat = saved; }
+        }
+      } catch (e) {}
+      document.documentElement.setAttribute("data-plat", plat);
+    })();
   </script>
   <style>
 
@@ -245,6 +258,33 @@
     .rp-unlock-card .eyebrow {
       margin-bottom: 16px;
     }
+    /* Platform switch (Garmin / Amazfit). Content for one platform only carries
+       data-only; the html[data-plat] set in <head> hides the other one. */
+    [data-plat="garmin"] [data-only="amazfit"],
+    [data-plat="amazfit"] [data-only="garmin"] { display: none !important; }
+    .plat-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      margin: 4px 0 22px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius-pill);
+      background: var(--paper);
+    }
+    .plat-btn {
+      padding: 8px 20px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 150ms, color 150ms;
+    }
+    .plat-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+    .plat-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
     .rp-tabs {
       display: flex;
       gap: 4px;
@@ -607,25 +647,33 @@
       <div class="hero-copy">
         <p class="eyebrow">Padel activity</p>
         <h1>Padel Go</h1>
-        <p class="hero-lede">
-          A Garmin and Amazfit watch app for padel players - full 15/30/40 scoring with four game-point rules (Standard, Golden Point, Silver Point and Star Point), <span class="notranslate" translate="no" data-mode-name="americano">Americano</span> and Mexicano point-count rounds, serve and side tracking built for doubles, and every match saved as a recorded activity in Garmin Connect, or in the Zepp app through the Amazfit Padel workout.
+        <div class="plat-switch" role="group" aria-label="Watch">
+          <button type="button" class="plat-btn" data-plat-btn="garmin" aria-pressed="true">Garmin</button>
+          <button type="button" class="plat-btn" data-plat-btn="amazfit" aria-pressed="false">Amazfit</button>
+        </div>
+        <p class="hero-lede" data-only="garmin">
+          A Garmin watch app for padel players - full 15/30/40 scoring with four game-point rules (Standard, Golden Point, Silver Point and Star Point), <span class="notranslate" translate="no" data-mode-name="americano">Americano</span> and Mexicano point-count rounds, serve and side tracking built for doubles, and every match saved as a recorded activity in Garmin Connect.
+        </p>
+        <p class="hero-lede" data-only="amazfit">
+          An Amazfit watch app for padel players - full 15/30/40 scoring with four game-point rules (Standard, Golden Point, Silver Point and Star Point), <span class="notranslate" translate="no" data-mode-name="americano">Americano</span> and Mexicano point-count rounds, serve and side tracking built for doubles, and the score kept right inside the watch's Padel workout, which records the activity to the Zepp app.
         </p>
         <div class="hero-actions">
           <a class="button button-primary" href="#unlock">Unlock full access</a>
-          <a class="button button-secondary" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noreferrer">View on Connect IQ</a>
+          <a class="button button-secondary" data-only="garmin" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noreferrer">View on Connect IQ</a>
+          <a class="button button-secondary" data-only="amazfit" href="./faq/#amazfit">Amazfit FAQ</a>
         </div>
       </div>
 
       <div class="hero-visual" style="grid-template-columns: 1fr; max-width: 320px; justify-self: center;">
         <div class="preview">
-          <img src="../assets/w-padel-go.jpg" alt="Padel Go padel scoring app on a Garmin watch" width="900" height="900">
+          <img src="../assets/w-padel-go.jpg" alt="Padel Go padel scoring app on a watch" width="900" height="900">
         </div>
       </div>
     </section>
 
     <!-- Stats strip -->
     <div class="trust-strip section" style="margin-top: 0; margin-bottom: 96px;">
-      <div id="stat-rating">
+      <div id="stat-rating" data-only="garmin">
         <strong>4.8 ★</strong>
         <span>From 44 Connect IQ reviews</span>
       </div>
@@ -633,9 +681,13 @@
         <strong>21+</strong>
         <span>Languages supported</span>
       </div>
-      <div>
+      <div data-only="garmin">
         <strong>98</strong>
         <span>Garmin devices</span>
+      </div>
+      <div data-only="amazfit">
+        <strong>Zepp OS 3.6+</strong>
+        <span>Amazfit watches</span>
       </div>
       <div id="stat-price-intl">
         <strong>$8.99</strong>
@@ -650,13 +702,15 @@
     <!-- Americano spotlight -->
     <section class="section rp-spotlight" id="americano">
       <div>
-        <p class="eyebrow">New in 1.3.13</p>
+        <p class="eyebrow" data-only="garmin">New in 1.3.13</p>
+        <p class="eyebrow" data-only="amazfit">Americano</p>
         <h2>Americano and Mexicano, scored on your wrist</h2>
         <p>
           Pick the <span class="notranslate" translate="no" data-mode-name="americano">Americano</span> format and the watch counts rallies 1, 2, 3 - no games, no sets. Set the <span class="notranslate" translate="no" data-mode-name="pointsperround">Points per round</span> and each round ends itself at the agreed total, ready for the next pairing.
         </p>
         <div class="rp-cta-group">
-          <a class="button button-primary" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noreferrer">Get Padel Go on Connect IQ</a>
+          <a class="button button-primary" data-only="garmin" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noreferrer">Get Padel Go on Connect IQ</a>
+          <a class="button button-primary" data-only="amazfit" href="#unlock">Unlock full access</a>
         </div>
       </div>
       <ul class="rp-spotlight-points">
@@ -666,7 +720,7 @@
         </li>
         <li>
           <strong>Every round in one activity</strong>
-          <span>Next Match rolls straight into the next round. The summary lists Round 1, Round 2, Round 3 with each score, and the totals land in Garmin Connect.</span>
+          <span>Next Match rolls straight into the next round. The summary lists Round 1, Round 2, Round 3 with each score<span data-only="garmin">, and the totals land in Garmin Connect</span>.</span>
         </li>
         <li>
           <strong>Timed rounds too</strong>
@@ -695,7 +749,8 @@
         </div>
         <div class="rp-feature">
           <strong>One-gesture scoring</strong>
-          <span>Swipe down for your point, up for the other pair's - physical buttons work too, sweat or gloves no problem.</span>
+          <span data-only="garmin">Swipe down for your point, up for the other pair's - physical buttons work too, sweat or gloves no problem.</span>
+          <span data-only="amazfit">Inside the Padel workout, tap the bottom half for your point and the top half for theirs. Opened as an app, buttons and swipes work too.</span>
         </div>
         <div class="rp-feature">
           <strong>Singles &amp; doubles</strong>
@@ -711,30 +766,32 @@
         </div>
         <div class="rp-feature">
           <strong>Activity recording</strong>
-          <span>Average and max heart rate, calories and match time saved to Garmin Connect, with per-set scores in the activity.</span>
+          <span data-only="garmin">Average and max heart rate, calories and match time saved to Garmin Connect, with per-set scores in the activity.</span>
+          <span data-only="amazfit">Run Padel Go inside the watch's Padel workout: the watch records heart rate, calories and duration and syncs them to the Zepp app.</span>
         </div>
         <div class="rp-feature">
           <strong>Warm-up mode</strong>
-          <span>Start recording before the first serve - heart rate, calories and time from the warm-up count in the activity, and the match carries on from it.</span>
+          <span data-only="garmin">Start recording before the first serve - heart rate, calories and time from the warm-up count in the activity, and the match carries on from it.</span>
+          <span data-only="amazfit">Time your warm-up on the watch, then start the match from the same screen.</span>
         </div>
         <div class="rp-feature">
           <strong>Match history</strong>
-          <span>Your last 20 matches on the watch - date, result, set scores and duration, no phone needed.</span>
+          <span data-only="garmin">Your last 20 matches on the watch - date, result, set scores and duration, no phone needed.</span>
+          <span data-only="amazfit">Your recent matches on the watch under Past Games - date, result and set scores, no phone needed.</span>
         </div>
       </div>
     </section>
 
     <!-- Amazfit -->
-    <section class="section rp-spotlight" id="amazfit">
+    <section class="section rp-spotlight" id="amazfit" data-only="amazfit">
       <div>
         <p class="eyebrow">Amazfit &middot; Zepp OS</p>
         <h2>Padel Go on Amazfit watches</h2>
         <p>
-          The same scoring, formats and game-point rules as the Garmin version, on Amazfit watches running Zepp OS 3.6 or newer, such as the Balance, Active 2, T-Rex 3, Cheetah and Bip 6. Get it from the Zepp App Store. The first 3 matches are free, then it unlocks here with the same one-time purchase.
+          Padel Go runs on Amazfit watches with Zepp OS 3.6 or newer, such as the Balance, Active 2, T-Rex 3, Cheetah and Bip 6. Get it from the Zepp App Store. The first 3 matches are free, then unlock it here with a one-time purchase.
         </p>
         <div class="rp-cta-group">
           <a class="button button-primary" href="#unlock">Unlock full access</a>
-          <a class="button button-secondary" href="./faq/#amazfit">Amazfit FAQ</a>
         </div>
       </div>
       <ul class="rp-spotlight-points">
@@ -783,7 +840,7 @@
                   <input id="claim-code-input" name="claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
                          inputmode="numeric" pattern="[0-9 -]*" aria-describedby="claim-code-hint">
                 </div>
-                <p class="rp-field-hint" id="claim-code-hint">Garmin: under Unlock App in the pre-game menu, or on the lock screen after the 24-hour free trial. Amazfit: open Padel Go and go to About in the main menu, or see the unlock screen after the free matches.</p>
+                <p class="rp-field-hint" id="claim-code-hint"><span data-only="garmin">On the watch: Unlock App in the pre-game menu, or the lock screen after the 24-hour free trial.</span><span data-only="amazfit">On the watch: About in the Padel Go main menu, or the unlock screen after the free matches.</span></p>
               </div>
               <div class="rp-field-row">
                 <div class="rp-field">
@@ -870,7 +927,7 @@
                   <input id="restore-claim-code-input" name="restore-claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
                          inputmode="numeric" pattern="[0-9 -]*" aria-describedby="restore-claim-code-hint">
                 </div>
-                <p class="rp-field-hint" id="restore-claim-code-hint">Use the code from your new watch. Garmin: Unlock App in the pre-game menu, or the lock screen. Amazfit: About in the Padel Go main menu.</p>
+                <p class="rp-field-hint" id="restore-claim-code-hint">Use the code from your new watch: <span data-only="garmin">Unlock App in the pre-game menu, or the lock screen.</span><span data-only="amazfit">About in the Padel Go main menu.</span></p>
               </div>
               <div class="rp-field">
                 <label for="restore-email">Email used at purchase</label>
@@ -882,7 +939,7 @@
                 </div>
               </div>
             </form>
-            <p id="restore-status" class="rp-status">After restore, open the app on the watch - it picks up the license by itself within a minute. On Amazfit, keep the Zepp app connected, or choose Refresh License.</p>
+            <p id="restore-status" class="rp-status">After restore, open the app on the watch - it picks up the license by itself within a minute.<span data-only="amazfit"> Keep the Zepp app connected, or choose Refresh License.</span></p>
           </div>
         </div>
 
@@ -897,9 +954,9 @@
               <span class="rp-price-amount"><span class="rp-price-num">₹449</span> <span class="rp-price-tax">incl. tax</span></span>
             </div>
           </div>
-          <p>24-hour free trial on Garmin, then a one-time purchase. No subscription, no hidden fees. The app is yours permanently on your watch. A license unlocks one watch, so a Garmin watch and an Amazfit watch are separate purchases.</p>
+          <p><span data-only="garmin">24-hour free trial, then a one-time purchase.</span><span data-only="amazfit">The first 3 matches are free, then a one-time purchase.</span> No subscription, no hidden fees. The app is yours permanently on your watch. A license unlocks one watch.</p>
           <div class="rp-cta-group">
-            <a class="button button-primary" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noreferrer">View on Garmin Connect IQ</a>
+            <a class="button button-primary" data-only="garmin" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noreferrer">View on Garmin Connect IQ</a>
             <a class="button button-secondary" href="./faq/">FAQ</a>
           </div>
         </div>
@@ -943,7 +1000,7 @@
           Scoring by rallies instead of games? The <span class="notranslate" translate="no" data-mode-name="americano">Americano</span> format counts points 1, 2, 3 with no games or sets, and <span class="notranslate" translate="no" data-mode-name="pointsperround">Points per round</span> ends each round at the agreed total - 24, 32, or whatever your club plays - so it also covers Mexicano and coaching drills.
         </p>
         <p>
-          Every match saves to Garmin Connect as a recorded activity - average and max heart rate, calories, elapsed time and per-set scores. On Amazfit, run Padel Go inside the watch's Padel workout and the watch records the workout to the Zepp app.
+          <span data-only="garmin">Every match saves to Garmin Connect as a recorded activity - average and max heart rate, calories, elapsed time and per-set scores.</span><span data-only="amazfit">Run Padel Go inside the watch's Padel workout and the watch records the workout - heart rate, calories and duration - to the Zepp app, while Padel Go keeps the score.</span>
         </p>
       </div>
       <figure class="rp-explainer">
@@ -1050,6 +1107,30 @@
     <p class="legal-note">Garmin and Connect IQ are trademarks of Garmin Ltd. Amazfit and Zepp are trademarks of Zepp Health. Padel Go is an independent app not affiliated with or endorsed by Garmin or Zepp Health.</p>
   </footer>
 
+  <script>
+    // Garmin / Amazfit switch. The choice is remembered; the "Amazfit" nav
+    // link and a #amazfit link switch to Amazfit.
+    (function () {
+      var root = document.documentElement;
+      var btns = Array.prototype.slice.call(document.querySelectorAll("[data-plat-btn]"));
+      function setPlat(plat, save) {
+        root.setAttribute("data-plat", plat);
+        btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-plat-btn") === plat)); });
+        if (save) { try { localStorage.setItem("padelgo.platform", plat); } catch (e) {} }
+      }
+      btns.forEach(function (b) {
+        b.addEventListener("click", function () { setPlat(b.getAttribute("data-plat-btn"), true); });
+      });
+      document.addEventListener("click", function (ev) {
+        var a = ev.target.closest && ev.target.closest('a[href="#amazfit"]');
+        if (a) { setPlat("amazfit", true); }
+      });
+      window.addEventListener("hashchange", function () {
+        if (location.hash === "#amazfit") { setPlat("amazfit", true); }
+      });
+      setPlat(root.getAttribute("data-plat") || "garmin", false);
+    })();
+  </script>
   <script src="./app.js"></script>
   <script src="./i18n.js"></script>
   <script>
