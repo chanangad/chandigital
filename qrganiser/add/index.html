@@ -218,9 +218,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
 <script type="module">
-import { encryptCards, relayId, normaliseCode } from "./relay-crypto.js";
-import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js";
-import * as tpl from "./templates.js";
+import { encryptCards, relayId, normaliseCode } from "./relay-crypto.js?v=471b51ae";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=b5b70ed5";
+import * as tpl from "./templates.js?v=5a609bf9";
 
 let lang = pickLanguage();
 const t = (key, vars = {}) => {
