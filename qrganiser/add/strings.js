@@ -5,7 +5,7 @@ export const LANGUAGES = [{"id": "en", "html": "en", "label": "English", "site":
 export const STRINGS = {
  "en": {
   "title": "QRGANISER · Add cards",
-  "tagline": "Put your cards on your Garmin watch",
+  "tagline": "All your passes and codes, on your wrist.",
   "about": "About the app",
   "language": "Language",
   "step1": "Scan your cards",
@@ -111,7 +111,7 @@ export const STRINGS = {
  },
  "ces": {
   "title": "QRGANISER · Přidat karty",
-  "tagline": "Mějte své karty v hodinkách Garmin",
+  "tagline": "Všechny vaše karty a kódy na zápěstí.",
   "about": "O aplikaci",
   "language": "Jazyk",
   "step1": "Naskenujte karty",
@@ -217,7 +217,7 @@ export const STRINGS = {
  },
  "dan": {
   "title": "QRGANISER · Tilføj kort",
-  "tagline": "Få dine kort på dit Garmin-ur",
+  "tagline": "Alle dine kort og koder, på håndleddet.",
   "about": "Om appen",
   "language": "Sprog",
   "step1": "Scan dine kort",
@@ -323,7 +323,7 @@ export const STRINGS = {
  },
  "deu": {
   "title": "QRGANISER · Karten hinzufügen",
-  "tagline": "Deine Karten auf deiner Garmin-Uhr",
+  "tagline": "Alle deine Pässe und Codes am Handgelenk.",
   "about": "Über die App",
   "language": "Sprache",
   "step1": "Karten scannen",
@@ -429,7 +429,7 @@ export const STRINGS = {
  },
  "spa": {
   "title": "QRGANISER · Añadir tarjetas",
-  "tagline": "Lleva tus tarjetas en tu reloj Garmin",
+  "tagline": "Todos tus pases y códigos, en tu muñeca.",
   "about": "Acerca de la app",
   "language": "Idioma",
   "step1": "Escanea tus tarjetas",
@@ -535,7 +535,7 @@ export const STRINGS = {
  },
  "fin": {
   "title": "QRGANISER · Lisää kortteja",
-  "tagline": "Siirrä korttisi Garmin-kelloosi",
+  "tagline": "Kaikki korttisi ja koodisi ranteessa.",
   "about": "Tietoja sovelluksesta",
   "language": "Kieli",
   "step1": "Skannaa korttisi",
@@ -641,7 +641,7 @@ export const STRINGS = {
  },
  "fre": {
   "title": "QRGANISER · Ajouter des cartes",
-  "tagline": "Vos cartes sur votre montre Garmin",
+  "tagline": "Tous vos pass et codes, à votre poignet.",
   "about": "À propos de l’app",
   "language": "Langue",
   "step1": "Scannez vos cartes",
@@ -747,7 +747,7 @@ export const STRINGS = {
  },
  "hun": {
   "title": "QRGANISER · Kártyák hozzáadása",
-  "tagline": "Vidd a kártyáidat a Garmin órádra",
+  "tagline": "Minden kártyád és kódod a csuklódon.",
   "about": "Az alkalmazásról",
   "language": "Nyelv",
   "step1": "Szkenneld a kártyáidat",
@@ -853,7 +853,7 @@ export const STRINGS = {
  },
  "ind": {
   "title": "QRGANISER · Tambah kartu",
-  "tagline": "Simpan kartu Anda di jam Garmin",
+  "tagline": "Semua kartu dan kode Anda, di pergelangan tangan.",
   "about": "Tentang aplikasi",
   "language": "Bahasa",
   "step1": "Pindai kartu Anda",
@@ -959,7 +959,7 @@ export const STRINGS = {
  },
  "ita": {
   "title": "QRGANISER · Aggiungi tessere",
-  "tagline": "Le tue tessere sul tuo orologio Garmin",
+  "tagline": "Tutti i tuoi pass e codici, al polso.",
   "about": "Info sull’app",
   "language": "Lingua",
   "step1": "Scansiona le tessere",
@@ -1065,7 +1065,7 @@ export const STRINGS = {
  },
  "kor": {
   "title": "QRGANISER · 카드 추가",
-  "tagline": "카드를 Garmin 워치에 담으세요",
+  "tagline": "모든 패스와 코드를 손목 위에.",
   "about": "앱 정보",
   "language": "언어",
   "step1": "카드 스캔",
@@ -1171,7 +1171,7 @@ export const STRINGS = {
  },
  "dut": {
   "title": "QRGANISER · Kaarten toevoegen",
-  "tagline": "Zet je kaarten op je Garmin-horloge",
+  "tagline": "Al je passen en codes, om je pols.",
   "about": "Over de app",
   "language": "Taal",
   "step1": "Scan je kaarten",
@@ -1277,7 +1277,7 @@ export const STRINGS = {
  },
  "nob": {
   "title": "QRGANISER · Legg til kort",
-  "tagline": "Legg kortene dine på Garmin-klokken",
+  "tagline": "Alle kortene og kodene dine, på håndleddet.",
   "about": "Om appen",
   "language": "Språk",
   "step1": "Skann kortene dine",
@@ -1383,7 +1383,7 @@ export const STRINGS = {
  },
  "jpn": {
   "title": "QRGANISER · カードを追加",
-  "tagline": "カードを Garmin ウォッチに入れよう",
+  "tagline": "すべてのパスとコードを手首に。",
   "about": "アプリについて",
   "language": "言語",
   "step1": "カードをスキャン",
@@ -1489,7 +1489,7 @@ export const STRINGS = {
  },
  "pol": {
   "title": "QRGANISER · Dodaj karty",
-  "tagline": "Twoje karty na zegarku Garmin",
+  "tagline": "Wszystkie karnety i kody na nadgarstku.",
   "about": "O aplikacji",
   "language": "Język",
   "step1": "Zeskanuj karty",
@@ -1595,7 +1595,7 @@ export const STRINGS = {
  },
  "pob": {
   "title": "QRGANISER · Adicionar cartões",
-  "tagline": "Coloque seus cartões no relógio Garmin",
+  "tagline": "Todos os seus passes e códigos, no pulso.",
   "about": "Sobre o app",
   "language": "Idioma",
   "step1": "Escaneie seus cartões",
@@ -1701,7 +1701,7 @@ export const STRINGS = {
  },
  "por": {
   "title": "QRGANISER · Adicionar cartões",
-  "tagline": "Coloque os seus cartões no relógio Garmin",
+  "tagline": "Todos os seus passes e códigos, no pulso.",
   "about": "Sobre a app",
   "language": "Idioma",
   "step1": "Digitalize os cartões",
@@ -1807,7 +1807,7 @@ export const STRINGS = {
  },
  "swe": {
   "title": "QRGANISER · Lägg till kort",
-  "tagline": "Lägg in dina kort i din Garmin-klocka",
+  "tagline": "Alla dina kort och koder, på handleden.",
   "about": "Om appen",
   "language": "Språk",
   "step1": "Skanna dina kort",
@@ -1913,7 +1913,7 @@ export const STRINGS = {
  },
  "tha": {
   "title": "QRGANISER · เพิ่มบัตร",
-  "tagline": "ใส่บัตรของคุณไว้ในนาฬิกา Garmin",
+  "tagline": "บัตรและโค้ดทั้งหมดของคุณ บนข้อมือ",
   "about": "เกี่ยวกับแอป",
   "language": "ภาษา",
   "step1": "สแกนบัตร",
@@ -2019,7 +2019,7 @@ export const STRINGS = {
  },
  "zhs": {
   "title": "QRGANISER · 添加卡片",
-  "tagline": "把卡片放进你的 Garmin 手表",
+  "tagline": "所有卡券和二维码，尽在手腕。",
   "about": "关于应用",
   "language": "语言",
   "step1": "扫描卡片",
@@ -2125,7 +2125,7 @@ export const STRINGS = {
  },
  "zht": {
   "title": "QRGANISER · 新增卡片",
-  "tagline": "把卡片放進你的 Garmin 手錶",
+  "tagline": "所有票券與條碼，盡在手腕。",
   "about": "關於 App",
   "language": "語言",
   "step1": "掃描卡片",
