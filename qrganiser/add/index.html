@@ -10,7 +10,7 @@
 <title>QRGANISER · Add cards</title>
 <meta name="description" content="Scan your loyalty, gym and access cards with your phone and send them to QRGANISER on your Garmin watch. End-to-end encrypted.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anta&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #000;
@@ -36,8 +36,31 @@
   header .tools { margin-left: auto; display: flex; gap: 8px; align-items: center; }
   .viewfinder .idle p { margin: 0; }
   .mark { width: 40px; height: 40px; }
-  header h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+  /* The QRGANISER wordmark, as in the brand artwork: Anta, "QR" in full
+     white and the rest at 65%, letters pulled together by 3%. */
+  header h1 { font: 400 27px/1 Anta, Inter, sans-serif; letter-spacing: -0.03em; text-transform: uppercase; margin: 0 0 3px; color: #fff; }
+  header h1 .rest { color: rgba(255, 255, 255, .65); }
   header p { margin: 0; color: var(--muted); font-size: 13px; }
+
+  .secure {
+    display: flex; align-items: center; gap: 8px; margin: 10px 0 0; padding: 9px 12px;
+    font-size: 13px; color: var(--text); background: rgba(0, 200, 170, .1);
+    border: 1px solid rgba(0, 200, 170, .28); border-radius: 12px;
+  }
+  .secure svg { flex: none; color: var(--accent); }
+
+  .quick { margin-top: 18px; }
+  .quick-label { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    flex: none; min-height: 40px; padding: 8px 14px; border-radius: 999px; font-size: 14px;
+    background: transparent; border: 1px solid var(--line); color: var(--text);
+  }
+  .chip b { color: var(--accent); font-weight: 600; }
+  .chip[aria-pressed="true"] { border-color: var(--accent); background: rgba(0, 200, 170, .12); }
+  .manual h3 { margin: 0; font-size: 15px; }
+  .manual .note { color: var(--muted); font-size: 13px; opacity: 1; margin: 0; }
+  .manual .status { margin: 0; min-height: 0; }
   header .lang { font: inherit; font-size: 13px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 8px; max-width: 120px; min-height: 0; width: auto; }
   header .about { color: var(--muted); font-size: 13px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
 
@@ -119,7 +142,7 @@
   <header>
     <img class="mark" src="../../assets/qrganiser-icon.png" alt="" width="40" height="40">
     <div>
-      <h1>QRGANISER</h1>
+      <h1 aria-label="QRGANISER">QR<span class="rest">GANISER</span></h1>
       <p data-i18n="tagline">Put your cards on your Garmin watch</p>
     </div>
     <div class="tools">
@@ -127,6 +150,11 @@
       <a class="about" href="../" data-i18n="about">About the app</a>
     </div>
   </header>
+
+  <p class="secure">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    <span data-i18n="privacyTop">Encrypted on this phone. Nothing is stored.</span>
+  </p>
 
   <h2><span class="step">1</span><span data-i18n="step1">Scan your cards</span></h2>
   <div class="viewfinder" id="vf">
@@ -155,6 +183,18 @@
     <button class="primary" type="submit" data-i18n="addCard">Add card</button>
   </form>
 
+  <div class="quick">
+    <p class="quick-label" data-i18n="quickAdd">Or add without scanning</p>
+    <div class="chips" id="chips"></div>
+  </div>
+  <form class="manual" id="tplForm" hidden novalidate>
+    <h3 id="tplTitle"></h3>
+    <div id="tplFields" style="display:grid;gap:10px"></div>
+    <p class="note" id="tplNote"></p>
+    <div class="status err" id="tplStatus" role="status"></div>
+    <button class="primary" type="submit" data-i18n="addCard">Add card</button>
+  </form>
+
   <h2><span class="step">2</span><span data-i18n="step2">Check names</span></h2>
   <div class="cards" id="cards"></div>
 
@@ -180,6 +220,7 @@
 <script type="module">
 import { encryptCards, relayId, normaliseCode } from "./relay-crypto.js";
 import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js";
+import * as tpl from "./templates.js";
 
 let lang = pickLanguage();
 const t = (key, vars = {}) => {
@@ -195,6 +236,8 @@ function applyLanguage() {
   document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
   document.querySelectorAll("[data-i18n-aria]").forEach((el) => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
   if (controls) $("camBtn").textContent = t("stop");
+  renderChips();
+  if (openTemplate) showTemplate(openTemplate, true);
 }
 
 // Same origin in production (chandigital.in/qrganiser/). ?api= is for local
@@ -276,23 +319,38 @@ function mapFormat(fmt, text) {
     : [1, text, { key: "noteAsQr", vars: { format: name } }];
 }
 
+// Payment, contact and Wi-Fi cards: badge text and the note under the name.
+const KIND_PILL = { upi: "₹ UPI", pix: "PIX", paynow: "PAYNOW", promptpay: "PROMPTPAY", sepa: "SEPA", wifi: "WI-FI" };
+const KIND_NOTE = { upi: "noteReceive", pix: "noteReceive", paynow: "noteReceive", promptpay: "noteReceive",
+                    sepa: "noteReceive", contact: "noteContact", wifi: "noteWifi" };
+const kindPill = (kind) => kind === "contact" ? t("pillContact").toUpperCase() : KIND_PILL[kind];
+
+// Returns true when the card was added.
 function addCard(name, data, fmt, note) {
   // A boarding pass is passed on byte for byte (its fields are fixed-width
   // and the airline's system reads them); everything else is trimmed.
   if (!parseBcbp(data)) data = data.trim();
-  if (!data) return;
+  if (!data) return false;
+  // The watch takes 300 characters per card. Cutting a code short would
+  // produce one that scans as something else, so refuse instead.
+  if (data.length > tpl.MAX_DATA) { flash(t("tplTooLong"), true); return false; }
   const existing = cards.find((c) => c.data === data);
-  if (existing) { flash(t("dupe", { name: existing.name })); return; }
-  if (cards.length >= MAX_CARDS) { flash(t("tooMany", { n: MAX_CARDS }), true); return; }
+  if (existing) { flash(t("dupe", { name: existing.name })); return false; }
+  if (cards.length >= MAX_CARDS) { flash(t("tooMany", { n: MAX_CARDS }), true); return false; }
   const pass = parseBcbp(data);
+  const info = pass ? null : tpl.describe(data);
   if (pass && !note) note = { key: "noteBoarding" };
-  cards.push({ name: name || (pass ? passName(pass) : t("defaultName", { n: cards.length + 1 })), data, fmt, note, pass });
+  if (info) { fmt = 1; note = { key: KIND_NOTE[info.kind] }; }
+  if (!name && info) name = ((info.kind === "contact" ? "" : KIND_PILL[info.kind].replace("₹ ", "") + " · ") + info.detail).slice(0, 24);
+  cards.push({ name: name || (pass ? passName(pass) : t("defaultName", { n: cards.length + 1 })), data, fmt, note, pass, info });
+  flash("");
   render();
   if (navigator.vibrate) navigator.vibrate(40);
   $("vf").classList.remove("hit"); void $("vf").offsetWidth; $("vf").classList.add("hit");
   const inputs = document.querySelectorAll(".card input.name");
   const last = inputs[inputs.length - 1];
   if (last && !name) { last.select(); last.focus({ preventScroll: true }); }
+  return true;
 }
 
 function render() {
@@ -322,10 +380,12 @@ function render() {
     const meta = document.createElement("div");
     meta.className = "meta";
     const pill = document.createElement("span");
-    pill.className = "pill"; pill.textContent = c.pass ? "✈ " + t("pillFlight") : FMT_LABEL[shownFormat(c)];
+    pill.className = "pill";
+    pill.textContent = c.pass ? "✈ " + t("pillFlight") : c.info ? kindPill(c.info.kind) : FMT_LABEL[shownFormat(c)];
     const tail = document.createElement("span");
     tail.className = "tail";
     tail.textContent = c.pass ? [c.pass.from + "→" + c.pass.to, c.pass.seat].filter(Boolean).join(" · ")
+      : c.info ? c.info.detail
       : c.data.length > 18 ? "…" + c.data.slice(-16) : c.data;
     meta.append(pill, tail);
     el.append(name, note, meta, rm);
@@ -406,7 +466,140 @@ $("photo").addEventListener("change", async (ev) => {
     URL.revokeObjectURL(url);
   }
 });
-$("typeBtn").addEventListener("click", () => { $("manual").hidden = !$("manual").hidden; if (!$("manual").hidden) $("mName").focus(); });
+$("typeBtn").addEventListener("click", () => {
+  $("manual").hidden = !$("manual").hidden;
+  if (!$("manual").hidden) { closeTemplate(); $("mName").focus(); }
+});
+
+// ---- quick add ----
+// Each template is a few fields and a builder from templates.js. Field
+// labels and options are string ids; `mode`/`cap` tune the phone keyboard.
+const TEMPLATES = {
+  upi: { chip: "tplUpi", sign: "₹", build: tpl.upi, fields: [
+    { id: "vpa", label: "fUpiId", ph: "name@bank", mode: "email", cap: "none" },
+    { id: "payee", label: "fPayee", auto: "name" }] },
+  pix: { chip: "tplPix", sign: "R$", build: tpl.pix, fields: [
+    { id: "key", label: "fPixKey", cap: "none" },
+    { id: "receiver", label: "fPayee", auto: "name" },
+    { id: "city", label: "fCity", auto: "address-level2" }] },
+  paynow: { chip: "tplPaynow", sign: "S$", build: tpl.paynow, fields: [
+    { id: "kind", label: "fPaynowKind", options: [["mobile", "optMobile"], ["uen", "optUen"]] },
+    { id: "value", label: "fPaynowValue", cap: "characters" },
+    { id: "receiver", label: "fPayee", auto: "name" }] },
+  promptpay: { chip: "tplPromptpay", sign: "฿", build: tpl.promptpay, fields: [
+    { id: "id", label: "fPromptpayId", mode: "numeric" }] },
+  sepa: { chip: "tplSepa", sign: "€", build: tpl.sepa, fields: [
+    { id: "receiver", label: "fPayee", auto: "name" },
+    { id: "iban", label: "fIban", cap: "characters" },
+    { id: "bic", label: "fBic", cap: "characters" }] },
+  contact: { chip: "tplContact", build: tpl.contact, fields: [
+    { id: "first", label: "fFirst", auto: "given-name" },
+    { id: "last", label: "fLast", auto: "family-name" },
+    { id: "phone", label: "fPhone", mode: "tel", auto: "tel" },
+    { id: "email", label: "fEmail", mode: "email", cap: "none", auto: "email" },
+    { id: "org", label: "fOrg", auto: "organization" }] },
+  wifi: { chip: "tplWifi", build: tpl.wifi, fields: [
+    { id: "ssid", label: "fSsid", cap: "none" },
+    { id: "password", label: "fPassword", cap: "none" },
+    { id: "security", label: "fSecurity", options: [["WPA", "optWpa"], ["WEP", "optWep"], ["nopass", "optOpen"]] }] },
+};
+
+let openTemplate = null, showAllChips = false;
+const localChips = (() => {
+  let tz = "";
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+  // ?region= previews another region's chips, e.g. ?region=Asia/Bangkok.
+  return tpl.regionalTemplates(params.get("region") || tz);
+})();
+
+function renderChips() {
+  const box = $("chips");
+  box.replaceChildren();
+  const ids = showAllChips ? [...localChips, ...tpl.ALL_TEMPLATES.filter((id) => !localChips.includes(id))] : localChips;
+  for (const id of ids) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip";
+    b.setAttribute("aria-pressed", String(openTemplate === id));
+    if (TEMPLATES[id].sign) { const s = document.createElement("b"); s.textContent = TEMPLATES[id].sign + " "; b.append(s); }
+    b.append(t(TEMPLATES[id].chip));
+    b.addEventListener("click", () => (openTemplate === id ? closeTemplate() : showTemplate(id)));
+    box.append(b);
+  }
+  if (!showAllChips && ids.length < tpl.ALL_TEMPLATES.length) {
+    const more = document.createElement("button");
+    more.type = "button"; more.className = "chip"; more.textContent = t("more") + " +";
+    more.addEventListener("click", () => { showAllChips = true; renderChips(); });
+    box.append(more);
+  }
+}
+
+// keep=true redraws the open form in a new language without losing input.
+function showTemplate(id, keep) {
+  const old = keep ? readTemplate() : {};
+  openTemplate = id;
+  $("manual").hidden = true;
+  $("tplTitle").textContent = t(TEMPLATES[id].chip);
+  const box = $("tplFields");
+  box.replaceChildren();
+  for (const f of TEMPLATES[id].fields) {
+    const label = document.createElement("label");
+    const span = document.createElement("span");
+    span.textContent = t(f.label);
+    let input;
+    if (f.options) {
+      input = document.createElement("select");
+      for (const [value, key] of f.options) {
+        const o = document.createElement("option");
+        o.value = value; o.textContent = t(key);
+        input.append(o);
+      }
+    } else {
+      input = document.createElement("input");
+      input.type = "text";
+      input.spellcheck = false;
+      input.autocomplete = f.auto || "off";
+      if (f.mode) input.inputMode = f.mode;
+      if (f.cap) input.autocapitalize = f.cap;
+      if (f.ph) input.placeholder = f.ph;
+    }
+    input.dataset.field = f.id;
+    if (old[f.id] != null) input.value = old[f.id];
+    label.append(span, input);
+    box.append(label);
+  }
+  $("tplNote").textContent = t(KIND_NOTE[id]);
+  if (!keep) $("tplStatus").textContent = "";
+  $("tplForm").hidden = false;
+  renderChips();
+  if (!keep) { box.querySelector("input, select").focus({ preventScroll: true }); $("tplForm").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+}
+
+function readTemplate() {
+  const out = {};
+  document.querySelectorAll("#tplFields [data-field]").forEach((el) => { out[el.dataset.field] = el.value; });
+  return out;
+}
+
+function closeTemplate() {
+  openTemplate = null;
+  $("tplForm").hidden = true;
+  $("tplFields").replaceChildren();   // typed details don't linger in the page
+  $("tplStatus").textContent = "";
+  renderChips();
+}
+
+$("tplForm").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  try {
+    const built = TEMPLATES[openTemplate].build(readTemplate());
+    const before = cards.length;
+    if (addCard(built.name, built.data, 1, null)) closeTemplate();
+    else if (cards.length === before) $("tplStatus").textContent = $("status").textContent;
+  } catch (e) {
+    if (!(e instanceof tpl.TemplateError)) throw e;
+    $("tplStatus").textContent = t(e.key, e.vars);
+  }
+});
 $("manual").addEventListener("submit", (ev) => {
   ev.preventDefault();
   addCard($("mName").value.trim(), $("mData").value, parseInt($("mFmt").value, 10), null);
