@@ -20,7 +20,16 @@ const LANGUAGES = [
   { code: "sv", label: "Svenska" },
   { code: "th", label: "ไทย" },
   { code: "zh-CN", label: "简体中文" },
-  { code: "zh-TW", label: "繁體中文" }
+  { code: "zh-TW", label: "繁體中文" },
+  { code: "el", label: "Ελληνικά" },
+  { code: "hr", label: "Hrvatski" },
+  { code: "sl", label: "Slovenščina" },
+  { code: "sk", label: "Slovenčina" },
+  { code: "et", label: "Eesti" },
+  { code: "lv", label: "Latviešu" },
+  { code: "lt", label: "Lietuvių" },
+  { code: "ro", label: "Română" },
+  { code: "bg", label: "Български" }
 ];
 
 const STORAGE_KEY = "rallypoint-lang";

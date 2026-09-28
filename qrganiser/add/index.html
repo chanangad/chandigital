@@ -34,6 +34,9 @@
   main { max-width: 520px; margin: 0 auto; }
   header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 20px 0 8px; }
   header .tools { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  /* Keep the logo beside the name even when a long tagline wraps. */
+  header > div:not(.tools) { flex: 1 1 0; min-width: 0; }
+  header .mark { flex: none; align-self: flex-start; margin-top: 2px; }
   .viewfinder .idle p { margin: 0; }
   .mark { width: 40px; height: 40px; }
   /* The QRGANISER wordmark, as in the brand artwork: Anta, "QR" in full
@@ -90,6 +93,9 @@
     display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-height: 48px;
   }
   button.primary { background: var(--accent); color: var(--accent-ink); }
+  /* Long translations (Greek, Finnish...) wrap inside the button rather
+     than pushing the row off the screen. */
+  .row > button { min-width: 0; padding: 10px 8px; line-height: 1.2; overflow-wrap: anywhere; hyphens: auto; text-align: center; }
   button:disabled { opacity: .45; cursor: default; }
   button.ghost { background: transparent; border: 1px solid var(--line); }
   input[type=file] { display: none; }
@@ -219,7 +225,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
 <script type="module">
 import { encryptCards, relayId, normaliseCode } from "./relay-crypto.js?v=471b51ae";
-import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=c1fc7805";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=fa6d1153";
 import * as tpl from "./templates.js?v=5a609bf9";
 
 let lang = pickLanguage();
