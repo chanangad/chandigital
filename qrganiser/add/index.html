@@ -33,8 +33,9 @@
   }
   main { max-width: 520px; margin: 0 auto; }
   header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 20px 0 8px; }
-  header .tools { margin-left: auto; display: flex; gap: 8px; align-items: center; }
-  /* Keep the logo beside the name even when a long tagline wraps. */
+  /* Language and About sit on their own row, so the name and tagline
+     always get the full width beside the logo. */
+  header .tools { width: 100%; display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
   header > div:not(.tools) { flex: 1 1 0; min-width: 0; }
   header .mark { flex: none; align-self: flex-start; margin-top: 2px; }
   .viewfinder .idle p { margin: 0; }
@@ -198,7 +199,7 @@
     <div id="tplFields" style="display:grid;gap:10px"></div>
     <p class="note" id="tplNote"></p>
     <div class="status err" id="tplStatus" role="status"></div>
-    <button class="primary" type="submit" data-i18n="addCard">Add card</button>
+    <button class="primary" type="submit" id="tplSubmit" data-i18n="addCard">Add card</button>
   </form>
 
   <h2><span class="step">2</span><span data-i18n="step2">Check names</span></h2>
@@ -225,8 +226,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.2.1/umd/zxing-browser.min.js"></script>
 <script type="module">
 import { encryptCards, relayId, normaliseCode } from "./relay-crypto.js?v=471b51ae";
-import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=fa6d1153";
-import * as tpl from "./templates.js?v=5a609bf9";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=281d771e";
+import * as tpl from "./templates.js?v=16e5155f";
 
 let lang = pickLanguage();
 const t = (key, vars = {}) => {
@@ -326,8 +327,8 @@ function mapFormat(fmt, text) {
 }
 
 // Payment, contact and Wi-Fi cards: badge text and the note under the name.
-const KIND_PILL = { upi: "₹ UPI", pix: "PIX", paynow: "PAYNOW", promptpay: "PROMPTPAY", sepa: "SEPA", wifi: "WI-FI" };
-const KIND_NOTE = { upi: "noteReceive", pix: "noteReceive", paynow: "noteReceive", promptpay: "noteReceive",
+const KIND_PILL = { upi: "₹ UPI", pix: "PIX", paynow: "PAYNOW", promptpay: "PROMPTPAY", duitnow: "DUITNOW", sepa: "SEPA", wifi: "WI-FI" };
+const KIND_NOTE = { upi: "noteReceive", pix: "noteReceive", paynow: "noteReceive", promptpay: "noteReceive", duitnow: "noteReceive",
                     sepa: "noteReceive", contact: "noteContact", wifi: "noteWifi" };
 const kindPill = (kind) => kind === "contact" ? t("pillContact").toUpperCase() : KIND_PILL[kind];
 
@@ -465,7 +466,7 @@ $("photo").addEventListener("change", async (ev) => {
   try {
     const result = await getReader().decodeFromImageUrl(url);
     const [fmt, value, note] = mapFormat(result.getBarcodeFormat(), result.getText());
-    addCard("", value, fmt, note);
+    if (addCard("", value, fmt, note) && openTemplate && TEMPLATES[openTemplate].image) closeTemplate();
   } catch {
     flash(t("noCode"), true);
   } finally {
@@ -494,6 +495,9 @@ const TEMPLATES = {
     { id: "receiver", label: "fPayee", auto: "name" }] },
   promptpay: { chip: "tplPromptpay", sign: "฿", build: tpl.promptpay, fields: [
     { id: "id", label: "fPromptpayId", mode: "numeric" }] },
+  // DuitNow QRs carry the bank's participant code, so they come from the
+  // user's bank app as an image rather than being built here.
+  duitnow: { chip: "tplDuitnow", sign: "RM", image: true, fields: [] },
   sepa: { chip: "tplSepa", sign: "€", build: tpl.sepa, fields: [
     { id: "receiver", label: "fPayee", auto: "name" },
     { id: "iban", label: "fIban", cap: "characters" },
@@ -547,6 +551,16 @@ function showTemplate(id, keep) {
   $("tplTitle").textContent = t(TEMPLATES[id].chip);
   const box = $("tplFields");
   box.replaceChildren();
+  $("tplSubmit").hidden = !!TEMPLATES[id].image;
+  if (TEMPLATES[id].image) {
+    const help = document.createElement("p");
+    help.className = "hint"; help.style.margin = "0";
+    help.textContent = t("duitnowHelp");
+    const pick = document.createElement("button");
+    pick.type = "button"; pick.className = "primary"; pick.textContent = t("choosePhoto");
+    pick.addEventListener("click", () => $("photo").click());
+    box.append(help, pick);
+  }
   for (const f of TEMPLATES[id].fields) {
     const label = document.createElement("label");
     const span = document.createElement("span");
@@ -577,7 +591,7 @@ function showTemplate(id, keep) {
   if (!keep) $("tplStatus").textContent = "";
   $("tplForm").hidden = false;
   renderChips();
-  if (!keep) { box.querySelector("input, select").focus({ preventScroll: true }); $("tplForm").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+  if (!keep) { box.querySelector("input, select, button").focus({ preventScroll: true }); $("tplForm").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
 }
 
 function readTemplate() {

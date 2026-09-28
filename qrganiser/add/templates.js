@@ -226,6 +226,10 @@ export function describe(data) {
       if (aid === "br.gov.bcb.pix") return { kind: "pix", detail: sub["01"] || "" };
       if (aid === "sg.paynow") return { kind: "paynow", detail: sub["02"] || "" };
       if (aid === "a000000677010111") return { kind: "promptpay", detail: (sub["01"] || sub["02"] || "").replace(/^0066/, "0") };
+      // Malaysia's DuitNow QR (PayNet, RID A000000615). Not generated here:
+      // it carries the bank's own participant code, so the add page asks for
+      // the QR the user's bank app produces and only recognises it.
+      if (aid.startsWith("a000000615")) return { kind: "duitnow", detail: f["59"] || "" };
     }
   }
   return null;
@@ -242,8 +246,9 @@ export function regionalTemplates(tz) {
   else if (/^America\/(Sao_Paulo|Recife|Bahia|Fortaleza|Manaus|Belem|Cuiaba|Campo_Grande|Porto_Velho|Boa_Vista|Rio_Branco|Araguaina|Maceio|Noronha|Santarem)$/.test(tz)) out.push("pix");
   else if (tz === "Asia/Singapore") out.push("paynow");
   else if (tz === "Asia/Bangkok") out.push("promptpay");
+  else if (tz === "Asia/Kuala_Lumpur" || tz === "Asia/Kuching") out.push("duitnow");
   else if ((/^Europe\//.test(tz) || /^Atlantic\/(Canary|Madeira|Azores|Reykjavik)$/.test(tz)) && !SEPA_EXCLUDED.test(tz)) out.push("sepa");
   return out.concat(["contact", "wifi"]);
 }
 
-export const ALL_TEMPLATES = ["upi", "pix", "paynow", "promptpay", "sepa", "contact", "wifi"];
+export const ALL_TEMPLATES = ["upi", "pix", "paynow", "promptpay", "duitnow", "sepa", "contact", "wifi"];

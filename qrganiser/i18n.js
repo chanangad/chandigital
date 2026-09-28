@@ -29,7 +29,8 @@ const LANGUAGES = [
   { code: "lv", label: "Latviešu" },
   { code: "lt", label: "Lietuvių" },
   { code: "ro", label: "Română" },
-  { code: "bg", label: "Български" }
+  { code: "bg", label: "Български" },
+  { code: "ms", label: "Bahasa Melayu" }
 ];
 
 const STORAGE_KEY = "rallypoint-lang";
