@@ -513,6 +513,17 @@
       .rp-field-row { grid-template-columns: 1fr; }
       .rp-unlock-card { padding: 24px 20px; }
     }
+      /* Live claim-code check: a spinner while the server is asked, a green tick
+       when a watch has reported the typed code, a grey mark when none has. */
+    .rp-code-check { flex-shrink: 0; display: flex; align-items: center; padding: 0 12px 0 4px; color: #1a7a3c; pointer-events: none; }
+    .rp-code-check[hidden] { display: none; }
+    .rp-code-check--verify { color: #b8650f; }
+    .rp-code-spin { flex-shrink: 0; width: 16px; height: 16px; margin: 0 14px 0 4px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--muted); animation: rp-claim-spin 0.8s linear infinite; }
+    .rp-code-spin[hidden] { display: none; }
+    @keyframes rp-claim-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .rp-code-spin { animation: none; } }
+    #claim-code-note { margin: 6px 0 0; }
+    #claim-code-note:empty { display: none; }
   </style>
 </head>
 <body>
@@ -649,8 +660,12 @@
                 <div class="rp-prefix-wrap">
                   <span class="rp-prefix" aria-hidden="true">RP-</span>
                   <input id="claim-code-input" name="claim-code" type="text" required placeholder="4839 2017 5264" autocomplete="off" spellcheck="false"
-                         inputmode="numeric" pattern="[0-9 -]*">
+                         inputmode="numeric" pattern="[0-9 \-]*">
+                  <span id="claim-code-spin" class="rp-code-spin" role="img" aria-label="Checking the code" hidden></span>
+                  <span id="claim-code-check" class="rp-code-check" role="img" aria-label="Watch found" hidden><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span id="claim-code-warn" class="rp-code-check rp-code-check--verify" role="img" aria-label="Please verify this code" hidden><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="6.4" r="1.2" fill="currentColor"/><path d="M10 9.2v5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
                 </div>
+                <p id="claim-code-note" class="rp-status" role="status" aria-live="polite"></p>
               </div>
               <div class="rp-field-row">
                 <div class="rp-field">
@@ -944,6 +959,59 @@
 
 
     claimCodeInput.addEventListener("input", function() { syncClaimCode(claimCodeInput.value); });
+
+    // Does a watch actually show this code? Watches report their code on
+    // every licence check, so a typed code that no watch has reported is
+    // almost always a wrong digit - buyers have paid for such codes and stayed
+    // locked until the licence was moved by hand. This only nudges: a watch
+    // with no phone connection is unknown too, so the pay buttons never wait
+    // for it.
+    var claimCodeNote = document.getElementById("claim-code-note");
+    var claimCodeCheck = document.getElementById("claim-code-check");
+    var claimCodeWarn = document.getElementById("claim-code-warn");
+    var claimCodeSpin = document.getElementById("claim-code-spin");
+    var claimCheckTimer = null;
+    var claimCheckSeq = 0;
+    function showClaimState(state) {
+      claimCodeSpin.hidden = state !== "spin";
+      claimCodeCheck.hidden = state !== "ok";
+      claimCodeWarn.hidden = state !== "warn";
+    }
+    function checkClaimCode(immediate) {
+      clearTimeout(claimCheckTimer);
+      showClaimState("none");
+      var suffix = claimCodeDigits(claimCodeInput.value);
+      if (suffix.replace("-", "").length < 8) { setPanelStatus(claimCodeNote, ""); return; }
+      setPanelStatus(claimCodeNote, "");
+      showClaimState("spin");
+      var seq = ++claimCheckSeq;
+      var run = async function() {
+        try {
+          var response = await fetch(`${API_BASE}/api/claim/check?code=` + encodeURIComponent("RP-" + suffix));
+          if (seq !== claimCheckSeq) { return; }
+          if (!response.ok) { showClaimState("none"); return; }
+          var data = await response.json();
+          if (seq !== claimCheckSeq) { return; } // the code changed meanwhile
+          if (data.paid) {
+            showClaimState("ok");
+            setPanelStatus(claimCodeNote, "This code is already unlocked. Open Badminton Go on the watch with your phone nearby.", "ok");
+          } else if (data.known) {
+            showClaimState("ok");
+            setPanelStatus(claimCodeNote, "");
+          } else {
+            showClaimState("warn");
+            setPanelStatus(claimCodeNote, "Please verify this code matches your watch.");
+          }
+        } catch (_) {
+          // A failed check must never stand between a buyer and the pay
+          // button: say nothing rather than something wrong.
+          if (seq === claimCheckSeq) { showClaimState("none"); setPanelStatus(claimCodeNote, ""); }
+        }
+      };
+      if (immediate) { run(); } else { claimCheckTimer = setTimeout(run, 600); }
+    }
+    claimCodeInput.addEventListener("input", function() { checkClaimCode(false); });
+    if (initialClaimCode) { checkClaimCode(true); }
 
     async function beginCheckout(provider, currency) {
       var rawSuffix = claimCodeInput.value.trim().toUpperCase();
