@@ -587,7 +587,7 @@
        when a watch has reported the typed code, a grey mark when none has. */
     .rp-code-check { flex-shrink: 0; display: flex; align-items: center; padding: 0 12px 0 4px; color: #1a7a3c; pointer-events: none; }
     .rp-code-check[hidden] { display: none; }
-    .rp-code-check--verify { color: #b8650f; }
+    .rp-code-check--verify { color: var(--muted); }
     .rp-code-spin { flex-shrink: 0; width: 16px; height: 16px; margin: 0 14px 0 4px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--muted); animation: rp-claim-spin 0.8s linear infinite; }
     .rp-code-spin[hidden] { display: none; }
     @keyframes rp-claim-spin { to { transform: rotate(360deg); } }
