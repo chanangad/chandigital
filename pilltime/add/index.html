@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<!-- PRE-LAUNCH: hidden from search until launch. At launch: content="index, follow" -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://chandigital.in/pilltime/add/">
+<link rel="icon" href="../../assets/cd-circle-v2.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/pilltime-icon.png">
+<title>Pill Time! · Your meds</title>
+<meta name="description" content="Set up your medicines and courses, then send them to Pill Time! on your Garmin watch. End-to-end encrypted; nothing is kept on our server.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000;
+    --surface: #111214;
+    --surface-2: #1b1c20;
+    --line: #2a2b31;
+    --text: #f5f6f7;
+    --muted: #9a9ca5;
+    --accent: #00c8aa;
+    --accent-ink: #00221d;
+    --amber: #ffb020;
+    --danger: #ff6b5a;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font: 16px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: env(safe-area-inset-top) 16px calc(32px + env(safe-area-inset-bottom));
+  }
+  main { max-width: 520px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 12px; padding: 20px 0 8px; }
+  header .about { margin-left: auto; color: var(--muted); font-size: 13px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+  .mark { width: 40px; height: 40px; flex: none; }
+  header h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+  h2 { font-size: 15px; font-weight: 600; margin: 28px 0 12px; display: flex; align-items: center; gap: 10px; }
+  h2 .step { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-2); color: var(--accent); display: grid; place-items: center; font-size: 13px; }
+  [hidden] { display: none !important; }
+
+  .row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .presets { margin-top: 6px; }
+  button, .btn {
+    appearance: none; border: 0; font: inherit; font-weight: 600; cursor: pointer;
+    border-radius: 14px; padding: 12px 16px; color: var(--text); background: var(--surface-2);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-height: 48px;
+  }
+  button.primary { background: var(--accent); color: var(--accent-ink); }
+  button.ghost { background: transparent; border: 1px solid var(--line); }
+  button.small { flex: none; min-height: 36px; padding: 6px 12px; font-size: 14px; border-radius: 10px; }
+  button.danger { color: var(--danger); }
+  button:disabled { opacity: .45; cursor: default; }
+  input[type=file] { display: none; }
+
+  label { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+  input[type=text], input[type=number], input[type=date], input[type=time], select {
+    font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px; width: 100%; min-height: 48px; color-scheme: dark;
+  }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .check { display: flex; align-items: center; gap: 10px; color: var(--text); font-size: 15px; }
+  .check input { width: 20px; height: 20px; accent-color: var(--accent); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .meds { display: grid; gap: 10px; }
+  .empty { color: var(--muted); font-size: 14px; padding: 18px; border: 1px dashed var(--line); border-radius: var(--radius); text-align: center; }
+  .med { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 4px; }
+  .med .top { display: flex; align-items: baseline; gap: 8px; }
+  .med .name { font-weight: 600; font-size: 17px; }
+  .med .dose { color: var(--muted); font-size: 14px; }
+  .med .sum { color: var(--muted); font-size: 14px; }
+  .med .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .tag { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 10px; background: var(--surface-2); color: var(--muted); }
+  .tag.crit { color: var(--amber); }
+  .med .acts { display: flex; gap: 8px; margin-top: 8px; }
+
+  .drafts { display: grid; gap: 10px; margin-top: 12px; }
+  .draft { background: var(--surface); border: 1px dashed var(--amber); border-radius: var(--radius); padding: 14px; display: grid; gap: 4px; }
+  .draft .warn { color: var(--amber); font-size: 13px; }
+  .draft .note { color: var(--muted); font-size: 13px; }
+  .editor { margin-top: 12px; padding: 16px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--accent); display: grid; gap: 14px; }
+  .editor h3 { margin: 0; font-size: 16px; }
+  fieldset { border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin: 0; display: grid; gap: 10px; }
+  legend { color: var(--muted); font-size: 13px; padding: 0 6px; }
+  .times { display: grid; gap: 8px; }
+  .time-row { display: flex; gap: 8px; }
+  .time-row input { flex: 1; }
+  .days { display: flex; gap: 6px; flex-wrap: wrap; }
+  .days label { display: block; }
+  .days input { display: none; }
+  .days span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); color: var(--muted); font-weight: 600; cursor: pointer; }
+  .days input:checked + span { background: var(--accent); color: var(--accent-ink); }
+  .hint { color: var(--muted); font-size: 13px; margin: 0; }
+
+  .code-input {
+    font: 700 24px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-align: center; text-transform: uppercase;
+    padding: 16px 8px; border-radius: var(--radius);
+  }
+  .status { margin-top: 12px; min-height: 24px; font-size: 14px; color: var(--muted); }
+  .status.ok { color: var(--accent); }
+  .status.err { color: var(--danger); }
+  footer { margin-top: 32px; color: var(--muted); font-size: 13px; display: grid; gap: 10px; }
+  footer strong { color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+      <g transform="rotate(-40 20 20)">
+        <rect x="13" y="3" width="14" height="34" rx="7" fill="#fff"/>
+        <path d="M13 20h14v10a7 7 0 0 1-14 0z" fill="#00c8aa"/>
+      </g>
+    </svg>
+    <div>
+      <h1>Pill Time!</h1>
+      <p>Medicine reminders on your Garmin watch</p>
+    </div>
+    <a class="about" href="../">About the app</a>
+  </header>
+
+  <h2><span class="step">1</span>Connect your watch</h2>
+  <p class="hint">On the watch open Pill Time!, press MENU and choose <em>Add or update meds</em>. Type the code it shows. Keep that screen open while you work here; the code lasts 10 minutes.</p>
+  <div class="row">
+    <input type="text" class="code-input" id="code" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX XXXX XXXX" aria-label="Pairing code">
+  </div>
+
+  <h2><span class="step">2</span>Your medicines</h2>
+  <div class="meds" id="meds"></div>
+  <div class="drafts" id="drafts" hidden></div>
+  <div class="row">
+    <button class="primary" id="scanBtn" disabled>Scan a prescription or label</button>
+    <input type="file" id="scanFile" accept="image/*" capture="environment">
+  </div>
+  <p class="hint" id="scanHint">Enter the watch code above to scan. We read the photo and fill in the details; you check each medicine before it is added.</p>
+  <div class="status" id="scanStatus" role="status"></div>
+  <div class="row">
+    <button id="addBtn">Add a medicine by hand</button>
+  </div>
+  <p class="hint" style="margin-top:14px">Or start from a common pattern:</p>
+  <div class="row presets" id="presets">
+    <button class="small ghost" data-preset="morning">Morning</button>
+    <button class="small ghost" data-preset="twice">Morning &amp; evening</button>
+    <button class="small ghost" data-preset="meals">With meals</button>
+    <button class="small ghost" data-preset="bedtime">Bedtime</button>
+    <button class="small ghost" data-preset="prn">As needed</button>
+  </div>
+
+  <form class="editor" id="editor" hidden>
+    <h3 id="editorTitle">Add a medicine</h3>
+    <label>Name
+      <input type="text" id="fName" maxlength="24" required autocomplete="off" placeholder="e.g. Metformin">
+    </label>
+    <label>Dose (optional)
+      <input type="text" id="fDose" maxlength="12" autocomplete="off" placeholder="e.g. 500 mg, 2 puffs">
+    </label>
+
+    <fieldset>
+      <legend>When</legend>
+      <label>How often
+        <select id="fType">
+          <option value="daily">Every day</option>
+          <option value="weekdays">On certain days of the week</option>
+          <option value="cycle">Every few days, or on/off cycles</option>
+          <option value="interval">Every few hours, from the last dose</option>
+          <option value="prn">As needed (no reminders)</option>
+        </select>
+      </label>
+      <div id="prnBox" class="grid2" hidden>
+        <label>At least (hours apart)<input type="number" id="fGap" min="0" max="72" step="0.5" value="6"></label>
+        <label>At most per day<input type="number" id="fPrnMax" min="0" max="24" value="4"></label>
+        <p class="hint" style="grid-column: 1 / -1">Nothing reminds you. Log each dose on the watch with one press; it shows when the next one is fine and how many you have had today. 0 = no limit.</p>
+      </div>
+      <div id="weekdayBox" class="days" hidden></div>
+      <div id="cycleBox" class="grid2" hidden>
+        <label>Take for (days)<input type="number" id="fOn" min="1" max="365" value="1"></label>
+        <label>Then pause for (days)<input type="number" id="fOff" min="0" max="365" value="1"></label>
+        <p class="hint" style="grid-column: 1 / -1">Every other day: take 1, pause 1. Every 3 days: take 1, pause 2. A 21/7 pack: take 21, pause 7. Counted from the start date.</p>
+      </div>
+      <div id="intervalBox" class="grid2" hidden>
+        <label>Every (hours)<input type="number" id="fEvery" min="0.5" max="72" step="0.5" value="6"></label>
+        <label>At most per day<input type="number" id="fMax" min="0" max="24" value="0"></label>
+        <p class="hint" style="grid-column: 1 / -1">The next reminder counts from when you actually took the last dose. The first time below is the first dose. 0 = no daily limit.</p>
+      </div>
+      <div id="timesBox">
+        <p class="hint" id="timesHint">Times</p>
+        <div class="times" id="times"></div>
+        <div class="row" id="addTimeRow"><button type="button" class="small ghost" id="addTime">+ Add a time</button></div>
+      </div>
+      <label class="check" id="criticalBox"><input type="checkbox" id="fCritical"> Time-critical: remind even during quiet hours</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Course</legend>
+      <div class="grid2">
+        <label>Start date<input type="date" id="fStart"></label>
+        <label>Number of days<input type="number" id="fDays" min="0" max="3650" placeholder="Ongoing"></label>
+      </div>
+      <p class="hint">Leave the number of days empty for a medicine you take long term. Reminders stop on their own when a course ends.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Supply</legend>
+      <label class="check"><input type="checkbox" id="fTrack"> Count my supply and warn me before I run out</label>
+      <div id="stockBox" class="grid2" hidden>
+        <label>I have now<input type="number" id="fStock" min="0" step="0.5" value="30"></label>
+        <label>Per dose<input type="number" id="fPerDose" min="0.25" step="0.25" value="1"></label>
+        <label>Warn at (days left)<input type="number" id="fRefill" min="0" max="60" value="7"></label>
+        <label>Pack size<input type="number" id="fPack" min="0" step="1" value="30"></label>
+      </div>
+    </fieldset>
+
+    <label class="check"><input type="checkbox" id="fPaused"> Paused (keep it in the list, no reminders)</label>
+
+    <div class="row">
+      <button type="submit" class="primary">Save</button>
+      <button type="button" class="ghost" id="cancelBtn">Cancel</button>
+    </div>
+  </form>
+
+  <h2><span class="step">3</span>Send to your watch</h2>
+  <p class="hint">Sends the whole list to the watch showing the code above. Re-send after any change.</p>
+  <div class="row">
+    <button class="primary" id="sendBtn" disabled>Send to watch</button>
+  </div>
+  <div class="status" id="status" role="status"></div>
+
+  <h2><span class="step">4</span>Keep a backup</h2>
+  <p class="hint">This list is saved only in this browser. Phones can clear browser data, so keep a backup file to restore it here or on another phone.</p>
+  <div class="row">
+    <button class="ghost" id="exportBtn">Save backup file</button>
+    <button class="ghost" id="importBtn">Restore from file</button>
+    <input type="file" id="importFile" accept="application/json,.json">
+  </div>
+
+  <footer>
+    <div><strong>Private by design.</strong> Your list is encrypted on this phone with a key from the watch's code. Our server only ever holds the scrambled result, for 10 minutes at most, and the watch deletes it as soon as it has it.</div>
+    <div><strong>Scanning is the one exception.</strong> A photo you scan is sent, unencrypted, to our server and to an AI service (Anthropic's Claude) to read it. It is not stored or used for training, and it is discarded once read. Nothing is added until you check and save it. You can always add medicines by hand instead. <a href="../privacy/" style="color:inherit">Privacy policy</a>.</div>
+    <div><strong>Not a medical device.</strong> Pill Time! is a reminder aid. It does not give medical advice, and a reminder can be late or missed (for example if the watch is off or in Do Not Disturb). Always follow your prescriber's instructions.</div>
+  </footer>
+</main>
+
+<script type="module">
+import { encryptMeds, relayId, normaliseCode, dayNumber, TYPE, FLAG, MAX_MEDS, MAX_TIMES } from "./relay-crypto.js";
+
+// ?api= points the page at a local `wrangler dev` worker, e.g.
+// ?api=http://127.0.0.1:8799/api/pilltime/ (see worker/README.md). Only
+// loopback addresses are honoured, so a crafted link cannot redirect sends.
+const API_OVERRIDE = new URLSearchParams(location.search).get("api");
+const API = API_OVERRIDE && /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/.*\/$/.test(API_OVERRIDE)
+  ? API_OVERRIDE
+  : "https://chandigital.in/api/pilltime/";
+const RELAY = API + "relay/";
+const SCAN = API + "scan";
+const SCAN_CONSENT = "pilltime.scanConsent";
+const KEY = "pilltime.v1";
+const DAY_LETTERS = ["S", "M", "T", "W", "T", "F", "S"];
+const $ = (id) => document.getElementById(id);
+
+// --- state ------------------------------------------------------------------
+
+function newListId() {
+  return [...crypto.getRandomValues(new Uint8Array(8))].map((b) => (b % 36).toString(36)).join("");
+}
+
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && Array.isArray(s.meds)) return s;
+  } catch {}
+  return { listId: newListId(), nextId: 1, meds: [] };
+}
+
+let state = load();
+let editing = null;
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {}
+}
+
+// --- list -------------------------------------------------------------------
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function summary(m) {
+  const times = m.times.join(", ");
+  if (m.type === "weekdays") return m.weekdays.map((d) => DAY_LETTERS[d]).join("") + " at " + times;
+  if (m.type === "cycle") {
+    return (m.on === 1 ? `Every ${m.on + m.off} days` : `${m.on} days on, ${m.off} off`) + " at " + times;
+  }
+  if (m.type === "interval") return `Every ${m.everyHours} h from ${m.times[0]}` + (m.maxPerDay ? `, max ${m.maxPerDay}/day` : "");
+  if (m.type === "prn") return "As needed" + (m.gapHours ? `, ${m.gapHours} h apart` : "") + (m.prnMax ? `, max ${m.prnMax}/day` : "");
+  return "Daily at " + times;
+}
+
+function render() {
+  const list = $("meds");
+  if (!state.meds.length) {
+    list.innerHTML = `<div class="empty">No medicines yet. Add the first one below.</div>`;
+  } else {
+    list.innerHTML = state.meds.map((m) => {
+      const tags = [];
+      if (m.days) tags.push(`<span class="tag">${m.days}-day course</span>`);
+      if (m.track) tags.push(`<span class="tag">${m.stock} left</span>`);
+      if (m.critical) tags.push(`<span class="tag crit">Time-critical</span>`);
+      if (m.paused) tags.push(`<span class="tag">Paused</span>`);
+      return `<div class="med">
+        <div class="top"><span class="name">${esc(m.name)}</span><span class="dose">${esc(m.dose || "")}</span></div>
+        <div class="sum">${esc(summary(m))}</div>
+        ${tags.length ? `<div class="tags">${tags.join("")}</div>` : ""}
+        <div class="acts">
+          <button class="small ghost" data-edit="${m.id}">Edit</button>
+          <button class="small ghost danger" data-del="${m.id}">Remove</button>
+        </div>
+      </div>`;
+    }).join("");
+  }
+  $("addBtn").disabled = state.meds.length >= MAX_MEDS;
+  updateSend();
+}
+
+$("meds").addEventListener("click", (e) => {
+  const edit = e.target.closest("[data-edit]");
+  const del = e.target.closest("[data-del]");
+  if (edit) openEditor(state.meds.find((m) => m.id === +edit.dataset.edit));
+  if (del) {
+    const m = state.meds.find((x) => x.id === +del.dataset.del);
+    if (m && confirm(`Remove ${m.name}? Send the list to your watch again afterwards.`)) {
+      state.meds = state.meds.filter((x) => x !== m);
+      save();
+      render();
+    }
+  }
+});
+
+// --- editor -----------------------------------------------------------------
+
+const weekdayBox = $("weekdayBox");
+weekdayBox.innerHTML = [1, 2, 3, 4, 5, 6, 0].map((d) =>
+  `<label><input type="checkbox" value="${d}"><span>${DAY_LETTERS[d]}</span></label>`).join("");
+
+function todayIso() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function blank() {
+  return {
+    name: "", dose: "", type: "daily", times: ["08:00"], weekdays: [1, 3, 5], on: 1, off: 1,
+    everyHours: 6, maxPerDay: 0, gapHours: 6, prnMax: 4, start: todayIso(), days: 0, critical: false, paused: false,
+    track: false, stock: 30, perDose: 1, refill: 7, pack: 30, stockRev: 1,
+  };
+}
+
+function renderTimes(times) {
+  const box = $("times");
+  const interval = $("fType").value === "interval";
+  const shown = interval ? times.slice(0, 1) : times;
+  box.innerHTML = shown.map((t, i) => `<div class="time-row">
+    <input type="time" value="${t}" required aria-label="Time ${i + 1}">
+    ${!interval && shown.length > 1 ? `<button type="button" class="small ghost" data-rm="${i}" aria-label="Remove time">✕</button>` : ""}
+  </div>`).join("");
+  $("addTimeRow").hidden = interval || shown.length >= MAX_TIMES;
+  $("timesHint").textContent = interval ? "First dose" : "Times";
+}
+
+function readTimes() {
+  return [...$("times").querySelectorAll("input")].map((i) => i.value).filter(Boolean);
+}
+
+$("times").addEventListener("click", (e) => {
+  const rm = e.target.closest("[data-rm]");
+  if (!rm) return;
+  const t = readTimes();
+  t.splice(+rm.dataset.rm, 1);
+  renderTimes(t);
+});
+$("addTime").addEventListener("click", () => {
+  const t = readTimes();
+  t.push(t.length ? t[t.length - 1] : "08:00");
+  renderTimes(t);
+});
+
+function syncTypeUi() {
+  const type = $("fType").value;
+  weekdayBox.hidden = type !== "weekdays";
+  $("cycleBox").hidden = type !== "cycle";
+  $("intervalBox").hidden = type !== "interval";
+  $("prnBox").hidden = type !== "prn";
+  $("timesBox").hidden = type === "prn";
+  $("criticalBox").hidden = type === "prn";
+  renderTimes(readTimes().length ? readTimes() : ["08:00"]);
+}
+$("fType").addEventListener("change", syncTypeUi);
+$("fTrack").addEventListener("change", () => { $("stockBox").hidden = !$("fTrack").checked; });
+
+let draftIndex = -1;
+
+//! m: a saved med to edit, or null for a new one. draft: prefilled values
+//! for a new med (from a scan).
+function openEditor(m, draft = null, fromDraft = -1) {
+  editing = m || null;
+  draftIndex = fromDraft;
+  const v = m || { ...blank(), ...(draft || {}) };
+  $("editorTitle").textContent = m ? `Edit ${m.name}` : (draft ? `Check ${draft.name}` : "Add a medicine");
+  $("fName").value = v.name;
+  $("fDose").value = v.dose;
+  $("fType").value = v.type;
+  weekdayBox.querySelectorAll("input").forEach((i) => { i.checked = v.weekdays.includes(+i.value); });
+  $("fOn").value = v.on;
+  $("fOff").value = v.off;
+  $("fEvery").value = v.everyHours;
+  $("fMax").value = v.maxPerDay;
+  $("fGap").value = v.gapHours;
+  $("fPrnMax").value = v.prnMax;
+  $("fStart").value = v.start;
+  $("fDays").value = v.days || "";
+  $("fCritical").checked = v.critical;
+  $("fPaused").checked = v.paused;
+  $("fTrack").checked = v.track;
+  $("fStock").value = v.stock;
+  $("fPerDose").value = v.perDose;
+  $("fRefill").value = v.refill;
+  $("fPack").value = v.pack;
+  $("stockBox").hidden = !v.track;
+  weekdayBox.hidden = v.type !== "weekdays";
+  $("cycleBox").hidden = v.type !== "cycle";
+  $("intervalBox").hidden = v.type !== "interval";
+  $("prnBox").hidden = v.type !== "prn";
+  $("timesBox").hidden = v.type === "prn";
+  $("criticalBox").hidden = v.type === "prn";
+  renderTimes(v.times.length ? v.times : ["08:00"]);
+  $("editor").hidden = false;
+  $("fName").focus();
+  $("editor").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+$("addBtn").addEventListener("click", () => openEditor(null));
+$("cancelBtn").addEventListener("click", () => { draftIndex = -1; });
+$("presets").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-preset]");
+  if (!b || state.meds.length >= MAX_MEDS) return;
+  const p = { ...blank() };
+  const presets = {
+    morning: { times: ["08:00"] },
+    twice: { times: ["08:00", "20:00"] },
+    meals: { times: ["08:00", "13:00", "19:00"] },
+    bedtime: { times: ["22:00"] },
+    prn: { type: "prn", times: [] },
+  };
+  openEditor(null);
+  const v = { ...p, ...presets[b.dataset.preset] };
+  $("fType").value = v.type;
+  syncTypeUi();
+  renderTimes(v.times.length ? v.times : ["08:00"]);
+  $("fName").focus();
+});
+$("cancelBtn").addEventListener("click", () => { $("editor").hidden = true; });
+
+const num = (id, fallback) => { const v = parseFloat($(id).value); return Number.isFinite(v) ? v : fallback; };
+
+$("editor").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const type = $("fType").value;
+  const times = [...new Set(readTimes())].sort();
+  const weekdays = [...weekdayBox.querySelectorAll("input:checked")].map((i) => +i.value);
+  if (!$("fName").value.trim()) return;
+  if (type !== "prn" && !times.length) { alert("Add at least one time."); return; }
+  if (type === "weekdays" && !weekdays.length) { alert("Pick at least one day."); return; }
+  const m = {
+    ...(editing || blank()),
+    name: $("fName").value.trim(),
+    dose: $("fDose").value.trim(),
+    type,
+    times: type === "prn" ? [] : (type === "interval" ? times.slice(0, 1) : times),
+    weekdays,
+    on: Math.max(1, Math.round(num("fOn", 1))),
+    off: Math.max(0, Math.round(num("fOff", 0))),
+    everyHours: Math.max(0.5, num("fEvery", 6)),
+    maxPerDay: Math.max(0, Math.round(num("fMax", 0))),
+    gapHours: Math.max(0, num("fGap", 0)),
+    prnMax: Math.max(0, Math.round(num("fPrnMax", 0))),
+    start: $("fStart").value || todayIso(),
+    days: Math.max(0, Math.round(num("fDays", 0))),
+    critical: type !== "prn" && $("fCritical").checked,
+    paused: $("fPaused").checked,
+    track: $("fTrack").checked,
+    perDose: Math.max(0.25, num("fPerDose", 1)),
+    refill: Math.max(0, Math.round(num("fRefill", 7))),
+    pack: Math.max(0, num("fPack", 0)),
+  };
+  const stock = Math.max(0, num("fStock", 0));
+  // The watch keeps its own count as doses are taken; a new revision tells
+  // it that this number was edited here on purpose and should win.
+  if (!editing || editing.stock !== stock || editing.track !== m.track) {
+    m.stockRev = (editing ? editing.stockRev : 0) + 1;
+  }
+  m.stock = stock;
+  if (editing) {
+    state.meds = state.meds.map((x) => (x === editing ? m : x));
+  } else {
+    m.id = state.nextId++;
+    state.meds.push(m);
+  }
+  if (draftIndex >= 0) {
+    drafts.splice(draftIndex, 1);
+    draftIndex = -1;
+    renderDrafts();
+  }
+  save();
+  $("editor").hidden = true;
+  render();
+});
+
+// --- send -------------------------------------------------------------------
+
+function toMinutes(t) {
+  const [h, mm] = t.split(":").map(Number);
+  return h * 60 + mm;
+}
+
+function toWire(m) {
+  const types = { daily: TYPE.DAILY, weekdays: TYPE.WEEKDAYS, cycle: TYPE.CYCLE, interval: TYPE.INTERVAL, prn: TYPE.PRN };
+  let p1 = 0, p2 = 0;
+  if (m.type === "weekdays") p1 = m.weekdays.reduce((mask, d) => mask | (1 << d), 0);
+  if (m.type === "cycle") { p1 = m.on; p2 = m.off; }
+  if (m.type === "interval") { p1 = Math.round(m.everyHours * 60); p2 = m.maxPerDay; }
+  if (m.type === "prn") { p1 = Math.round((m.gapHours || 0) * 60); p2 = m.prnMax || 0; }
+  const [y, mo, d] = m.start.split("-").map(Number);
+  return {
+    id: m.id, name: m.name, dose: m.dose,
+    flags: (m.critical ? FLAG.CRITICAL : 0) | (m.track ? FLAG.STOCK : 0) | (m.paused ? FLAG.PAUSED : 0),
+    type: types[m.type], times: m.times.map(toMinutes), p1, p2,
+    start: dayNumber(new Date(y, mo - 1, d)), days: m.days,
+    perDose: Math.round(m.perDose * 100), stock: Math.round(m.stock * 100), stockRev: m.stockRev,
+    refill: m.track ? m.refill : 0, pack: Math.round(m.pack * 100),
+  };
+}
+
+function setStatus(text, kind) {
+  const s = $("status");
+  s.textContent = text;
+  s.className = "status" + (kind ? " " + kind : "");
+}
+
+function updateSend() {
+  const coded = normaliseCode($("code").value).length === 12;
+  $("sendBtn").disabled = !coded || !state.meds.length;
+  $("scanBtn").disabled = !coded || scanning;
+  $("scanHint").hidden = coded;
+}
+
+$("code").addEventListener("input", (e) => {
+  const raw = normaliseCode(e.target.value).slice(0, 12);
+  e.target.value = raw.replace(/(.{4})(?=.)/g, "$1 ");
+  updateSend();
+});
+
+$("sendBtn").addEventListener("click", async () => {
+  const code = normaliseCode($("code").value);
+  $("sendBtn").disabled = true;
+  setStatus("Encrypting and sending…");
+  try {
+    const parcel = await encryptMeds(code, state.listId, state.meds.map(toWire), dayNumber(new Date()));
+    const res = await fetch(RELAY + (await relayId(code)), {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(parcel),
+    });
+    if (res.status === 429) throw new Error("Too many sends from this network. Try again in an hour.");
+    if (!res.ok) throw new Error(`The server said ${res.status}. Try again.`);
+    setStatus("Sent. Keep the watch near your phone; it picks the list up within a few seconds.", "ok");
+    // The watch leaves its pairing screen once it has the list, so the code
+    // is spent: clear it for the next send.
+    $("code").value = "";
+  } catch (err) {
+    setStatus(err.message === "TOO_LARGE"
+      ? "The list is too long to send in one go. Shorten some names or remove a medicine."
+      : err.message || "Could not send. Check your connection.", "err");
+  }
+  updateSend();
+});
+
+// --- scan -------------------------------------------------------------------
+
+let scanning = false;
+let drafts = [];
+
+function setScanStatus(text, kind) {
+  const s = $("scanStatus");
+  s.textContent = text;
+  s.className = "status" + (kind ? " " + kind : "");
+}
+
+//! Downscales to at most 1600 px on the long side and re-encodes as JPEG:
+//! enough to read a label, a fraction of the upload, and it strips the
+//! photo's location metadata.
+async function preparePhoto(file) {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  }
+  return btoa(binary);
+}
+
+function hhmm(t) {
+  return /^\d\d:\d\d$/.test(t) ? t : null;
+}
+
+//! A scanned medicine as editor values for a new med.
+function draftFrom(r) {
+  const d = {
+    name: r.name.slice(0, 24),
+    dose: r.strength.slice(0, 12),
+    perDose: r.dose_units > 0 ? r.dose_units : 1,
+    days: r.course_days || 0,
+    times: r.times.map(hhmm).filter(Boolean),
+    type: "daily",
+    unsure: [...r.unsure],
+    instructions: r.instructions,
+  };
+  if (r.schedule === "weekdays" && r.weekdays.length) {
+    d.type = "weekdays";
+    d.weekdays = r.weekdays;
+  } else if (r.schedule === "interval") {
+    d.type = "interval";
+    d.everyHours = r.every_hours || 6;
+    d.maxPerDay = r.max_per_day || 0;
+    d.times = d.times.length ? d.times.slice(0, 1) : ["08:00"];
+    if (!r.every_hours) d.unsure.push("hours");
+  } else if (r.schedule === "as_needed") {
+    d.type = "prn";
+    d.gapHours = r.every_hours || 0;
+    d.prnMax = r.max_per_day || 0;
+    d.times = [];
+  } else if (r.schedule === "unknown") {
+    d.unsure.push("when to take");
+  }
+  if (d.type !== "prn" && !d.times.length) {
+    d.times = ["08:00"];
+    if (!d.unsure.includes("when to take")) d.unsure.push("times");
+  }
+  return d;
+}
+
+function renderDrafts() {
+  const box = $("drafts");
+  box.hidden = !drafts.length;
+  box.innerHTML = drafts.map((d, i) => {
+    const m = { ...blank(), ...d };
+    return `<div class="draft">
+      <div class="top"><span class="name">${esc(m.name)}</span> <span class="dose">${esc(m.dose || "")}</span></div>
+      <div class="sum">${esc(summary(m))}${m.days ? `, ${m.days} days` : ""}</div>
+      ${d.instructions ? `<div class="note">${esc(d.instructions)}</div>` : ""}
+      ${d.unsure.length ? `<div class="warn">Couldn't read clearly: ${esc(d.unsure.join(", "))}. Check against the label.</div>` : ""}
+      <div class="acts">
+        <button class="small primary" data-review="${i}">Check and add</button>
+        <button class="small ghost" data-discard="${i}">Discard</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+$("drafts").addEventListener("click", (e) => {
+  const review = e.target.closest("[data-review]");
+  const discard = e.target.closest("[data-discard]");
+  if (review) {
+    const i = +review.dataset.review;
+    if (state.meds.length >= MAX_MEDS) { alert("The list is full (20 medicines)."); return; }
+    openEditor(null, drafts[i], i);
+  } else if (discard) {
+    drafts.splice(+discard.dataset.discard, 1);
+    renderDrafts();
+  }
+});
+
+$("scanBtn").addEventListener("click", () => {
+  let agreed = false;
+  try { agreed = localStorage.getItem(SCAN_CONSENT) === "1"; } catch {}
+  if (!agreed) {
+    const ok = confirm("The photo is sent to our server and to an AI service (Anthropic's Claude) to read it, then discarded. It is not stored. Continue?");
+    if (!ok) return;
+    try { localStorage.setItem(SCAN_CONSENT, "1"); } catch {}
+  }
+  $("scanFile").click();
+});
+
+$("scanFile").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  const code = normaliseCode($("code").value);
+  scanning = true;
+  updateSend();
+  setScanStatus("Reading the photo… this can take up to half a minute.");
+  try {
+    let image;
+    try {
+      image = await preparePhoto(file);
+    } catch {
+      throw new Error("This browser could not open that image. Try a JPEG or PNG photo.");
+    }
+    const res = await fetch(SCAN, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: await relayId(code), mediaType: "image/jpeg", image }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (data.code === "no_session") throw new Error("The watch code has expired or was mistyped. Reopen Add or update meds on the watch and enter the new code.");
+      throw new Error(data.error || `The server said ${res.status}. Try again.`);
+    }
+    const found = (data.meds || []).map(draftFrom);
+    drafts.push(...found);
+    renderDrafts();
+    if (!found.length) {
+      setScanStatus(data.notes || "No medicines could be read. Try a sharper photo in good light, or add them by hand.", "err");
+    } else {
+      const left = typeof data.scansLeft === "number" ? ` ${data.scansLeft} scan${data.scansLeft === 1 ? "" : "s"} left with this code.` : "";
+      setScanStatus(`Found ${found.length} medicine${found.length === 1 ? "" : "s"}. Check each one before adding it.${left}` + (data.notes ? ` ${data.notes}` : ""), "ok");
+    }
+  } catch (err) {
+    setScanStatus(err.message || "Could not read that photo.", "err");
+  }
+  scanning = false;
+  updateSend();
+});
+
+// --- backup -----------------------------------------------------------------
+
+$("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify({ app: "pilltime", version: 1, ...state }, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `pilltime-backup-${todayIso()}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+$("importBtn").addEventListener("click", () => $("importFile").click());
+$("importFile").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    if (data.app !== "pilltime" || !Array.isArray(data.meds)) throw new Error();
+    if (state.meds.length && !confirm("Replace the list in this browser with the backup?")) return;
+    // Keeping the backup's list id lets the watch match meds by id, so
+    // adherence history and stock carry over on the next send.
+    state = { listId: data.listId || newListId(), nextId: data.nextId || data.meds.length + 1, meds: data.meds.slice(0, MAX_MEDS) };
+    save();
+    render();
+    setStatus("Backup restored.", "ok");
+  } catch {
+    setStatus("That file is not a Pill Time! backup.", "err");
+  }
+});
+
+render();
+</script>
+</body>
+</html>
