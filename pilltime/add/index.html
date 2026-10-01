@@ -52,10 +52,15 @@
   main { max-width: 540px; margin: 0 auto; }
   [hidden] { display: none !important; }
 
-  header { display: flex; align-items: center; gap: 12px; padding: 18px 0 6px; }
+  header { display: flex; align-items: center; gap: 10px 12px; padding: 18px 0 6px; flex-wrap: wrap; }
   .mark { width: 44px; height: 44px; flex: none; border-radius: 12px; box-shadow: var(--shadow); }
-  header .brand { font-weight: 800; font-size: 18px; }
-  header .about { margin-left: auto; color: var(--muted); font-size: 14px; font-weight: 600; text-decoration: none;
+  header .brand { font-weight: 800; font-size: 18px; white-space: nowrap; }
+  /* Picker and About stay together; on a narrow phone they drop to a row of
+     their own under the name rather than squeezing it. */
+  header .links { margin-left: auto; display: flex; gap: 8px; align-items: center; min-width: 0; }
+  header .lang { font: inherit; font-size: 14px; font-weight: 600; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+    border-radius: 999px; padding: 6px 10px; width: auto; max-width: 132px; min-height: 0; }
+  header .about { color: var(--muted); font-size: 14px; font-weight: 600; text-decoration: none;
     background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; white-space: nowrap; }
 
   .intro { padding: 18px 2px 4px; }
@@ -187,147 +192,150 @@
   <header>
     <img class="mark" src="../../assets/pilltime-icon.png" alt="" width="44" height="44">
     <span class="brand">Pill Time!</span>
-    <a class="about" href="../">About the app</a>
+    <div class="links">
+      <select class="lang" id="lang" aria-label="Language" data-i18n-aria="language"></select>
+      <a class="about" href="../" data-i18n="about">About the app</a>
+    </div>
   </header>
 
   <section class="intro">
-    <h1>Let's set up your medicines</h1>
-    <p>Takes about a minute. Your watch will remind you at every dose, and you log it with one press.</p>
+    <h1 data-i18n="introTitle">Let's set up your medicines</h1>
+    <p data-i18n="introText">Takes about a minute. Your watch will remind you at every dose, and you log it with one press.</p>
   </section>
 
   <section class="card">
-    <h2><span class="step">1</span>Connect your watch</h2>
-    <p class="hint">On the watch, open Pill Time!, press MENU and choose <em>Add or update meds</em>. Type the code it shows. Keep that screen open while you're here; the code lasts 10 minutes.</p>
+    <h2><span class="step">1</span><span data-i18n="step1">Connect your watch</span></h2>
+    <p class="hint" data-i18n-html="step1Hint">On the watch, open Pill Time!, press MENU and choose <em>Add or update meds</em>. Type the code it shows. Keep that screen open while you're here; the code lasts 10 minutes.</p>
     <div class="row">
-      <input type="text" class="code-input" id="code" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX XXXX XXXX" aria-label="Pairing code">
+      <input type="text" class="code-input" id="code" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX XXXX XXXX" aria-label="Pairing code" data-i18n-aria="pairingCode">
     </div>
   </section>
 
   <section class="card">
-    <h2><span class="step">2</span>Your medicines</h2>
+    <h2><span class="step">2</span><span data-i18n="step2">Your medicines</span></h2>
     <div class="meds" id="meds"></div>
     <div class="saved" id="saved" hidden>
-      <span class="dot"></span><span id="savedText">Saved on this phone</span>
-      <button type="button" class="link" id="forgetBtn">Remove from this phone</button>
+      <span class="dot"></span><span id="savedText"></span>
+      <button type="button" class="link" id="forgetBtn" data-i18n="forget">Remove from this phone</button>
     </div>
-    <h3 class="sub"><span aria-hidden="true">✍️</span>Add manually</h3>
-    <p class="hint">Pick when you take it, then type the name.</p>
+    <h3 class="sub"><span aria-hidden="true">✍️</span><span data-i18n="addManually">Add manually</span></h3>
+    <p class="hint" data-i18n="addManuallyHint">Pick when you take it, then type the name.</p>
     <div class="row presets" id="presets">
-      <button class="chip" data-preset="morning"><span aria-hidden="true">☀️</span>Morning</button>
-      <button class="chip" data-preset="twice"><span aria-hidden="true">🌗</span>Morning &amp; evening</button>
-      <button class="chip" data-preset="meals"><span aria-hidden="true">🍽️</span>With meals</button>
-      <button class="chip" data-preset="bedtime"><span aria-hidden="true">🌙</span>Bedtime</button>
-      <button class="chip" data-preset="prn"><span aria-hidden="true">🤕</span>As needed</button>
+      <button class="chip" data-preset="morning"><span aria-hidden="true">☀️</span><span data-i18n="presetMorning">Morning</span></button>
+      <button class="chip" data-preset="twice"><span aria-hidden="true">🌗</span><span data-i18n="presetTwice">Morning &amp; evening</span></button>
+      <button class="chip" data-preset="meals"><span aria-hidden="true">🍽️</span><span data-i18n="presetMeals">With meals</span></button>
+      <button class="chip" data-preset="bedtime"><span aria-hidden="true">🌙</span><span data-i18n="presetBedtime">Bedtime</span></button>
+      <button class="chip" data-preset="prn"><span aria-hidden="true">🤕</span><span data-i18n="presetPrn">As needed</span></button>
     </div>
     <div class="row">
-      <button class="ghost" id="addBtn"><span aria-hidden="true">＋</span>Something else</button>
+      <button class="ghost" id="addBtn"><span aria-hidden="true">＋</span><span data-i18n="somethingElse">Something else</span></button>
     </div>
 
-    <h3 class="sub"><span aria-hidden="true">📷</span>Scan a prescription or label</h3>
-    <p class="hint" id="scanHint">Enter your watch's code above to scan. We read the photo and fill in the details, and you check each one before it's added.</p>
+    <h3 class="sub"><span aria-hidden="true">📷</span><span data-i18n="scanTitle">Scan a prescription or label</span></h3>
+    <p class="hint" id="scanHint" data-i18n="scanHint">Enter your watch's code above to scan. We read the photo and fill in the details, and you check each one before it's added.</p>
     <div class="row">
-      <button class="primary" id="scanBtn" disabled>Take or choose a photo</button>
+      <button class="primary" id="scanBtn" disabled data-i18n="scanBtn">Take or choose a photo</button>
       <input type="file" id="scanFile" accept="image/*" capture="environment">
     </div>
     <div class="status" id="scanStatus" role="status"></div>
     <div class="drafts" id="drafts" hidden></div>
 
   <form class="editor" id="editor" hidden>
-    <h3 id="editorTitle">Add a medicine</h3>
-    <label>Name
-      <input type="text" id="fName" maxlength="24" required autocomplete="off" placeholder="e.g. Metformin">
+    <h3 id="editorTitle"></h3>
+    <label><span data-i18n="fName">Name</span>
+      <input type="text" id="fName" maxlength="24" required autocomplete="off" placeholder="e.g. Metformin" data-i18n-placeholder="fNameHint">
     </label>
-    <label>Dose (optional)
-      <input type="text" id="fDose" maxlength="12" autocomplete="off" placeholder="e.g. 500 mg, 2 puffs">
+    <label><span data-i18n="fDose">Dose (optional)</span>
+      <input type="text" id="fDose" maxlength="12" autocomplete="off" placeholder="e.g. 500 mg, 2 puffs" data-i18n-placeholder="fDoseHint">
     </label>
 
     <fieldset>
-      <legend>When</legend>
-      <label>How often
+      <legend data-i18n="when">When</legend>
+      <label><span data-i18n="howOften">How often</span>
         <select id="fType">
-          <option value="daily">Every day</option>
-          <option value="weekdays">On certain days of the week</option>
-          <option value="cycle">Every few days, or on/off cycles</option>
-          <option value="interval">Every few hours, from the last dose</option>
-          <option value="prn">As needed (no reminders)</option>
+          <option value="daily" data-i18n="typeDaily">Every day</option>
+          <option value="weekdays" data-i18n="typeWeekdays">On certain days of the week</option>
+          <option value="cycle" data-i18n="typeCycle">Every few days, or on/off cycles</option>
+          <option value="interval" data-i18n="typeInterval">Every few hours, from the last dose</option>
+          <option value="prn" data-i18n="typePrn">As needed (no reminders)</option>
         </select>
       </label>
       <div id="prnBox" class="grid2" hidden>
-        <label>At least (hours apart)<input type="number" id="fGap" min="0" max="72" step="0.5" value="6"></label>
-        <label>At most per day<input type="number" id="fPrnMax" min="0" max="24" value="4"></label>
-        <p class="hint" style="grid-column: 1 / -1">Nothing reminds you. Log each dose on the watch with one press; it shows when the next one is fine and how many you have had today. 0 = no limit.</p>
+        <label><span data-i18n="gapHours">At least (hours apart)</span><input type="number" id="fGap" min="0" max="72" step="0.5" value="6"></label>
+        <label><span data-i18n="maxPerDay">At most per day</span><input type="number" id="fPrnMax" min="0" max="24" value="4"></label>
+        <p class="hint" style="grid-column: 1 / -1" data-i18n="prnHint">Nothing reminds you. Log each dose on the watch with one press; it shows when the next one is fine and how many you have had today. 0 = no limit.</p>
       </div>
       <div id="weekdayBox" class="days" hidden></div>
       <div id="cycleBox" class="grid2" hidden>
-        <label>Take for (days)<input type="number" id="fOn" min="1" max="365" value="1"></label>
-        <label>Then pause for (days)<input type="number" id="fOff" min="0" max="365" value="1"></label>
-        <p class="hint" style="grid-column: 1 / -1">Every other day: take 1, pause 1. Every 3 days: take 1, pause 2. A 21/7 pack: take 21, pause 7. Counted from the start date.</p>
+        <label><span data-i18n="cycleOn">Take for (days)</span><input type="number" id="fOn" min="1" max="365" value="1"></label>
+        <label><span data-i18n="cycleOff">Then pause for (days)</span><input type="number" id="fOff" min="0" max="365" value="1"></label>
+        <p class="hint" style="grid-column: 1 / -1" data-i18n="cycleHint">Every other day: take 1, pause 1. Every 3 days: take 1, pause 2. A 21/7 pack: take 21, pause 7. Counted from the start date.</p>
       </div>
       <div id="intervalBox" class="grid2" hidden>
-        <label>Every (hours)<input type="number" id="fEvery" min="0.5" max="72" step="0.5" value="6"></label>
-        <label>At most per day<input type="number" id="fMax" min="0" max="24" value="0"></label>
-        <p class="hint" style="grid-column: 1 / -1">The next reminder counts from when you actually took the last dose. The first time below is the first dose. 0 = no daily limit.</p>
+        <label><span data-i18n="everyHours">Every (hours)</span><input type="number" id="fEvery" min="0.5" max="72" step="0.5" value="6"></label>
+        <label><span data-i18n="maxPerDay">At most per day</span><input type="number" id="fMax" min="0" max="24" value="0"></label>
+        <p class="hint" style="grid-column: 1 / -1" data-i18n="intervalHint">The next reminder counts from when you actually took the last dose. The first time below is the first dose. 0 = no daily limit.</p>
       </div>
       <div id="timesBox">
-        <p class="hint" id="timesHint">Times</p>
+        <p class="hint" id="timesHint"></p>
         <div class="times" id="times"></div>
-        <div class="row" id="addTimeRow"><button type="button" class="small ghost" id="addTime">+ Add a time</button></div>
+        <div class="row" id="addTimeRow"><button type="button" class="small ghost" id="addTime" data-i18n="addTime">+ Add a time</button></div>
       </div>
-      <label class="check" id="criticalBox"><input type="checkbox" id="fCritical"> Time-critical: remind even during quiet hours</label>
+      <label class="check" id="criticalBox"><input type="checkbox" id="fCritical"> <span data-i18n="critical">Time-critical: remind even during quiet hours</span></label>
     </fieldset>
 
     <fieldset>
-      <legend>Course</legend>
+      <legend data-i18n="course">Course</legend>
       <div class="grid2 stack">
-        <label>Start date<input type="date" id="fStart"></label>
-        <label>Number of days<input type="number" id="fDays" min="0" max="3650" placeholder="Ongoing"></label>
+        <label><span data-i18n="startDate">Start date</span><input type="date" id="fStart"></label>
+        <label><span data-i18n="numDays">Number of days</span><input type="number" id="fDays" min="0" max="3650" placeholder="Ongoing" data-i18n-placeholder="ongoing"></label>
       </div>
-      <p class="hint">Leave the number of days empty for a medicine you take long term. Reminders stop on their own when a course ends.</p>
+      <p class="hint" data-i18n="courseHint">Leave the number of days empty for a medicine you take long term. Reminders stop on their own when a course ends.</p>
     </fieldset>
 
     <fieldset>
-      <legend>Supply</legend>
-      <label class="check"><input type="checkbox" id="fTrack"> Count my supply and warn me before I run out</label>
+      <legend data-i18n="supply">Supply</legend>
+      <label class="check"><input type="checkbox" id="fTrack"> <span data-i18n="track">Count my supply and warn me before I run out</span></label>
       <div id="stockBox" class="grid2" hidden>
-        <label>I have now<input type="number" id="fStock" min="0" step="0.5" value="30"></label>
-        <label>Per dose<input type="number" id="fPerDose" min="0.25" step="0.25" value="1"></label>
-        <label>Warn at (days left)<input type="number" id="fRefill" min="0" max="60" value="7"></label>
-        <label>Pack size<input type="number" id="fPack" min="0" step="1" value="30"></label>
+        <label><span data-i18n="stockNow">I have now</span><input type="number" id="fStock" min="0" step="0.5" value="30"></label>
+        <label><span data-i18n="perDose">Per dose</span><input type="number" id="fPerDose" min="0.25" step="0.25" value="1"></label>
+        <label><span data-i18n="refillAt">Warn at (days left)</span><input type="number" id="fRefill" min="0" max="60" value="7"></label>
+        <label><span data-i18n="packSize">Pack size</span><input type="number" id="fPack" min="0" step="1" value="30"></label>
       </div>
     </fieldset>
 
-    <label class="check"><input type="checkbox" id="fPaused"> Paused (keep it in the list, no reminders)</label>
+    <label class="check"><input type="checkbox" id="fPaused"> <span data-i18n="paused">Paused (keep it in the list, no reminders)</span></label>
 
     <div class="row">
-      <button type="submit" class="primary">Save</button>
-      <button type="button" class="ghost" id="cancelBtn">Cancel</button>
+      <button type="submit" class="primary" data-i18n="save">Save</button>
+      <button type="button" class="ghost" id="cancelBtn" data-i18n="cancel">Cancel</button>
     </div>
   </form>
   </section>
 
   <section class="card">
-    <h2><span class="step">3</span>Send to your watch</h2>
-    <p class="hint">Sends your whole list to the watch showing the code. Send again after any change.</p>
+    <h2><span class="step">3</span><span data-i18n="step3">Send to your watch</span></h2>
+    <p class="hint" data-i18n="step3Hint">Sends your whole list to the watch showing the code. Send again after any change.</p>
     <div class="row">
-      <button class="primary" id="sendBtn" disabled>Send to my watch</button>
+      <button class="primary" id="sendBtn" disabled data-i18n="send">Send to my watch</button>
     </div>
     <div class="status" id="status" role="status"></div>
   </section>
 
   <section class="card">
-    <h2><span class="step">4</span>Keep a backup</h2>
-    <p class="hint">Your list lives only on this phone. Phones sometimes clear browser data, so a backup file lets you restore it here or on another phone.</p>
+    <h2><span class="step">4</span><span data-i18n="step4">Keep a backup</span></h2>
+    <p class="hint" data-i18n="step4Hint">Your list lives only on this phone. Phones sometimes clear browser data, so a backup file lets you restore it here or on another phone.</p>
     <div class="row">
-      <button class="ghost" id="exportBtn">Save backup file</button>
-      <button class="ghost" id="importBtn">Restore from file</button>
+      <button class="ghost" id="exportBtn" data-i18n="exportBtn">Save backup file</button>
+      <button class="ghost" id="importBtn" data-i18n="importBtn">Restore from file</button>
       <input type="file" id="importFile" accept="application/json,.json">
     </div>
   </section>
 
   <footer>
-    <div><strong>Private by design.</strong> Your list is encrypted on this phone with a key from the watch's code. Our server only ever holds the scrambled result, for 10 minutes at most, and the watch deletes it as soon as it has it.</div>
-    <div><strong>Scanning is the one exception.</strong> A photo you scan is sent, unencrypted, to our server and to an AI service (Anthropic's Claude) to read it. It is not stored or used for training, and it is discarded once read. Nothing is added until you check and save it. You can always add medicines by hand instead. <a href="../privacy/">Privacy policy</a>.</div>
-    <div><strong>Not a medical device.</strong> Pill Time! is a reminder aid. It does not give medical advice, and a reminder can be late or missed (for example if the watch is off or in Do Not Disturb). Always follow your prescriber's instructions.</div>
+    <div><strong data-i18n="privTitle">Private by design.</strong> <span data-i18n="privText">Your list is encrypted on this phone with a key from the watch's code. Our server only ever holds the scrambled result, for 10 minutes at most, and the watch deletes it as soon as it has it.</span></div>
+    <div><strong data-i18n="scanPrivTitle">Scanning is the one exception.</strong> <span data-i18n="scanPrivText">A photo you scan is sent, unencrypted, to our server and to an AI service (Anthropic's Claude) to read it. It is not stored or used for training, and it is discarded once read. Nothing is added until you check and save it. You can always add medicines manually instead.</span> <a href="../privacy/" data-i18n="privacyLink">Privacy policy</a>.</div>
+    <div><strong data-i18n="medTitle">Not a medical device.</strong> <span data-i18n="medText">Pill Time! is a reminder aid. It does not give medical advice, and a reminder can be late or missed (for example if the watch is off or in Do Not Disturb). Always follow your prescriber's instructions.</span></div>
   </footer>
 </main>
 
@@ -341,7 +349,16 @@
 </dialog>
 
 <script type="module">
-import { encryptMeds, relayId, normaliseCode, dayNumber, TYPE, FLAG, MAX_MEDS, MAX_TIMES } from "./relay-crypto.js";
+import { encryptMeds, relayId, normaliseCode, dayNumber, TYPE, FLAG, MAX_MEDS, MAX_TIMES } from "./relay-crypto.js?v=fb66419d";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=9a5e27fc";
+
+let lang = pickLanguage();
+const t = (key, vars = {}) => {
+  const s = (STRINGS[lang] && STRINGS[lang][key]) || STRINGS.en[key] || key;
+  vars = { menu: (STRINGS[lang] || STRINGS.en).menuName || STRINGS.en.menuName, ...vars };
+  return s.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : `{${k}}`));
+};
+const htmlLang = () => LANGUAGES.find((l) => l.id === lang).html;
 
 // ?api= points the page at a local `wrangler dev` worker, e.g.
 // ?api=http://127.0.0.1:8799/api/pilltime/ (see worker/README.md). Only
@@ -354,12 +371,14 @@ const RELAY = API + "relay/";
 const SCAN = API + "scan";
 const SCAN_CONSENT = "pilltime.scanConsent";
 const KEY = "pilltime.v1";
-const DAY_LETTERS = ["S", "M", "T", "W", "T", "F", "S"];
+// One letter per weekday (0 = Sunday) in the page's language: 4 Jan 2026
+// was a Sunday.
+const dayLetter = (d) => new Intl.DateTimeFormat(htmlLang(), { weekday: "narrow" }).format(new Date(2026, 0, 4 + d));
 const $ = (id) => document.getElementById(id);
 
 // Questions and notices in the page's own style. onOk runs inside the tap
 // itself, which iOS needs for anything that opens the camera or files.
-function ask(text, { title = "", ok = "OK", cancel = "Cancel", danger = false, onOk = null } = {}) {
+function ask(text, { title = "", ok = t("ok"), cancel = t("cancel"), danger = false, onOk = null } = {}) {
   return new Promise((resolve) => {
     const d = $("ask");
     $("askTitle").textContent = title;
@@ -411,13 +430,14 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 
 function summary(m) {
   const times = m.times.join(", ");
-  if (m.type === "weekdays") return m.weekdays.map((d) => DAY_LETTERS[d]).join("") + " at " + times;
+  const max = (n) => (n ? t("sumMax", { n }) : "");
+  if (m.type === "weekdays") return t("sumWeekdays", { days: m.weekdays.map(dayLetter).join(" "), times });
   if (m.type === "cycle") {
-    return (m.on === 1 ? `Every ${m.on + m.off} days` : `${m.on} days on, ${m.off} off`) + " at " + times;
+    return m.on === 1 ? t("sumEveryDays", { n: m.on + m.off, times }) : t("sumCycle", { on: m.on, off: m.off, times });
   }
-  if (m.type === "interval") return `Every ${m.everyHours} h from ${m.times[0]}` + (m.maxPerDay ? `, max ${m.maxPerDay}/day` : "");
-  if (m.type === "prn") return "As needed" + (m.gapHours ? `, ${m.gapHours} h apart` : "") + (m.prnMax ? `, max ${m.prnMax}/day` : "");
-  return "Daily at " + times;
+  if (m.type === "interval") return t("sumInterval", { h: m.everyHours, time: m.times[0] }) + max(m.maxPerDay);
+  if (m.type === "prn") return t("sumPrn") + (m.gapHours ? t("sumGap", { h: m.gapHours }) : "") + max(m.prnMax);
+  return t("sumDaily", { times });
 }
 
 // A small capsule for each card, alternating the dp's green and blue.
@@ -431,12 +451,12 @@ function pillSvg(i) {
 
 function whenText(ms) {
   const d = new Date(ms);
-  const time = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  const time = d.toLocaleTimeString(htmlLang(), { hour: "numeric", minute: "2-digit" });
   const today = new Date();
-  if (d.toDateString() === today.toDateString()) return `today at ${time}`;
+  if (d.toDateString() === today.toDateString()) return t("sentToday", { time });
   const y = new Date(today); y.setDate(today.getDate() - 1);
-  if (d.toDateString() === y.toDateString()) return `yesterday at ${time}`;
-  return d.toLocaleDateString([], { day: "numeric", month: "short" }) + ` at ${time}`;
+  if (d.toDateString() === y.toDateString()) return t("sentYesterday", { time });
+  return t("sentOn", { date: d.toLocaleDateString(htmlLang(), { day: "numeric", month: "short" }), time });
 }
 
 function render() {
@@ -447,23 +467,23 @@ function render() {
         <rect x="18" y="4" width="20" height="48" rx="10" fill="#4fcf32" opacity=".22"/>
         <path d="M18 28h20v14a10 10 0 0 1-20 0z" fill="#4fcf32"/>
         <rect x="18" y="4" width="20" height="48" rx="10" fill="none" stroke="#209fff" stroke-width="3"/></g></svg>
-      <div><strong>No medicines yet.</strong><br>Add one manually below, or scan a prescription.</div>
+      <div><strong>${esc(t("emptyTitle"))}</strong><br>${esc(t("emptyText"))}</div>
     </div>`;
   } else {
     list.innerHTML = state.meds.map((m, i) => {
       const tags = [];
-      if (m.days) tags.push(`<span class="tag">${m.days}-day course</span>`);
-      if (m.track) tags.push(`<span class="tag">${m.stock} left</span>`);
-      if (m.critical) tags.push(`<span class="tag crit">Time-critical</span>`);
-      if (m.paused) tags.push(`<span class="tag">Paused</span>`);
+      if (m.days) tags.push(`<span class="tag">${esc(t("tagCourse", { n: m.days }))}</span>`);
+      if (m.track) tags.push(`<span class="tag">${esc(t("tagLeft", { n: m.stock }))}</span>`);
+      if (m.critical) tags.push(`<span class="tag crit">${esc(t("tagCritical"))}</span>`);
+      if (m.paused) tags.push(`<span class="tag">${esc(t("tagPaused"))}</span>`);
       return `<div class="med">
         ${pillSvg(i)}
         <div class="top"><span class="name">${esc(m.name)}</span><span class="dose">${esc(m.dose || "")}</span></div>
         <div class="sum">${esc(summary(m))}</div>
         ${tags.length ? `<div class="tags">${tags.join("")}</div>` : ""}
         <div class="acts">
-          <button class="small ghost" data-edit="${m.id}">Edit</button>
-          <button class="small ghost danger" data-del="${m.id}">Remove</button>
+          <button class="small ghost" data-edit="${m.id}">${esc(t("edit"))}</button>
+          <button class="small ghost danger" data-del="${m.id}">${esc(t("remove"))}</button>
         </div>
       </div>`;
     }).join("");
@@ -472,15 +492,14 @@ function render() {
   // and offer a way to clear it (a shared or borrowed phone).
   $("saved").hidden = !state.meds.length;
   $("savedText").textContent = state.lastSent
-    ? `Saved on this phone · last sent to your watch ${whenText(state.lastSent)}`
-    : "Saved on this phone · not sent to a watch yet";
+    ? t("savedSent", { when: whenText(state.lastSent) })
+    : t("savedNotSent");
   $("addBtn").disabled = state.meds.length >= MAX_MEDS;
   updateSend();
 }
 
 $("forgetBtn").addEventListener("click", async () => {
-  if (!(await ask("Your watch keeps its reminders. You can restore a backup file later.",
-    { title: "Remove your list from this phone?", ok: "Remove", cancel: "Keep", danger: true }))) return;
+  if (!(await ask(t("forgetText"), { title: t("forgetTitle"), ok: t("remove"), cancel: t("keep"), danger: true }))) return;
   try { localStorage.removeItem(KEY); } catch {}
   state = { listId: newListId(), nextId: 1, meds: [] };
   $("editor").hidden = true;
@@ -493,8 +512,7 @@ $("meds").addEventListener("click", async (e) => {
   if (edit) openEditor(state.meds.find((m) => m.id === +edit.dataset.edit));
   if (del) {
     const m = state.meds.find((x) => x.id === +del.dataset.del);
-    if (m && await ask("Send the list to your watch again afterwards so it's removed there too.",
-        { title: `Remove ${m.name}?`, ok: "Remove", cancel: "Keep", danger: true })) {
+    if (m && await ask(t("removeText"), { title: t("removeTitle", { name: m.name }), ok: t("remove"), cancel: t("keep"), danger: true })) {
       state.meds = state.meds.filter((x) => x !== m);
       save();
       render();
@@ -505,8 +523,13 @@ $("meds").addEventListener("click", async (e) => {
 // --- editor -----------------------------------------------------------------
 
 const weekdayBox = $("weekdayBox");
-weekdayBox.innerHTML = [1, 2, 3, 4, 5, 6, 0].map((d) =>
-  `<label><input type="checkbox" value="${d}"><span>${DAY_LETTERS[d]}</span></label>`).join("");
+function renderWeekdays() {
+  const on = [...weekdayBox.querySelectorAll("input:checked")].map((i) => +i.value);
+  const name = (d) => new Intl.DateTimeFormat(htmlLang(), { weekday: "long" }).format(new Date(2026, 0, 4 + d));
+  weekdayBox.innerHTML = [1, 2, 3, 4, 5, 6, 0].map((d) =>
+    `<label><input type="checkbox" value="${d}"${on.includes(d) ? " checked" : ""} aria-label="${esc(name(d))}"><span>${esc(dayLetter(d))}</span></label>`).join("");
+}
+renderWeekdays();
 
 function todayIso() {
   const d = new Date();
@@ -525,12 +548,12 @@ function renderTimes(times) {
   const box = $("times");
   const interval = $("fType").value === "interval";
   const shown = interval ? times.slice(0, 1) : times;
-  box.innerHTML = shown.map((t, i) => `<div class="time-row">
-    <input type="time" value="${t}" required aria-label="Time ${i + 1}">
-    ${!interval && shown.length > 1 ? `<button type="button" class="small ghost" data-rm="${i}" aria-label="Remove time">✕</button>` : ""}
+  box.innerHTML = shown.map((time, i) => `<div class="time-row">
+    <input type="time" value="${time}" required aria-label="${esc(t("timeN", { n: i + 1 }))}">
+    ${!interval && shown.length > 1 ? `<button type="button" class="small ghost" data-rm="${i}" aria-label="${esc(t("removeTime"))}">✕</button>` : ""}
   </div>`).join("");
   $("addTimeRow").hidden = interval || shown.length >= MAX_TIMES;
-  $("timesHint").textContent = interval ? "First dose" : "Times";
+  $("timesHint").textContent = interval ? t("firstDose") : t("times");
 }
 
 function readTimes() {
@@ -544,10 +567,29 @@ $("times").addEventListener("click", (e) => {
   t.splice(+rm.dataset.rm, 1);
   renderTimes(t);
 });
+// A new row suggests a likely next dose rather than repeating the last
+// one: 08:00, then 20:00, 14:00, 11:00, 17:00, 22:00, skipping any slot
+// within 2 hours of a time already set; after that, the middle of the
+// longest gap between doses.
+function nextTime(times) {
+  const mins = times.map(toMinutes).sort((x, y) => x - y);
+  const free = (m) => mins.every((x) => Math.abs(x - m) >= 120);
+  for (const m of [480, 1200, 840, 660, 1020, 1320]) if (free(m)) return m;
+  const edges = [360, ...mins, 1380];
+  let best = 0, at = 0;
+  for (let i = 1; i < edges.length; i++) {
+    if (edges[i] - edges[i - 1] > best) { best = edges[i] - edges[i - 1]; at = edges[i - 1] + best / 2; }
+  }
+  let m = Math.round(at / 30) * 30;
+  while (mins.includes(m)) m = (m + 30) % 1440;
+  return m;
+}
+const hhmmOf = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+
 $("addTime").addEventListener("click", () => {
   const t = readTimes();
-  t.push(t.length ? t[t.length - 1] : "08:00");
-  renderTimes(t);
+  t.push(hhmmOf(nextTime(t)));
+  renderTimes(t.sort());
 });
 
 function syncTypeUi() {
@@ -564,6 +606,7 @@ $("fType").addEventListener("change", syncTypeUi);
 $("fTrack").addEventListener("change", () => { $("stockBox").hidden = !$("fTrack").checked; });
 
 let draftIndex = -1;
+let editorTitle = ["addTitle", ""];
 
 //! m: a saved med to edit, or null for a new one. draft: prefilled values
 //! for a new med (from a scan).
@@ -571,7 +614,8 @@ function openEditor(m, draft = null, fromDraft = -1) {
   editing = m || null;
   draftIndex = fromDraft;
   const v = m || { ...blank(), ...(draft || {}) };
-  $("editorTitle").textContent = m ? `Edit ${m.name}` : (draft ? `Check ${draft.name}` : "Add a medicine");
+  editorTitle = m ? ["editTitle", m.name] : (draft ? ["checkTitle", draft.name] : ["addTitle", ""]);
+  $("editorTitle").textContent = t(editorTitle[0], { name: editorTitle[1] });
   $("fName").value = v.name;
   $("fDose").value = v.dose;
   $("fType").value = v.type;
@@ -634,8 +678,8 @@ $("editor").addEventListener("submit", (e) => {
   const times = [...new Set(readTimes())].sort();
   const weekdays = [...weekdayBox.querySelectorAll("input:checked")].map((i) => +i.value);
   if (!$("fName").value.trim()) return;
-  if (type !== "prn" && !times.length) { tell("Add at least one time."); return; }
-  if (type === "weekdays" && !weekdays.length) { tell("Pick at least one day."); return; }
+  if (type !== "prn" && !times.length) { tell(t("needTime")); return; }
+  if (type === "weekdays" && !weekdays.length) { tell(t("needDay")); return; }
   const m = {
     ...(editing || blank()),
     name: $("fName").value.trim(),
@@ -728,7 +772,7 @@ $("code").addEventListener("input", (e) => {
 $("sendBtn").addEventListener("click", async () => {
   const code = normaliseCode($("code").value);
   $("sendBtn").disabled = true;
-  setStatus("Encrypting and sending…");
+  setStatus(t("sending"));
   try {
     const parcel = await encryptMeds(code, state.listId, state.meds.map(toWire), dayNumber(new Date()));
     const res = await fetch(RELAY + (await relayId(code)), {
@@ -736,19 +780,19 @@ $("sendBtn").addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parcel),
     });
-    if (res.status === 429) throw new Error("Too many sends from this network. Try again in an hour.");
-    if (!res.ok) throw new Error(`The server said ${res.status}. Try again.`);
+    if (res.status === 429) throw new Error(t("tooManySends"));
+    if (!res.ok) throw new Error(t("serverSaid", { status: res.status }));
     state.lastSent = Date.now();
     save();
     render();
-    setStatus("🎉 Sent! Keep your watch near your phone. It picks the list up within a few seconds and tells you when your first reminder is.", "ok");
+    setStatus("🎉 " + t("sent"), "ok");
     // The watch leaves its pairing screen once it has the list, so the code
     // is spent: clear it for the next send.
     $("code").value = "";
   } catch (err) {
-    setStatus(err.message === "TOO_LARGE"
-      ? "The list is too long to send in one go. Shorten some names or remove a medicine."
-      : err.message || "Could not send. Check your connection.", "err");
+    setStatus(err.message === "TOO_LARGE" ? t("tooLarge")
+      : err instanceof TypeError ? t("sendFailed")
+      : err.message || t("sendFailed"), "err");
   }
   updateSend();
 });
@@ -807,21 +851,27 @@ function draftFrom(r) {
     d.everyHours = r.every_hours || 6;
     d.maxPerDay = r.max_per_day || 0;
     d.times = d.times.length ? d.times.slice(0, 1) : ["08:00"];
-    if (!r.every_hours) d.unsure.push("hours");
+    if (!r.every_hours) d.unsure.push("every_hours");
   } else if (r.schedule === "as_needed") {
     d.type = "prn";
     d.gapHours = r.every_hours || 0;
     d.prnMax = r.max_per_day || 0;
     d.times = [];
   } else if (r.schedule === "unknown") {
-    d.unsure.push("when to take");
+    d.unsure.push("schedule");
   }
   if (d.type !== "prn" && !d.times.length) {
     d.times = ["08:00"];
-    if (!d.unsure.includes("when to take")) d.unsure.push("times");
+    if (!d.unsure.includes("schedule")) d.unsure.push("times");
   }
   return d;
 }
+
+// The scan reports unclear fields by their schema names.
+const FIELD_KEYS = { name: "fieldName", strength: "fieldStrength", dose_units: "fieldDoseUnits", schedule: "fieldSchedule",
+  times: "fieldTimes", weekdays: "fieldWeekdays", every_hours: "fieldEveryHours", max_per_day: "fieldMaxPerDay",
+  course_days: "fieldCourseDays", instructions: "fieldInstructions" };
+const fieldName = (f) => (FIELD_KEYS[f] ? t(FIELD_KEYS[f]) : f.replace(/_/g, " "));
 
 function renderDrafts() {
   const box = $("drafts");
@@ -830,12 +880,12 @@ function renderDrafts() {
     const m = { ...blank(), ...d };
     return `<div class="draft">
       <div class="top"><span class="name">${esc(m.name)}</span> <span class="dose">${esc(m.dose || "")}</span></div>
-      <div class="sum">${esc(summary(m))}${m.days ? `, ${m.days} days` : ""}</div>
+      <div class="sum">${esc(summary(m))}${m.days ? esc(t("sumCourseDays", { n: m.days })) : ""}</div>
       ${d.instructions ? `<div class="note">${esc(d.instructions)}</div>` : ""}
-      ${d.unsure.length ? `<div class="warn">Couldn't read clearly: ${esc(d.unsure.join(", "))}. Check against the label.</div>` : ""}
+      ${d.unsure.length ? `<div class="warn">${esc(t("unsure", { fields: [...new Set(d.unsure.map(fieldName))].join(", ") }))}</div>` : ""}
       <div class="acts">
-        <button class="small primary" data-review="${i}">Check and add</button>
-        <button class="small ghost" data-discard="${i}">Discard</button>
+        <button class="small primary" data-review="${i}">${esc(t("checkAdd"))}</button>
+        <button class="small ghost" data-discard="${i}">${esc(t("discard"))}</button>
       </div>
     </div>`;
   }).join("");
@@ -846,7 +896,7 @@ $("drafts").addEventListener("click", (e) => {
   const discard = e.target.closest("[data-discard]");
   if (review) {
     const i = +review.dataset.review;
-    if (state.meds.length >= MAX_MEDS) { tell("Your list is full", "Pill Time! holds up to 20 medicines."); return; }
+    if (state.meds.length >= MAX_MEDS) { tell(t("fullTitle"), t("fullText", { n: MAX_MEDS })); return; }
     openEditor(null, drafts[i], i);
   } else if (discard) {
     drafts.splice(+discard.dataset.discard, 1);
@@ -858,8 +908,8 @@ $("scanBtn").addEventListener("click", () => {
   let agreed = false;
   try { agreed = localStorage.getItem(SCAN_CONSENT) === "1"; } catch {}
   if (!agreed) {
-    ask("The photo is sent to our server and to an AI service (Anthropic's Claude) to read it, then discarded. It is never stored.", {
-      title: "Before you scan", ok: "Continue", cancel: "Not now",
+    ask(t("consentText"), {
+      title: t("consentTitle"), ok: t("continue"), cancel: t("notNow"),
       onOk: () => {
         try { localStorage.setItem(SCAN_CONSENT, "1"); } catch {}
         $("scanFile").click();
@@ -877,35 +927,36 @@ $("scanFile").addEventListener("change", async (e) => {
   const code = normaliseCode($("code").value);
   scanning = true;
   updateSend();
-  setScanStatus("Reading the photo… this can take up to half a minute.");
+  setScanStatus(t("reading"));
   try {
     let image;
     try {
       image = await preparePhoto(file);
     } catch {
-      throw new Error("This browser could not open that image. Try a JPEG or PNG photo.");
+      throw new Error(t("badImage"));
     }
     const res = await fetch(SCAN, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: await relayId(code), mediaType: "image/jpeg", image }),
+      body: JSON.stringify({ id: await relayId(code), mediaType: "image/jpeg", image, lang: htmlLang() }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      if (data.code === "no_session") throw new Error("The watch code has expired or was mistyped. Reopen Add or update meds on the watch and enter the new code.");
-      throw new Error(data.error || `The server said ${res.status}. Try again.`);
+      const known = { no_session: "scanNoSession", ip_limit: "scanIpLimit", session_limit: "scanSessionLimit",
+        daily_cap: "scanDailyCap", upstream_busy: "scanBusy", unreadable: "scanFailed", upstream_error: "scanFailed" };
+      throw new Error(known[data.code] ? t(known[data.code]) : t("serverSaid", { status: res.status }));
     }
     const found = (data.meds || []).map(draftFrom);
     drafts.push(...found);
     renderDrafts();
     if (!found.length) {
-      setScanStatus(data.notes || "No medicines could be read. Try a sharper photo in good light, or add them by hand.", "err");
+      setScanStatus(data.notes || t("noneFound"), "err");
     } else {
-      const left = typeof data.scansLeft === "number" ? ` ${data.scansLeft} scan${data.scansLeft === 1 ? "" : "s"} left with this code.` : "";
-      setScanStatus(`Found ${found.length} medicine${found.length === 1 ? "" : "s"}. Check each one before adding it.${left}` + (data.notes ? ` ${data.notes}` : ""), "ok");
+      const left = typeof data.scansLeft === "number" ? " " + t("scansLeft", { n: data.scansLeft }) : "";
+      setScanStatus(t("found", { n: found.length }) + left + (data.notes ? ` ${data.notes}` : ""), "ok");
     }
   } catch (err) {
-    setScanStatus(err.message || "Could not read that photo.", "err");
+    setScanStatus(err instanceof TypeError ? t("sendFailed") : err.message || t("scanFailed"), "err");
   }
   scanning = false;
   updateSend();
@@ -930,20 +981,50 @@ $("importFile").addEventListener("change", async (e) => {
   try {
     const data = JSON.parse(await file.text());
     if (data.app !== "pilltime" || !Array.isArray(data.meds)) throw new Error();
-    if (state.meds.length && !(await ask("The medicines on this page are replaced by the ones in the backup.",
-      { title: "Replace your list?", ok: "Replace", cancel: "Keep mine", danger: true }))) return;
+    if (state.meds.length && !(await ask(t("replaceText"), { title: t("replaceTitle"), ok: t("replace"), cancel: t("keepMine"), danger: true }))) return;
     // Keeping the backup's list id lets the watch match meds by id, so
     // adherence history and stock carry over on the next send.
     state = { listId: data.listId || newListId(), nextId: data.nextId || data.meds.length + 1, meds: data.meds.slice(0, MAX_MEDS) };
     save();
     render();
-    setStatus("Backup restored.", "ok");
+    setStatus(t("restored"), "ok");
   } catch {
-    setStatus("That file is not a Pill Time! backup.", "err");
+    setStatus(t("notBackup"), "err");
   }
 });
 
-render();
+// --- language ---------------------------------------------------------------
+
+function applyLanguage() {
+  document.documentElement.lang = htmlLang();
+  document.title = t("title");
+  document.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-html]").forEach((el) => { el.innerHTML = t(el.dataset.i18nHtml); });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  document.querySelectorAll("[data-i18n-aria]").forEach((el) => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
+  $("editorTitle").textContent = t(editorTitle[0], { name: editorTitle[1] });
+  $("timesHint").textContent = $("fType").value === "interval" ? t("firstDose") : t("times");
+  renderWeekdays();
+  if (!$("editor").hidden) renderTimes(readTimes());
+  renderDrafts();
+  render();
+}
+
+// Same list and saved choice as the rest of chandigital.in.
+const picker = $("lang");
+for (const l of LANGUAGES) {
+  const o = document.createElement("option");
+  o.value = l.id; o.textContent = l.label;
+  picker.append(o);
+}
+picker.value = lang;
+picker.addEventListener("change", () => {
+  lang = picker.value;
+  rememberLanguage(lang);
+  applyLanguage();
+});
+
+applyLanguage();
 </script>
 </body>
 </html>
