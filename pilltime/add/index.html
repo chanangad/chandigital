@@ -130,8 +130,9 @@
   .draft .dose, .draft .sum { color: var(--muted); font-size: 15px; }
   .draft .acts { display: flex; gap: 8px; margin-top: 8px; }
 
-  .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 14px; font-weight: 700; margin: 16px 0 2px; }
-  .or::before, .or::after { content: ""; height: 1px; background: var(--line); flex: 1; }
+  /* The two ways to add a medicine, given equal weight. */
+  h3.sub { font-size: 18px; font-weight: 800; margin: 24px 0 4px; display: flex; align-items: center; gap: 8px;
+    padding-top: 18px; border-top: 1.5px solid var(--line); }
 
   .editor { margin-top: 16px; padding: 18px; background: var(--surface); border-radius: var(--radius);
     border: 2px solid var(--brand); box-shadow: var(--shadow); display: grid; gap: 16px; }
@@ -190,14 +191,8 @@
       <span class="dot"></span><span id="savedText">Saved on this phone</span>
       <button type="button" class="link" id="forgetBtn">Remove from this phone</button>
     </div>
-    <div class="drafts" id="drafts" hidden></div>
-    <div class="row">
-      <button class="primary" id="scanBtn" disabled><span aria-hidden="true">📷</span>Scan a prescription or label</button>
-      <input type="file" id="scanFile" accept="image/*" capture="environment">
-    </div>
-    <p class="hint" id="scanHint" style="margin-top:8px">Enter your watch's code above to scan. We read the photo and fill in the details, and you check each one before it's added.</p>
-    <div class="status" id="scanStatus" role="status"></div>
-    <div class="or">or add by hand</div>
+    <h3 class="sub"><span aria-hidden="true">✍️</span>Add manually</h3>
+    <p class="hint">Pick when you take it, then type the name.</p>
     <div class="row presets" id="presets">
       <button class="chip" data-preset="morning"><span aria-hidden="true">☀️</span>Morning</button>
       <button class="chip" data-preset="twice"><span aria-hidden="true">🌗</span>Morning &amp; evening</button>
@@ -208,6 +203,16 @@
     <div class="row">
       <button class="ghost" id="addBtn"><span aria-hidden="true">＋</span>Something else</button>
     </div>
+
+    <h3 class="sub"><span aria-hidden="true">📷</span>Scan a prescription or label</h3>
+    <p class="hint" id="scanHint">Enter your watch's code above to scan. We read the photo and fill in the details, and you check each one before it's added.</p>
+    <div class="row">
+      <button class="primary" id="scanBtn" disabled>Take or choose a photo</button>
+      <input type="file" id="scanFile" accept="image/*" capture="environment">
+    </div>
+    <div class="status" id="scanStatus" role="status"></div>
+    <div class="drafts" id="drafts" hidden></div>
+
   <form class="editor" id="editor" hidden>
     <h3 id="editorTitle">Add a medicine</h3>
     <label>Name
@@ -387,7 +392,7 @@ function render() {
         <rect x="18" y="4" width="20" height="48" rx="10" fill="#4fcf32" opacity=".22"/>
         <path d="M18 28h20v14a10 10 0 0 1-20 0z" fill="#4fcf32"/>
         <rect x="18" y="4" width="20" height="48" rx="10" fill="none" stroke="#209fff" stroke-width="3"/></g></svg>
-      <div><strong>No medicines yet.</strong><br>Scan a prescription, or pick a pattern below.</div>
+      <div><strong>No medicines yet.</strong><br>Add one manually below, or scan a prescription.</div>
     </div>`;
   } else {
     list.innerHTML = state.meds.map((m, i) => {
