@@ -174,6 +174,10 @@
   .status:empty { display: none; }
   .status.ok { color: var(--brand); background: var(--brand-soft); padding: 12px 14px; border-radius: 14px; }
   .status.err { color: var(--danger); }
+  .code-state { margin: 10px 2px 0; font-size: 15px; font-weight: 700; color: var(--muted); }
+  .code-state.ok { color: var(--brand); }
+  .code-state.bad { color: var(--danger); font-weight: 600; }
+  .scan-doc { position: absolute; inset: 10px 12px; width: calc(100% - 24px); height: calc(100% - 20px); }
   /* While a photo is read: the photo with a sweeping scan line, a step that
      changes as it goes, and a bar that creeps towards the end. */
   .scanning { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center; margin-top: 14px;
@@ -236,8 +240,9 @@
     <h2><span class="step">1</span><span data-i18n="step1">Connect your watch</span></h2>
     <p class="hint" data-i18n-html="step1Hint">On the watch, open Pill Time!, press MENU and choose <em>Add or update meds</em>. Type the code it shows. Keep that screen open while you're here; the code lasts 10 minutes.</p>
     <div class="row">
-      <input type="text" class="code-input" id="code" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX XXXX XXXX" aria-label="Pairing code" data-i18n-aria="pairingCode">
+      <input type="text" class="code-input" id="code" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX XXXX XXXX" aria-label="Pairing code" data-i18n-aria="pairingCode" aria-describedby="codeState">
     </div>
+    <p class="code-state" id="codeState" role="status" hidden></p>
   </section>
 
   <section class="card">
@@ -263,11 +268,11 @@
     <h3 class="sub"><span aria-hidden="true">📷</span><span data-i18n="scanTitle">Scan a prescription or label</span></h3>
     <p class="hint" id="scanHint" data-i18n="scanHint">Enter your watch's code above to scan. We read the photo and fill in the details, and you check each one before it's added.</p>
     <div class="row">
-      <button class="primary" id="scanBtn" disabled data-i18n="scanBtn">Take or choose a photo</button>
-      <input type="file" id="scanFile" accept="image/*" capture="environment">
+      <button class="primary" id="scanBtn" disabled data-i18n="scanBtn">Take a photo or choose a file</button>
+      <input type="file" id="scanFile" accept="image/*,application/pdf">
     </div>
     <div class="scanning" id="scanning" hidden aria-live="polite">
-      <div class="scan-photo"><img id="scanPreview" alt=""><span class="scan-line"></span></div>
+      <div class="scan-photo"><img id="scanPreview" alt=""><svg class="scan-doc" id="scanDoc" viewBox="0 0 48 60" aria-hidden="true" hidden><path d="M6 2h26l14 14v40a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="#fff" stroke="#c9bba6" stroke-width="2"/><path d="M32 2v14h14" fill="none" stroke="#c9bba6" stroke-width="2"/><path d="M12 26h24M12 33h24M12 40h18M12 47h22" stroke="#7a6f62" stroke-width="3" stroke-linecap="round"/><text x="12" y="19" font-size="9" font-weight="800" fill="#c8412f" font-family="sans-serif">PDF</text></svg><span class="scan-line"></span></div>
       <div class="scan-text">
         <strong><span id="scanStep"></span><span class="dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></strong>
         <span class="scan-sub" data-i18n="scanWait">This can take up to half a minute.</span>
@@ -387,7 +392,7 @@
 
 <script type="module">
 import { encryptMeds, relayId, normaliseCode, dayNumber, TYPE, FLAG, MAX_MEDS, MAX_TIMES } from "./relay-crypto.js?v=fb66419d";
-import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=65803f09";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=475b5e83";
 
 let lang = pickLanguage();
 const t = (key, vars = {}) => {
@@ -406,6 +411,7 @@ const API = API_OVERRIDE && /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/.*\/$/.t
   : "https://chandigital.in/api/pilltime/";
 const RELAY = API + "relay/";
 const SCAN = API + "scan";
+const SCAN_SESSION = API + "scan/session/";
 const SCAN_CONSENT = "pilltime.scanConsent";
 const KEY = "pilltime.v1";
 // One letter per weekday (0 = Sunday) in the page's language: 4 Jan 2026
@@ -793,17 +799,55 @@ function setStatus(text, kind) {
   s.className = "status" + (kind ? " " + kind : "");
 }
 
+// The page asks the server whether a watch is showing the typed code, says
+// so under the box, and offers scanning only when one is. (The server checks
+// again on every scan; this is so a typo shows up straight away.) Sending is
+// not blocked on it: a watch that could not reach the server to announce
+// itself can still collect a list.
+let codeState = "none"; // none | checking | ok | bad | unknown
+let codeCheck = 0;
+
+async function checkCode() {
+  const code = normaliseCode($("code").value);
+  const seq = ++codeCheck;
+  if (code.length !== 12) { codeState = "none"; renderCodeState(); return; }
+  codeState = "checking";
+  renderCodeState();
+  let next = "unknown";
+  try {
+    const res = await fetch(SCAN_SESSION + (await relayId(code)));
+    next = res.ok ? "ok" : res.status === 404 ? "bad" : "unknown";
+  } catch {}
+  if (seq !== codeCheck) return;
+  codeState = next;
+  renderCodeState();
+}
+
+function renderCodeState() {
+  const keys = { checking: "codeChecking", ok: "codeOk", bad: "codeBad" };
+  const el = $("codeState");
+  el.hidden = !keys[codeState];
+  el.textContent = keys[codeState] ? t(keys[codeState]) : "";
+  el.className = "code-state " + codeState;
+  updateSend();
+}
+
 function updateSend() {
   const coded = normaliseCode($("code").value).length === 12;
   $("sendBtn").disabled = !coded || !state.meds.length;
-  $("scanBtn").disabled = !coded || scanning;
+  $("scanBtn").disabled = !(codeState === "ok" || codeState === "unknown") || scanning;
   $("scanHint").hidden = coded;
 }
 
 $("code").addEventListener("input", (e) => {
   const raw = normaliseCode(e.target.value).slice(0, 12);
   e.target.value = raw.replace(/(.{4})(?=.)/g, "$1 ");
-  updateSend();
+  checkCode();
+});
+// Back from the watch (or another app) with a code that was not found yet:
+// the watch may have opened its screen since.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && codeState === "bad") checkCode();
 });
 
 $("sendBtn").addEventListener("click", async () => {
@@ -826,6 +870,7 @@ $("sendBtn").addEventListener("click", async () => {
     // The watch leaves its pairing screen once it has the list, so the code
     // is spent: clear it for the next send.
     $("code").value = "";
+    checkCode();
   } catch (err) {
     setStatus(err.message === "TOO_LARGE" ? t("tooLarge")
       : err instanceof TypeError ? t("sendFailed")
@@ -856,6 +901,10 @@ async function preparePhoto(file) {
   canvas.height = Math.round(bitmap.height * scale);
   canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+  return toBase64(blob);
+}
+
+async function toBase64(blob) {
   const bytes = new Uint8Array(await blob.arrayBuffer());
   let binary = "";
   for (let i = 0; i < bytes.length; i += 0x8000) {
@@ -863,6 +912,11 @@ async function preparePhoto(file) {
   }
   return btoa(binary);
 }
+
+// PDFs go as they are (Claude reads them page by page), up to about two
+// pages' worth: the server refuses anything much bigger.
+const MAX_PDF_BYTES = 2_000_000;
+const isPdf = (file) => file.type === "application/pdf" || /\.pdf$/i.test(file.name || "");
 
 function hhmm(t) {
   return /^\d\d:\d\d$/.test(t) ? t : null;
@@ -966,7 +1020,10 @@ let scanStepKey = "scanStep1";
 function showScanning(file) {
   const img = $("scanPreview");
   if (img.src) URL.revokeObjectURL(img.src);
-  img.src = URL.createObjectURL(file);
+  const pdf = isPdf(file);
+  $("scanDoc").toggleAttribute("hidden", !pdf); // an SVG element has no .hidden
+  img.hidden = pdf;
+  if (!pdf) img.src = URL.createObjectURL(file);
   img.onerror = () => { img.removeAttribute("src"); };
   setScanStatus("");
   $("scanning").hidden = false;
@@ -998,20 +1055,28 @@ $("scanFile").addEventListener("change", async (e) => {
   let status = null;
   try {
     let image;
-    try {
-      image = await preparePhoto(file);
-    } catch {
-      throw new Error(t("badImage"));
+    let mediaType = "image/jpeg";
+    if (isPdf(file)) {
+      if (file.size > MAX_PDF_BYTES) throw new Error(t("pdfTooLarge"));
+      image = await toBase64(file);
+      mediaType = "application/pdf";
+    } else {
+      try {
+        image = await preparePhoto(file);
+      } catch {
+        throw new Error(t("badImage"));
+      }
     }
     const res = await fetch(SCAN, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: await relayId(code), mediaType: "image/jpeg", image, lang: htmlLang() }),
+      body: JSON.stringify({ id: await relayId(code), mediaType, image, lang: htmlLang() }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       const known = { no_session: "scanNoSession", ip_limit: "scanIpLimit", session_limit: "scanSessionLimit",
         daily_cap: "scanDailyCap", upstream_busy: "scanBusy", unreadable: "scanFailed", upstream_error: "scanFailed" };
+      if (data.code === "no_session") { codeState = "bad"; renderCodeState(); }
       throw new Error(known[data.code] ? t(known[data.code]) : t("serverSaid", { status: res.status }));
     }
     const found = (data.meds || []).map(draftFrom);
@@ -1076,6 +1141,7 @@ function applyLanguage() {
   $("timesHint").textContent = $("fType").value === "interval" ? t("firstDose") : t("times");
   renderWeekdays();
   $("scanStep").textContent = t(scanStepKey);
+  renderCodeState();
   if (!$("editor").hidden) renderTimes(readTimes());
   renderDrafts();
   render();
