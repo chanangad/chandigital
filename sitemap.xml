@@ -78,6 +78,27 @@
   </url>
 
   <url>
+    <loc>https://chandigital.in/pilltime/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://chandigital.in/pilltime/add/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://chandigital.in/pilltime/faq/</loc>
+    <lastmod>2026-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://chandigital.in/qrganiser/</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
