@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#fbf6ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1814" media="(prefers-color-scheme: dark)">
 <!-- PRE-LAUNCH: hidden from search until launch. At launch: content="index, follow" -->
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://chandigital.in/pilltime/add/">
@@ -12,146 +13,219 @@
 <title>Pill Time! · Your meds</title>
 <meta name="description" content="Set up your medicines and courses, then send them to Pill Time! on your Garmin watch. End-to-end encrypted; nothing is kept on our server.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 <style>
+  /* Warm, friendly look of its own: cream paper, white cards, the dp's
+     forest green with its capsule green and blue as accents. */
   :root {
-    --bg: #000;
-    --surface: #111214;
-    --surface-2: #1b1c20;
-    --line: #2a2b31;
-    --text: #f5f6f7;
-    --muted: #9a9ca5;
-    --accent: #00c8aa;
-    --accent-ink: #00221d;
-    --amber: #ffb020;
-    --danger: #ff6b5a;
-    --radius: 18px;
+    color-scheme: light;
+    --bg: #fbf6ee;
+    --bg-glow: #fff1dc;
+    --surface: #ffffff;
+    --surface-2: #f6efe4;
+    --line: #eadfce;
+    --text: #2b2620;
+    --muted: #7a6f62;
+    --brand: #1e6b34;
+    --brand-ink: #ffffff;
+    --brand-soft: #e3f4e2;
+    --green: #4fcf32;
+    --blue: #209fff;
+    --amber: #c97a00;
+    --amber-soft: #fff3df;
+    --danger: #c8412f;
+    --radius: 22px;
+    --shadow: 0 1px 2px rgba(60, 40, 10, .05), 0 6px 20px rgba(60, 40, 10, .07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #1b1814;
+      --bg-glow: #2a2219;
+      --surface: #25211c;
+      --surface-2: #2f2a24;
+      --line: #3b342c;
+      --text: #f6efe4;
+      --muted: #b3a796;
+      --brand: #49b864;
+      --brand-ink: #10240f;
+      --brand-soft: #24361f;
+      --amber: #ffb547;
+      --amber-soft: #3a2c16;
+      --danger: #ff7b68;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+    }
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  html, body { margin: 0; color: var(--text); }
+  html { background: var(--bg); }
   body {
-    font: 16px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font: 17px/1.55 Nunito, system-ui, -apple-system, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
-    padding: env(safe-area-inset-top) 16px calc(32px + env(safe-area-inset-bottom));
+    padding: env(safe-area-inset-top) 16px calc(40px + env(safe-area-inset-bottom));
+    background: radial-gradient(120% 60% at 50% -10%, var(--bg-glow), transparent 70%) no-repeat, var(--bg);
+    min-height: 100vh;
   }
-  main { max-width: 520px; margin: 0 auto; }
-  header { display: flex; align-items: center; gap: 12px; padding: 20px 0 8px; }
-  header .about { margin-left: auto; color: var(--muted); font-size: 13px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
-  .mark { width: 40px; height: 40px; flex: none; }
-  header h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
-  header p { margin: 0; color: var(--muted); font-size: 13px; }
-  h2 { font-size: 15px; font-weight: 600; margin: 28px 0 12px; display: flex; align-items: center; gap: 10px; }
-  h2 .step { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-2); color: var(--accent); display: grid; place-items: center; font-size: 13px; }
+  main { max-width: 540px; margin: 0 auto; }
   [hidden] { display: none !important; }
 
-  .row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .presets { margin-top: 6px; }
+  header { display: flex; align-items: center; gap: 12px; padding: 18px 0 6px; }
+  .mark { width: 44px; height: 44px; flex: none; border-radius: 12px; box-shadow: var(--shadow); }
+  header .brand { font-weight: 800; font-size: 18px; }
+  header .about { margin-left: auto; color: var(--muted); font-size: 14px; font-weight: 600; text-decoration: none;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; white-space: nowrap; }
+
+  .intro { padding: 18px 2px 4px; }
+  .intro h1 { font-size: 30px; line-height: 1.15; margin: 0 0 8px; font-weight: 800; letter-spacing: -0.01em; }
+  .intro p { margin: 0; color: var(--muted); font-size: 17px; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px; margin-top: 18px; }
+  h2 { font-size: 19px; font-weight: 800; margin: 0 0 6px; display: flex; align-items: center; gap: 10px; }
+  h2 .step { width: 28px; height: 28px; border-radius: 50%; background: var(--brand-soft); color: var(--brand);
+    display: grid; place-items: center; font-size: 15px; flex: none; }
+  .card > .hint:first-of-type { margin-top: 2px; }
+
+  .row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .presets { margin-top: 8px; }
   button, .btn {
-    appearance: none; border: 0; font: inherit; font-weight: 600; cursor: pointer;
-    border-radius: 14px; padding: 12px 16px; color: var(--text); background: var(--surface-2);
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-height: 48px;
+    appearance: none; border: 0; font: inherit; font-weight: 700; cursor: pointer;
+    border-radius: 16px; padding: 13px 18px; color: var(--text); background: var(--surface-2);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-height: 52px;
+    transition: transform .08s ease, filter .15s ease;
   }
-  button.primary { background: var(--accent); color: var(--accent-ink); }
-  button.ghost { background: transparent; border: 1px solid var(--line); }
-  button.small { flex: none; min-height: 36px; padding: 6px 12px; font-size: 14px; border-radius: 10px; }
+  button:active { transform: scale(.98); }
+  button.primary { background: var(--brand); color: var(--brand-ink); box-shadow: 0 4px 14px rgba(30, 107, 52, .25); }
+  button.primary:hover { filter: brightness(1.06); }
+  button.ghost { background: var(--surface); border: 1.5px solid var(--line); }
+  button.small { flex: none; min-height: 40px; padding: 7px 14px; font-size: 15px; border-radius: 999px; }
+  button.chip { flex: none; min-height: 40px; padding: 7px 14px; font-size: 15px; border-radius: 999px;
+    background: var(--surface); border: 1.5px solid var(--line); font-weight: 700; }
+  button.link { flex: none; min-height: 0; padding: 0; background: none; color: var(--muted); font-weight: 600;
+    text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
   button.danger { color: var(--danger); }
-  button:disabled { opacity: .45; cursor: default; }
+  button:disabled { opacity: .45; cursor: default; box-shadow: none; }
   input[type=file] { display: none; }
 
-  label { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+  label { font-size: 14px; font-weight: 700; color: var(--muted); display: grid; gap: 6px; }
   input[type=text], input[type=number], input[type=date], input[type=time], select {
-    font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--line);
-    border-radius: 12px; padding: 12px; width: 100%; min-height: 48px; color-scheme: dark;
+    font: inherit; font-weight: 600; color: var(--text); background: var(--surface-2); border: 1.5px solid var(--line);
+    border-radius: 14px; padding: 12px 14px; width: 100%; min-height: 50px;
   }
-  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .check { display: flex; align-items: center; gap: 10px; color: var(--text); font-size: 15px; }
-  .check input { width: 20px; height: 20px; accent-color: var(--accent); }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  input:focus, select:focus { outline: 3px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 1px; border-color: var(--brand); }
+  .check { display: flex; align-items: center; gap: 12px; color: var(--text); font-size: 16px; font-weight: 600; }
+  .check input { width: 22px; height: 22px; accent-color: var(--brand); flex: none; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-  .meds { display: grid; gap: 10px; }
-  .empty { color: var(--muted); font-size: 14px; padding: 18px; border: 1px dashed var(--line); border-radius: var(--radius); text-align: center; }
-  .med { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 4px; }
-  .med .top { display: flex; align-items: baseline; gap: 8px; }
-  .med .name { font-weight: 600; font-size: 17px; }
-  .med .dose { color: var(--muted); font-size: 14px; }
-  .med .sum { color: var(--muted); font-size: 14px; }
+  .meds { display: grid; gap: 10px; margin-top: 14px; }
+  .empty { color: var(--muted); font-size: 16px; padding: 22px 16px; border: 2px dashed var(--line); border-radius: var(--radius);
+    text-align: center; display: grid; justify-items: center; gap: 8px; }
+  .empty svg { width: 56px; height: 56px; }
+  .med { background: var(--surface-2); border-radius: 18px; padding: 14px 14px 12px 16px; display: grid;
+    grid-template-columns: 34px 1fr; column-gap: 12px; row-gap: 2px; }
+  .med .pill { grid-row: 1 / span 4; width: 30px; height: 30px; margin-top: 2px; }
+  .med .top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .med .name { font-weight: 800; font-size: 18px; }
+  .med .dose { color: var(--muted); font-size: 15px; font-weight: 600; }
+  .med .sum { color: var(--muted); font-size: 15px; }
   .med .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-  .tag { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 10px; background: var(--surface-2); color: var(--muted); }
-  .tag.crit { color: var(--amber); }
+  .tag { font-size: 13px; font-weight: 700; border-radius: 999px; padding: 2px 10px; background: var(--surface); color: var(--muted); }
+  .tag.crit { color: var(--amber); background: var(--amber-soft); }
   .med .acts { display: flex; gap: 8px; margin-top: 8px; }
 
-  .drafts { display: grid; gap: 10px; margin-top: 12px; }
-  .draft { background: var(--surface); border: 1px dashed var(--amber); border-radius: var(--radius); padding: 14px; display: grid; gap: 4px; }
-  .draft .warn { color: var(--amber); font-size: 13px; }
-  .draft .note { color: var(--muted); font-size: 13px; }
-  .editor { margin-top: 12px; padding: 16px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--accent); display: grid; gap: 14px; }
-  .editor h3 { margin: 0; font-size: 16px; }
-  fieldset { border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin: 0; display: grid; gap: 10px; }
-  legend { color: var(--muted); font-size: 13px; padding: 0 6px; }
+  .saved { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 10px; row-gap: 4px;
+    margin-top: 14px; padding: 10px 14px; background: var(--brand-soft); color: var(--text); border-radius: 14px;
+    font-size: 14px; font-weight: 600; }
+  .saved .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+  .saved button.link { grid-column: 2; justify-self: start; }
+
+  .drafts { display: grid; gap: 10px; margin-top: 14px; }
+  .draft { background: var(--amber-soft); border: 1.5px dashed var(--amber); border-radius: 18px; padding: 14px 16px; display: grid; gap: 4px; }
+  .draft .warn { color: var(--amber); font-size: 14px; font-weight: 700; }
+  .draft .note { color: var(--muted); font-size: 14px; }
+  .draft .name { font-weight: 800; font-size: 18px; }
+  .draft .dose, .draft .sum { color: var(--muted); font-size: 15px; }
+  .draft .acts { display: flex; gap: 8px; margin-top: 8px; }
+
+  .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 14px; font-weight: 700; margin: 16px 0 2px; }
+  .or::before, .or::after { content: ""; height: 1px; background: var(--line); flex: 1; }
+
+  .editor { margin-top: 16px; padding: 18px; background: var(--surface); border-radius: var(--radius);
+    border: 2px solid var(--brand); box-shadow: var(--shadow); display: grid; gap: 16px; }
+  .editor h3 { margin: 0; font-size: 20px; font-weight: 800; }
+  fieldset { border: 1.5px solid var(--line); border-radius: 18px; padding: 14px; margin: 0; display: grid; gap: 12px; }
+  legend { color: var(--text); font-size: 15px; font-weight: 800; padding: 0 6px; }
   .times { display: grid; gap: 8px; }
   .time-row { display: flex; gap: 8px; }
   .time-row input { flex: 1; }
   .days { display: flex; gap: 6px; flex-wrap: wrap; }
   .days label { display: block; }
   .days input { display: none; }
-  .days span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); color: var(--muted); font-weight: 600; cursor: pointer; }
-  .days input:checked + span { background: var(--accent); color: var(--accent-ink); }
-  .hint { color: var(--muted); font-size: 13px; margin: 0; }
+  .days span { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--surface-2);
+    color: var(--muted); font-weight: 800; cursor: pointer; border: 1.5px solid var(--line); }
+  .days input:checked + span { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+  .hint { color: var(--muted); font-size: 15px; margin: 0; }
 
   .code-input {
-    font: 700 24px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-align: center; text-transform: uppercase;
-    padding: 16px 8px; border-radius: var(--radius);
+    font: 700 26px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-align: center; text-transform: uppercase;
+    padding: 16px 8px; border-radius: 18px; background: var(--surface-2);
   }
-  .status { margin-top: 12px; min-height: 24px; font-size: 14px; color: var(--muted); }
-  .status.ok { color: var(--accent); }
+  .status { margin-top: 12px; min-height: 0; font-size: 15px; font-weight: 600; color: var(--muted); }
+  .status:empty { display: none; }
+  .status.ok { color: var(--brand); background: var(--brand-soft); padding: 12px 14px; border-radius: 14px; }
   .status.err { color: var(--danger); }
-  footer { margin-top: 32px; color: var(--muted); font-size: 13px; display: grid; gap: 10px; }
-  footer strong { color: var(--text); font-weight: 600; }
+  footer { margin-top: 28px; color: var(--muted); font-size: 14px; display: grid; gap: 12px; padding: 0 4px; }
+  footer strong { color: var(--text); font-weight: 800; }
+  footer a { color: inherit; }
 </style>
 </head>
 <body>
 <main>
   <header>
-    <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
-      <g transform="rotate(-40 20 20)">
-        <rect x="13" y="3" width="14" height="34" rx="7" fill="#fff"/>
-        <path d="M13 20h14v10a7 7 0 0 1-14 0z" fill="#00c8aa"/>
-      </g>
-    </svg>
-    <div>
-      <h1>Pill Time!</h1>
-      <p>Medicine reminders on your Garmin watch</p>
-    </div>
+    <img class="mark" src="../../assets/pilltime-icon.png" alt="" width="44" height="44">
+    <span class="brand">Pill Time!</span>
     <a class="about" href="../">About the app</a>
   </header>
 
-  <h2><span class="step">1</span>Connect your watch</h2>
-  <p class="hint">On the watch open Pill Time!, press MENU and choose <em>Add or update meds</em>. Type the code it shows. Keep that screen open while you work here; the code lasts 10 minutes.</p>
-  <div class="row">
-    <input type="text" class="code-input" id="code" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX XXXX XXXX" aria-label="Pairing code">
-  </div>
+  <section class="intro">
+    <h1>Let's set up your medicines</h1>
+    <p>Takes about a minute. Your watch will remind you at every dose, and you log it with one press.</p>
+  </section>
 
-  <h2><span class="step">2</span>Your medicines</h2>
-  <div class="meds" id="meds"></div>
-  <div class="drafts" id="drafts" hidden></div>
-  <div class="row">
-    <button class="primary" id="scanBtn" disabled>Scan a prescription or label</button>
-    <input type="file" id="scanFile" accept="image/*" capture="environment">
-  </div>
-  <p class="hint" id="scanHint">Enter the watch code above to scan. We read the photo and fill in the details; you check each medicine before it is added.</p>
-  <div class="status" id="scanStatus" role="status"></div>
-  <div class="row">
-    <button id="addBtn">Add a medicine by hand</button>
-  </div>
-  <p class="hint" style="margin-top:14px">Or start from a common pattern:</p>
-  <div class="row presets" id="presets">
-    <button class="small ghost" data-preset="morning">Morning</button>
-    <button class="small ghost" data-preset="twice">Morning &amp; evening</button>
-    <button class="small ghost" data-preset="meals">With meals</button>
-    <button class="small ghost" data-preset="bedtime">Bedtime</button>
-    <button class="small ghost" data-preset="prn">As needed</button>
-  </div>
+  <section class="card">
+    <h2><span class="step">1</span>Connect your watch</h2>
+    <p class="hint">On the watch, open Pill Time!, press MENU and choose <em>Add or update meds</em>. Type the code it shows. Keep that screen open while you're here; the code lasts 10 minutes.</p>
+    <div class="row">
+      <input type="text" class="code-input" id="code" maxlength="14" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="XXXX XXXX XXXX" aria-label="Pairing code">
+    </div>
+  </section>
 
+  <section class="card">
+    <h2><span class="step">2</span>Your medicines</h2>
+    <div class="meds" id="meds"></div>
+    <div class="saved" id="saved" hidden>
+      <span class="dot"></span><span id="savedText">Saved on this phone</span>
+      <button type="button" class="link" id="forgetBtn">Remove from this phone</button>
+    </div>
+    <div class="drafts" id="drafts" hidden></div>
+    <div class="row">
+      <button class="primary" id="scanBtn" disabled><span aria-hidden="true">📷</span>Scan a prescription or label</button>
+      <input type="file" id="scanFile" accept="image/*" capture="environment">
+    </div>
+    <p class="hint" id="scanHint" style="margin-top:8px">Enter your watch's code above to scan. We read the photo and fill in the details, and you check each one before it's added.</p>
+    <div class="status" id="scanStatus" role="status"></div>
+    <div class="or">or add by hand</div>
+    <div class="row presets" id="presets">
+      <button class="chip" data-preset="morning"><span aria-hidden="true">☀️</span>Morning</button>
+      <button class="chip" data-preset="twice"><span aria-hidden="true">🌗</span>Morning &amp; evening</button>
+      <button class="chip" data-preset="meals"><span aria-hidden="true">🍽️</span>With meals</button>
+      <button class="chip" data-preset="bedtime"><span aria-hidden="true">🌙</span>Bedtime</button>
+      <button class="chip" data-preset="prn"><span aria-hidden="true">🤕</span>As needed</button>
+    </div>
+    <div class="row">
+      <button class="ghost" id="addBtn"><span aria-hidden="true">＋</span>Something else</button>
+    </div>
   <form class="editor" id="editor" hidden>
     <h3 id="editorTitle">Add a medicine</h3>
     <label>Name
@@ -223,25 +297,30 @@
       <button type="button" class="ghost" id="cancelBtn">Cancel</button>
     </div>
   </form>
+  </section>
 
-  <h2><span class="step">3</span>Send to your watch</h2>
-  <p class="hint">Sends the whole list to the watch showing the code above. Re-send after any change.</p>
-  <div class="row">
-    <button class="primary" id="sendBtn" disabled>Send to watch</button>
-  </div>
-  <div class="status" id="status" role="status"></div>
+  <section class="card">
+    <h2><span class="step">3</span>Send to your watch</h2>
+    <p class="hint">Sends your whole list to the watch showing the code. Send again after any change.</p>
+    <div class="row">
+      <button class="primary" id="sendBtn" disabled>Send to my watch</button>
+    </div>
+    <div class="status" id="status" role="status"></div>
+  </section>
 
-  <h2><span class="step">4</span>Keep a backup</h2>
-  <p class="hint">This list is saved only in this browser. Phones can clear browser data, so keep a backup file to restore it here or on another phone.</p>
-  <div class="row">
-    <button class="ghost" id="exportBtn">Save backup file</button>
-    <button class="ghost" id="importBtn">Restore from file</button>
-    <input type="file" id="importFile" accept="application/json,.json">
-  </div>
+  <section class="card">
+    <h2><span class="step">4</span>Keep a backup</h2>
+    <p class="hint">Your list lives only on this phone. Phones sometimes clear browser data, so a backup file lets you restore it here or on another phone.</p>
+    <div class="row">
+      <button class="ghost" id="exportBtn">Save backup file</button>
+      <button class="ghost" id="importBtn">Restore from file</button>
+      <input type="file" id="importFile" accept="application/json,.json">
+    </div>
+  </section>
 
   <footer>
     <div><strong>Private by design.</strong> Your list is encrypted on this phone with a key from the watch's code. Our server only ever holds the scrambled result, for 10 minutes at most, and the watch deletes it as soon as it has it.</div>
-    <div><strong>Scanning is the one exception.</strong> A photo you scan is sent, unencrypted, to our server and to an AI service (Anthropic's Claude) to read it. It is not stored or used for training, and it is discarded once read. Nothing is added until you check and save it. You can always add medicines by hand instead. <a href="../privacy/" style="color:inherit">Privacy policy</a>.</div>
+    <div><strong>Scanning is the one exception.</strong> A photo you scan is sent, unencrypted, to our server and to an AI service (Anthropic's Claude) to read it. It is not stored or used for training, and it is discarded once read. Nothing is added until you check and save it. You can always add medicines by hand instead. <a href="../privacy/">Privacy policy</a>.</div>
     <div><strong>Not a medical device.</strong> Pill Time! is a reminder aid. It does not give medical advice, and a reminder can be late or missed (for example if the watch is off or in Do Not Disturb). Always follow your prescriber's instructions.</div>
   </footer>
 </main>
@@ -299,18 +378,44 @@ function summary(m) {
   return "Daily at " + times;
 }
 
+// A small capsule for each card, alternating the dp's green and blue.
+function pillSvg(i) {
+  const c = i % 2 ? "#209fff" : "#4fcf32";
+  return `<svg class="pill" viewBox="0 0 30 30" aria-hidden="true"><g transform="rotate(-45 15 15)">
+    <rect x="9" y="2" width="12" height="26" rx="6" fill="${c}" opacity=".25"/>
+    <path d="M9 15h12v7a6 6 0 0 1-12 0z" fill="${c}"/>
+    <rect x="9" y="2" width="12" height="26" rx="6" fill="none" stroke="${c}" stroke-width="2"/></g></svg>`;
+}
+
+function whenText(ms) {
+  const d = new Date(ms);
+  const time = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  const today = new Date();
+  if (d.toDateString() === today.toDateString()) return `today at ${time}`;
+  const y = new Date(today); y.setDate(today.getDate() - 1);
+  if (d.toDateString() === y.toDateString()) return `yesterday at ${time}`;
+  return d.toLocaleDateString([], { day: "numeric", month: "short" }) + ` at ${time}`;
+}
+
 function render() {
   const list = $("meds");
   if (!state.meds.length) {
-    list.innerHTML = `<div class="empty">No medicines yet. Add the first one below.</div>`;
+    list.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 56 56" aria-hidden="true"><g transform="rotate(-40 28 28)">
+        <rect x="18" y="4" width="20" height="48" rx="10" fill="#4fcf32" opacity=".22"/>
+        <path d="M18 28h20v14a10 10 0 0 1-20 0z" fill="#4fcf32"/>
+        <rect x="18" y="4" width="20" height="48" rx="10" fill="none" stroke="#209fff" stroke-width="3"/></g></svg>
+      <div><strong>No medicines yet.</strong><br>Scan a prescription, or pick a pattern below.</div>
+    </div>`;
   } else {
-    list.innerHTML = state.meds.map((m) => {
+    list.innerHTML = state.meds.map((m, i) => {
       const tags = [];
       if (m.days) tags.push(`<span class="tag">${m.days}-day course</span>`);
       if (m.track) tags.push(`<span class="tag">${m.stock} left</span>`);
       if (m.critical) tags.push(`<span class="tag crit">Time-critical</span>`);
       if (m.paused) tags.push(`<span class="tag">Paused</span>`);
       return `<div class="med">
+        ${pillSvg(i)}
         <div class="top"><span class="name">${esc(m.name)}</span><span class="dose">${esc(m.dose || "")}</span></div>
         <div class="sum">${esc(summary(m))}</div>
         ${tags.length ? `<div class="tags">${tags.join("")}</div>` : ""}
@@ -321,9 +426,23 @@ function render() {
       </div>`;
     }).join("");
   }
+  // The list stays on this phone so it can be edited and sent again; say so,
+  // and offer a way to clear it (a shared or borrowed phone).
+  $("saved").hidden = !state.meds.length;
+  $("savedText").textContent = state.lastSent
+    ? `Saved on this phone · last sent to your watch ${whenText(state.lastSent)}`
+    : "Saved on this phone · not sent to a watch yet";
   $("addBtn").disabled = state.meds.length >= MAX_MEDS;
   updateSend();
 }
+
+$("forgetBtn").addEventListener("click", () => {
+  if (!confirm("Remove your list from this phone? Your watch keeps its reminders. You can restore a backup file later.")) return;
+  try { localStorage.removeItem(KEY); } catch {}
+  state = { listId: newListId(), nextId: 1, meds: [] };
+  $("editor").hidden = true;
+  render();
+});
 
 $("meds").addEventListener("click", (e) => {
   const edit = e.target.closest("[data-edit]");
@@ -575,7 +694,10 @@ $("sendBtn").addEventListener("click", async () => {
     });
     if (res.status === 429) throw new Error("Too many sends from this network. Try again in an hour.");
     if (!res.ok) throw new Error(`The server said ${res.status}. Try again.`);
-    setStatus("Sent. Keep the watch near your phone; it picks the list up within a few seconds.", "ok");
+    state.lastSent = Date.now();
+    save();
+    render();
+    setStatus("🎉 Sent! Keep your watch near your phone. It picks the list up within a few seconds and tells you when your first reminder is.", "ok");
     // The watch leaves its pairing screen once it has the list, so the code
     // is spent: clear it for the next send.
     $("code").value = "";
