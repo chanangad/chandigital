@@ -174,6 +174,35 @@
   .status:empty { display: none; }
   .status.ok { color: var(--brand); background: var(--brand-soft); padding: 12px 14px; border-radius: 14px; }
   .status.err { color: var(--danger); }
+  /* While a photo is read: the photo with a sweeping scan line, a step that
+     changes as it goes, and a bar that creeps towards the end. */
+  .scanning { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center; margin-top: 14px;
+    padding: 14px; border-radius: 18px; background: var(--brand-soft); }
+  .scan-photo { position: relative; width: 76px; height: 96px; border-radius: 12px; overflow: hidden;
+    background: var(--surface-2); box-shadow: var(--shadow); }
+  .scan-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .scan-line { position: absolute; left: -10%; right: -10%; height: 3px; top: 0; background: var(--green);
+    box-shadow: 0 0 12px 4px color-mix(in srgb, var(--green) 55%, transparent); animation: sweep 1.8s ease-in-out infinite alternate; }
+  .scan-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent, color-mix(in srgb, var(--green) 18%, transparent), transparent);
+    background-size: 100% 40%; background-repeat: no-repeat; animation: glow 1.8s ease-in-out infinite alternate; }
+  @keyframes sweep { from { top: 0; } to { top: calc(100% - 3px); } }
+  @keyframes glow { from { background-position: 0 -40%; } to { background-position: 0 140%; } }
+  .scan-text { display: grid; gap: 4px; min-width: 0; }
+  .scan-text strong { font-size: 17px; font-weight: 800; color: var(--brand); }
+  .dots i { font-style: normal; animation: blink 1.2s infinite; opacity: .15; }
+  .dots i:nth-child(2) { animation-delay: .2s; }
+  .dots i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 40% { opacity: 1; } }
+  .scan-sub { color: var(--muted); font-size: 14px; }
+  .scan-bar { height: 6px; border-radius: 999px; background: var(--surface); overflow: hidden; margin-top: 6px; }
+  .scan-bar span { display: block; height: 100%; width: 0; border-radius: inherit;
+    background: linear-gradient(90deg, var(--green), var(--brand)); transition: width 30s cubic-bezier(.1, .7, .3, 1); }
+  .scan-bar span.go { width: 92%; }
+  .scan-bar span.done { width: 100%; transition: width .3s ease; }
+  @media (prefers-reduced-motion: reduce) {
+    .scan-line, .scan-photo::after, .dots i { animation: none; opacity: 1; }
+    .scan-line { display: none; }
+  }
   /* The page's own pop-up, instead of the browser's "chandigital.in says". */
   dialog.ask { border: 0; border-radius: 24px; padding: 22px; width: calc(100% - 32px); max-width: 380px;
     background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgba(43, 38, 32, .28); }
@@ -236,6 +265,14 @@
     <div class="row">
       <button class="primary" id="scanBtn" disabled data-i18n="scanBtn">Take or choose a photo</button>
       <input type="file" id="scanFile" accept="image/*" capture="environment">
+    </div>
+    <div class="scanning" id="scanning" hidden aria-live="polite">
+      <div class="scan-photo"><img id="scanPreview" alt=""><span class="scan-line"></span></div>
+      <div class="scan-text">
+        <strong><span id="scanStep"></span><span class="dots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></strong>
+        <span class="scan-sub" data-i18n="scanWait">This can take up to half a minute.</span>
+        <div class="scan-bar"><span id="scanBar"></span></div>
+      </div>
     </div>
     <div class="status" id="scanStatus" role="status"></div>
     <div class="drafts" id="drafts" hidden></div>
@@ -350,7 +387,7 @@
 
 <script type="module">
 import { encryptMeds, relayId, normaliseCode, dayNumber, TYPE, FLAG, MAX_MEDS, MAX_TIMES } from "./relay-crypto.js?v=fb66419d";
-import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=9a5e27fc";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=65803f09";
 
 let lang = pickLanguage();
 const t = (key, vars = {}) => {
@@ -920,6 +957,36 @@ $("scanBtn").addEventListener("click", () => {
   $("scanFile").click();
 });
 
+// The working state shown while a photo is read. Steps advance on a timer
+// (the server gives no progress), and the bar creeps to 92 % over about 30 s.
+const SCAN_STEPS = [[0, "scanStep1"], [2500, "scanStep2"], [9000, "scanStep3"], [20000, "scanStep4"]];
+let scanTimers = [];
+let scanStepKey = "scanStep1";
+
+function showScanning(file) {
+  const img = $("scanPreview");
+  if (img.src) URL.revokeObjectURL(img.src);
+  img.src = URL.createObjectURL(file);
+  img.onerror = () => { img.removeAttribute("src"); };
+  setScanStatus("");
+  $("scanning").hidden = false;
+  const bar = $("scanBar");
+  bar.className = "";
+  void bar.offsetWidth;
+  bar.className = "go";
+  scanTimers = SCAN_STEPS.map(([ms, key]) => setTimeout(() => { scanStepKey = key; $("scanStep").textContent = t(key); }, ms));
+  $("scanning").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+async function hideScanning() {
+  scanTimers.forEach(clearTimeout);
+  $("scanBar").className = "done";
+  await new Promise((r) => setTimeout(r, 350));
+  $("scanning").hidden = true;
+  const img = $("scanPreview");
+  if (img.src) { URL.revokeObjectURL(img.src); img.removeAttribute("src"); }
+}
+
 $("scanFile").addEventListener("change", async (e) => {
   const file = e.target.files[0];
   e.target.value = "";
@@ -927,7 +994,8 @@ $("scanFile").addEventListener("change", async (e) => {
   const code = normaliseCode($("code").value);
   scanning = true;
   updateSend();
-  setScanStatus(t("reading"));
+  showScanning(file);
+  let status = null;
   try {
     let image;
     try {
@@ -948,16 +1016,18 @@ $("scanFile").addEventListener("change", async (e) => {
     }
     const found = (data.meds || []).map(draftFrom);
     drafts.push(...found);
-    renderDrafts();
     if (!found.length) {
-      setScanStatus(data.notes || t("noneFound"), "err");
+      status = [data.notes || t("noneFound"), "err"];
     } else {
       const left = typeof data.scansLeft === "number" ? " " + t("scansLeft", { n: data.scansLeft }) : "";
-      setScanStatus(t("found", { n: found.length }) + left + (data.notes ? ` ${data.notes}` : ""), "ok");
+      status = [t("found", { n: found.length }) + left + (data.notes ? ` ${data.notes}` : ""), "ok"];
     }
   } catch (err) {
-    setScanStatus(err instanceof TypeError ? t("sendFailed") : err.message || t("scanFailed"), "err");
+    status = [err instanceof TypeError ? t("sendFailed") : err.message || t("scanFailed"), "err"];
   }
+  await hideScanning();
+  renderDrafts();
+  setScanStatus(...status);
   scanning = false;
   updateSend();
 });
@@ -1005,6 +1075,7 @@ function applyLanguage() {
   $("editorTitle").textContent = t(editorTitle[0], { name: editorTitle[1] });
   $("timesHint").textContent = $("fType").value === "interval" ? t("firstDose") : t("times");
   renderWeekdays();
+  $("scanStep").textContent = t(scanStepKey);
   if (!$("editor").hidden) renderTimes(readTimes());
   renderDrafts();
   render();
