@@ -95,10 +95,21 @@
     font: inherit; font-weight: 600; color: var(--text); background: var(--surface-2); border: 1.5px solid var(--line);
     border-radius: 14px; padding: 12px 14px; width: 100%; min-height: 50px;
   }
+  /* iOS gives date and time fields a built-in minimum width, which pushed
+     the Course row (and the whole card) wider than the screen. Let every
+     field and grid column shrink to fit, and draw date/time like the rest. */
+  input, select { min-width: 0; max-width: 100%; }
+  input[type=date], input[type=time] { -webkit-appearance: none; appearance: none; display: block; text-align: left; }
+  input[type=date]::-webkit-date-and-time-value, input[type=time]::-webkit-date-and-time-value { text-align: left; }
+  .grid2 > * { min-width: 0; }
+  main, .card, .editor, fieldset { min-width: 0; max-width: 100%; }
+  html, body { overflow-x: hidden; }
   input:focus, select:focus { outline: 3px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 1px; border-color: var(--brand); }
   .check { display: flex; align-items: center; gap: 12px; color: var(--text); font-size: 16px; font-weight: 600; }
   .check input { width: 22px; height: 22px; accent-color: var(--brand); flex: none; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* A full date doesn't fit half a phone-width card. */
+  .grid2.stack { grid-template-columns: 1fr; }
 
   .meds { display: grid; gap: 10px; margin-top: 14px; }
   .empty { color: var(--muted); font-size: 16px; padding: 22px 16px; border: 2px dashed var(--line); border-radius: var(--radius);
@@ -158,6 +169,14 @@
   .status:empty { display: none; }
   .status.ok { color: var(--brand); background: var(--brand-soft); padding: 12px 14px; border-radius: 14px; }
   .status.err { color: var(--danger); }
+  /* The page's own pop-up, instead of the browser's "chandigital.in says". */
+  dialog.ask { border: 0; border-radius: 24px; padding: 22px; width: calc(100% - 32px); max-width: 380px;
+    background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgba(43, 38, 32, .28); }
+  dialog.ask::backdrop { background: rgba(43, 38, 32, .45); }
+  .ask-title { font-weight: 800; font-size: 20px; margin: 0 0 6px; }
+  .ask-text { margin: 0; color: var(--muted); font-size: 16px; }
+  dialog.ask .row { margin-top: 18px; }
+  button.danger-fill { background: var(--danger); color: #fff; box-shadow: none; }
   footer { margin-top: 28px; color: var(--muted); font-size: 14px; display: grid; gap: 12px; padding: 0 4px; }
   footer strong { color: var(--text); font-weight: 800; }
   footer a { color: inherit; }
@@ -259,7 +278,7 @@
 
     <fieldset>
       <legend>Course</legend>
-      <div class="grid2">
+      <div class="grid2 stack">
         <label>Start date<input type="date" id="fStart"></label>
         <label>Number of days<input type="number" id="fDays" min="0" max="3650" placeholder="Ongoing"></label>
       </div>
@@ -312,6 +331,15 @@
   </footer>
 </main>
 
+<dialog class="ask" id="ask" aria-labelledby="askTitle">
+  <p class="ask-title" id="askTitle"></p>
+  <p class="ask-text" id="askText"></p>
+  <div class="row">
+    <button type="button" class="ghost" id="askNo">Cancel</button>
+    <button type="button" class="primary" id="askYes">OK</button>
+  </div>
+</dialog>
+
 <script type="module">
 import { encryptMeds, relayId, normaliseCode, dayNumber, TYPE, FLAG, MAX_MEDS, MAX_TIMES } from "./relay-crypto.js";
 
@@ -328,6 +356,33 @@ const SCAN_CONSENT = "pilltime.scanConsent";
 const KEY = "pilltime.v1";
 const DAY_LETTERS = ["S", "M", "T", "W", "T", "F", "S"];
 const $ = (id) => document.getElementById(id);
+
+// Questions and notices in the page's own style. onOk runs inside the tap
+// itself, which iOS needs for anything that opens the camera or files.
+function ask(text, { title = "", ok = "OK", cancel = "Cancel", danger = false, onOk = null } = {}) {
+  return new Promise((resolve) => {
+    const d = $("ask");
+    $("askTitle").textContent = title;
+    $("askTitle").hidden = !title;
+    $("askText").textContent = text;
+    $("askText").hidden = !text;
+    $("askYes").textContent = ok;
+    $("askYes").className = danger ? "danger-fill" : "primary";
+    $("askNo").textContent = cancel;
+    $("askNo").hidden = !cancel;
+    const done = (value) => {
+      $("askYes").onclick = $("askNo").onclick = d.oncancel = null;
+      d.close();
+      resolve(value);
+    };
+    $("askYes").onclick = () => { if (onOk) onOk(); done(true); };
+    $("askNo").onclick = () => done(false);
+    d.oncancel = (e) => { e.preventDefault(); done(false); };
+    d.showModal();
+  });
+}
+
+const tell = (title, text = "") => ask(text, { title, cancel: "" });
 
 // --- state ------------------------------------------------------------------
 
@@ -423,21 +478,23 @@ function render() {
   updateSend();
 }
 
-$("forgetBtn").addEventListener("click", () => {
-  if (!confirm("Remove your list from this phone? Your watch keeps its reminders. You can restore a backup file later.")) return;
+$("forgetBtn").addEventListener("click", async () => {
+  if (!(await ask("Your watch keeps its reminders. You can restore a backup file later.",
+    { title: "Remove your list from this phone?", ok: "Remove", cancel: "Keep", danger: true }))) return;
   try { localStorage.removeItem(KEY); } catch {}
   state = { listId: newListId(), nextId: 1, meds: [] };
   $("editor").hidden = true;
   render();
 });
 
-$("meds").addEventListener("click", (e) => {
+$("meds").addEventListener("click", async (e) => {
   const edit = e.target.closest("[data-edit]");
   const del = e.target.closest("[data-del]");
   if (edit) openEditor(state.meds.find((m) => m.id === +edit.dataset.edit));
   if (del) {
     const m = state.meds.find((x) => x.id === +del.dataset.del);
-    if (m && confirm(`Remove ${m.name}? Send the list to your watch again afterwards.`)) {
+    if (m && await ask("Send the list to your watch again afterwards so it's removed there too.",
+        { title: `Remove ${m.name}?`, ok: "Remove", cancel: "Keep", danger: true })) {
       state.meds = state.meds.filter((x) => x !== m);
       save();
       render();
@@ -577,8 +634,8 @@ $("editor").addEventListener("submit", (e) => {
   const times = [...new Set(readTimes())].sort();
   const weekdays = [...weekdayBox.querySelectorAll("input:checked")].map((i) => +i.value);
   if (!$("fName").value.trim()) return;
-  if (type !== "prn" && !times.length) { alert("Add at least one time."); return; }
-  if (type === "weekdays" && !weekdays.length) { alert("Pick at least one day."); return; }
+  if (type !== "prn" && !times.length) { tell("Add at least one time."); return; }
+  if (type === "weekdays" && !weekdays.length) { tell("Pick at least one day."); return; }
   const m = {
     ...(editing || blank()),
     name: $("fName").value.trim(),
@@ -789,7 +846,7 @@ $("drafts").addEventListener("click", (e) => {
   const discard = e.target.closest("[data-discard]");
   if (review) {
     const i = +review.dataset.review;
-    if (state.meds.length >= MAX_MEDS) { alert("The list is full (20 medicines)."); return; }
+    if (state.meds.length >= MAX_MEDS) { tell("Your list is full", "Pill Time! holds up to 20 medicines."); return; }
     openEditor(null, drafts[i], i);
   } else if (discard) {
     drafts.splice(+discard.dataset.discard, 1);
@@ -801,9 +858,14 @@ $("scanBtn").addEventListener("click", () => {
   let agreed = false;
   try { agreed = localStorage.getItem(SCAN_CONSENT) === "1"; } catch {}
   if (!agreed) {
-    const ok = confirm("The photo is sent to our server and to an AI service (Anthropic's Claude) to read it, then discarded. It is not stored. Continue?");
-    if (!ok) return;
-    try { localStorage.setItem(SCAN_CONSENT, "1"); } catch {}
+    ask("The photo is sent to our server and to an AI service (Anthropic's Claude) to read it, then discarded. It is never stored.", {
+      title: "Before you scan", ok: "Continue", cancel: "Not now",
+      onOk: () => {
+        try { localStorage.setItem(SCAN_CONSENT, "1"); } catch {}
+        $("scanFile").click();
+      },
+    });
+    return;
   }
   $("scanFile").click();
 });
@@ -868,7 +930,8 @@ $("importFile").addEventListener("change", async (e) => {
   try {
     const data = JSON.parse(await file.text());
     if (data.app !== "pilltime" || !Array.isArray(data.meds)) throw new Error();
-    if (state.meds.length && !confirm("Replace the list in this browser with the backup?")) return;
+    if (state.meds.length && !(await ask("The medicines on this page are replaced by the ones in the backup.",
+      { title: "Replace your list?", ok: "Replace", cancel: "Keep mine", danger: true }))) return;
     // Keeping the backup's list id lets the watch match meds by id, so
     // adherence history and stock carry over on the next send.
     state = { listId: data.listId || newListId(), nextId: data.nextId || data.meds.length + 1, meds: data.meds.slice(0, MAX_MEDS) };
