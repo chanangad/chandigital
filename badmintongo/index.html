@@ -989,14 +989,21 @@
       showClaimState("none");
       var suffix = claimCodeDigits(claimCodeInput.value);
       if (suffix.replace("-", "").length < 8) { setPanelStatus(claimCodeNote, ""); return; }
-      setPanelStatus(claimCodeNote, "");
-      showClaimState("spin");
+      // 9 to 11 digits: current watches show 12 and the earliest builds showed
+      // 8, so this length is almost always a dropped digit. Said plainly, and
+      // before the server answers; a code a watch has reported still clears it.
+      var digitCount = suffix.replace("-", "").length;
+      var shortNote = (digitCount >= 9 && digitCount <= 11)
+        ? "Your watch shows a 12-digit code and this one has " + digitCount + ", so a digit may be missing. Please check the code on your watch before paying."
+        : "";
+      setPanelStatus(claimCodeNote, shortNote, shortNote ? "warn" : undefined);
+      showClaimState(shortNote ? "warn" : "spin");
       var seq = ++claimCheckSeq;
       var run = async function() {
         try {
           var response = await fetch(`${API_BASE}/api/claim/check?code=` + encodeURIComponent("RP-" + suffix));
           if (seq !== claimCheckSeq) { return; }
-          if (!response.ok) { showClaimState("none"); return; }
+          if (!response.ok) { showClaimState(shortNote ? "warn" : "none"); return; }
           var data = await response.json();
           if (seq !== claimCheckSeq) { return; } // the code changed meanwhile
           if (data.paid) {
@@ -1007,12 +1014,12 @@
             setPanelStatus(claimCodeNote, "");
           } else {
             showClaimState("warn");
-            setPanelStatus(claimCodeNote, "Please verify this code matches your watch.");
+            setPanelStatus(claimCodeNote, shortNote || "Please verify this code matches your watch.", shortNote ? "warn" : undefined);
           }
         } catch (_) {
           // A failed check must never stand between a buyer and the pay
           // button: say nothing rather than something wrong.
-          if (seq === claimCheckSeq) { showClaimState("none"); setPanelStatus(claimCodeNote, ""); }
+          if (seq === claimCheckSeq) { showClaimState(shortNote ? "warn" : "none"); setPanelStatus(claimCodeNote, shortNote, shortNote ? "warn" : undefined); }
         }
       };
       if (immediate) { run(); } else { claimCheckTimer = setTimeout(run, 600); }
