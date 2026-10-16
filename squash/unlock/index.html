@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Redirecting…</title>
+  <meta http-equiv="refresh" content="0; url=../?tab=unlock#unlock">
+</head>
+<body>
+  <script>
+    // The watch opens /squash/unlock/ (and the worker's cancel_url adds
+    // ?code=SQ-...). Carry every parameter through to the storefront and land
+    // on the checkout card.
+    const params = new URLSearchParams(window.location.search);
+    params.set("tab", "unlock");
+    window.location.replace(`../?${params.toString()}#unlock`);
+  </script>
+</body>
+</html>
