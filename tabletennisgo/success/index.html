@@ -155,7 +155,7 @@
     async function pollPaid(code) {
       for (let i = 0; i < 10; i++) {
         try {
-          const r = await fetch(`${API_BASE}/api/license/status?code=${encodeURIComponent(code)}`);
+          const r = await fetch(apiUrl("/api/license/status") + "?code=" + encodeURIComponent(code));
           if (r.ok) { const d = await r.json(); if (d && d.licenseState === "paid") return true; }
         } catch (_) {}
         await new Promise(r => setTimeout(r, 2000));
