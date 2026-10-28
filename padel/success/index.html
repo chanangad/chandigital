@@ -101,9 +101,9 @@
       <div id="success-follow" class="success-follow" hidden>
         <p class="eyebrow">Thank you</p>
         <h2>Enjoying Padel Go? Two things help more than you'd think.</h2>
-        <p>Chan Digital is a one-person studio. A rating on Connect IQ helps other players find Padel Go, and following along on Instagram is where new features and beta builds show up first.</p>
+        <p id="follow-copy">Chan Digital is a one-person studio. A rating on Connect IQ helps other players find Padel Go, and following along on Instagram is where new features and beta builds show up first.</p>
         <div class="actions">
-          <a class="primary" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg>Rate on Connect IQ</a>
+          <a class="primary" id="rate-ciq" href="https://apps.garmin.com/apps/3f718124-ae33-4086-a695-06ed70efd676" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg>Rate on Connect IQ</a>
           <a class="secondary" href="https://www.instagram.com/chandigital.in/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Follow @chandigital.in</a>
         </div>
         <p class="fineprint">Sharing a match or your watch on court? Tag @chandigital.in - we reshare our favourites and love seeing Padel Go in the wild.</p>
@@ -123,6 +123,27 @@
 
   <script src="../app.js"></script>
   <script src="../i18n.js"></script>
+  <script>
+    // Amazfit buyers: no Connect IQ rating ask (Padel Go for Amazfit is in the
+    // Zepp App Store). The server knows which watch reported the code.
+    (function () {
+      var p = new URLSearchParams(location.search);
+      var code = (p.get("code") || p.get("razorpay_payment_link_reference_id") || "").trim().toUpperCase();
+      if (!code) { return; }
+      fetch(API_BASE + "/api/claim/check?code=" + encodeURIComponent(code))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || d.platform !== "amazfit") { return; }
+          var btn = document.getElementById("rate-ciq");
+          if (btn) { btn.remove(); }
+          var copy = document.getElementById("follow-copy");
+          if (copy) {
+            copy.textContent = "Chan Digital is a one-person studio. A rating in the Zepp App Store helps other players find Padel Go, and following along on Instagram is where new features and beta builds show up first.";
+          }
+        })
+        .catch(function () {});
+    })();
+  </script>
   <script>
     const titleEl  = document.getElementById("success-title");
     const copyEl   = document.getElementById("success-copy");
