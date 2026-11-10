@@ -99,7 +99,7 @@
     </section>
 
         <div class="prose">
-      <span class="updated">Last updated: September 30, 2026</span>
+      <span class="updated">Last updated: November 11, 2026</span>
 
       <p><strong>In short:</strong> your medicine list lives on your watch and in your phone's browser. There are no accounts. When you send the list to your watch it passes through our server encrypted, so we can't read it, and it is deleted within 10 minutes. The one exception is scanning a prescription, which is optional and explained in section 4.</p>
 
@@ -127,7 +127,7 @@
       <h2>4. The set-up page and prescription scanning</h2>
       <p><strong>Your list.</strong> The set-up page at chandigital.in/pilltime/add keeps your list in your phone's browser storage. It is not sent to us unless you press Send. When you do, it is encrypted in the browser (AES) with a key derived from the code on your watch. Our server stores only the encrypted parcel, cannot decrypt it, and deletes it when your watch collects it or after 10 minutes, whichever is first.</p>
       <p><strong>Scanning (optional).</strong> If you choose to scan a prescription, label or medicine box, the photo is reduced in size on your phone, which also removes its location data, and is then sent unencrypted to our server and on to Anthropic, whose Claude AI model reads it and returns the medicine details to the page. We do not store or log the photo or what was read from it. Anthropic processes it under its commercial terms, which do not allow using it to train its models; see <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noreferrer">Anthropic's privacy policy</a>. Nothing read from a photo is added to your list until you check and save it.</p>
-      <p>To limit misuse of scanning we keep, per scan session, the id described in section 3, the claim code and the number of scans, for up to 30 days, and a daily total of scans. To limit misuse of the relay and scanning we also keep a count of requests per IP address for one hour.</p>
+      <p>To limit misuse of scanning we keep, per scan session, the id described in section 3, the claim code and the number of scans, for up to 30 days. The number of scans each watch can make is limited, so we also keep, against the claim code, how many scans it has made and when it first and last scanned, until 3 years after its last scan. We keep a daily total of scans and of the processing they used, which is not tied to any watch. To limit misuse of the relay and scanning we also keep a count of requests per IP address for one hour.</p>
 
       <h2>5. Data collected when you buy</h2>
       <p>When you purchase a license at chandigital.in/pilltime/, we collect:</p>
@@ -147,13 +147,13 @@
       <p>We do not sell, rent or share your personal data for marketing. We never receive your medicine list in a form we can read, apart from a photo you choose to scan.</p>
 
       <h2>7. Where data is stored</h2>
-      <p>License, purchase and scan-session records are stored in a Cloudflare database; the encrypted relay parcels and request counts in Cloudflare's key-value store. Payment processors keep their own records under their own privacy policies.</p>
+      <p>License, purchase and scan records are stored in a Cloudflare database; the encrypted relay parcels and request counts in Cloudflare's key-value store. Payment processors keep their own records under their own privacy policies.</p>
 
       <h2>8. Cookies and analytics</h2>
       <p>chandigital.in does not use analytics cookies or tracking scripts, so no cookie banner is shown. The pages load fonts from Google Fonts. The set-up page stores your list, and whether you have agreed to the scanning notice, in your browser; that data stays on your device.</p>
 
       <h2>9. Data retention</h2>
-      <p>Purchase records (name, email, claim code) are kept for up to 3 years for support, refunds and legal compliance. Scan-session records are kept for up to 30 days, relay parcels for at most 10 minutes, and per-IP request counts for one hour. You can ask for deletion at any time by emailing <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button>.</p>
+      <p>Purchase records (name, email, claim code) are kept for up to 3 years for support, refunds and legal compliance. Scan-session records are kept for up to 30 days, each watch's scan count for up to 3 years after its last scan, relay parcels for at most 10 minutes, and per-IP request counts for one hour. You can ask for deletion at any time by emailing <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button>.</p>
 
       <h2>10. Your rights</h2>
       <p>Depending on where you live, you may have the right to access, correct or delete your personal data. Email <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button> with "Privacy Request" in the subject line.</p>

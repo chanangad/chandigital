@@ -391,7 +391,7 @@
 
 <script type="module">
 import { encryptMeds, relayId, normaliseCode, dayNumber, TYPE, FLAG, MAX_MEDS, MAX_TIMES } from "./relay-crypto.js?v=fb66419d";
-import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=475b5e83";
+import { STRINGS, LANGUAGES, pickLanguage, rememberLanguage } from "./strings.js?v=4f1a720c";
 
 let lang = pickLanguage();
 const t = (key, vars = {}) => {
@@ -805,21 +805,46 @@ function setStatus(text, kind) {
 // itself can still collect a list.
 let codeState = "none"; // none | checking | ok | bad | unknown
 let codeCheck = 0;
+// Scans this watch has left for good, as the server last reported it:
+// {left, paid}, or null when not known. Each watch gets a few scans to try
+// and more once the app is unlocked.
+let allowance = null;
+
+function allowanceUsedText() {
+  return t(allowance && allowance.paid ? "scanAllowancePaid" : "scanAllowanceFree");
+}
+
+// Takes the used-up message down once it no longer applies: another watch's
+// code was typed, or this watch has been unlocked.
+function clearAllowanceText() {
+  const shown = $("scanStatus").textContent;
+  if (shown && (shown === t("scanAllowanceFree") || shown === t("scanAllowancePaid"))) setScanStatus("", "");
+}
 
 async function checkCode() {
   const code = normaliseCode($("code").value);
   const seq = ++codeCheck;
-  if (code.length !== 12) { codeState = "none"; renderCodeState(); return; }
+  allowance = null;
+  if (code.length !== 12) { codeState = "none"; renderCodeState(); clearAllowanceText(); return; }
   codeState = "checking";
   renderCodeState();
   let next = "unknown";
+  let seen = null;
   try {
     const res = await fetch(SCAN_SESSION + (await relayId(code)));
     next = res.ok ? "ok" : res.status === 404 ? "bad" : "unknown";
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (typeof data.allowanceLeft === "number") seen = { left: data.allowanceLeft, paid: !!data.paid };
+    }
   } catch {}
   if (seq !== codeCheck) return;
   codeState = next;
+  allowance = seen;
   renderCodeState();
+  // Say why scanning is off before a photo is chosen, not after it is sent.
+  if (allowance && allowance.left <= 0) setScanStatus(allowanceUsedText(), "err");
+  else clearAllowanceText();
 }
 
 function renderCodeState() {
@@ -834,7 +859,8 @@ function renderCodeState() {
 function updateSend() {
   const coded = normaliseCode($("code").value).length === 12;
   $("sendBtn").disabled = !coded || !state.meds.length;
-  $("scanBtn").disabled = !(codeState === "ok" || codeState === "unknown") || scanning;
+  $("scanBtn").disabled = !(codeState === "ok" || codeState === "unknown") || scanning
+    || (!!allowance && allowance.left <= 0);
   $("scanHint").hidden = coded;
 }
 
@@ -843,10 +869,12 @@ $("code").addEventListener("input", (e) => {
   e.target.value = raw.replace(/(.{4})(?=.)/g, "$1 ");
   checkCode();
 });
-// Back from the watch (or another app) with a code that was not found yet:
-// the watch may have opened its screen since.
+// Back from the watch (or another app) with a code that was not found yet,
+// or with the scans used up: the watch may have opened its screen, or been
+// unlocked, since.
 document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible" && codeState === "bad") checkCode();
+  if (document.visibilityState === "visible"
+      && (codeState === "bad" || (allowance && allowance.left <= 0))) checkCode();
 });
 
 $("sendBtn").addEventListener("click", async () => {
@@ -1076,6 +1104,10 @@ $("scanFile").addEventListener("change", async (e) => {
       const known = { no_session: "scanNoSession", ip_limit: "scanIpLimit", session_limit: "scanSessionLimit",
         daily_cap: "scanDailyCap", upstream_busy: "scanBusy", unreadable: "scanFailed", upstream_error: "scanFailed" };
       if (data.code === "no_session") { codeState = "bad"; renderCodeState(); }
+      if (data.code === "allowance") {
+        allowance = { left: 0, paid: !!data.paid };
+        throw new Error(allowanceUsedText());
+      }
       throw new Error(known[data.code] ? t(known[data.code]) : t("serverSaid", { status: res.status }));
     }
     const found = (data.meds || []).map(draftFrom);
@@ -1083,7 +1115,9 @@ $("scanFile").addEventListener("change", async (e) => {
     if (!found.length) {
       status = [data.notes || t("noneFound"), "err"];
     } else {
-      const left = typeof data.scansLeft === "number" ? " " + t("scansLeft", { n: data.scansLeft }) : "";
+      if (typeof data.allowanceLeft === "number") allowance = { left: data.allowanceLeft, paid: !!data.paid };
+      const n = allowance ? allowance.left : data.scansLeft;
+      const left = typeof n === "number" ? " " + t("scansLeft", { n }) : "";
       status = [t("found", { n: found.length }) + left + (data.notes ? ` ${data.notes}` : ""), "ok"];
     }
   } catch (err) {
