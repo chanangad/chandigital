@@ -99,9 +99,9 @@
     </section>
 
         <div class="prose">
-      <span class="updated">Last updated: November 11, 2026</span>
+      <span class="updated">Last updated: November 20, 2026</span>
 
-      <p><strong>In short:</strong> your medicine list lives on your watch and in your phone's browser. There are no accounts. When you send the list to your watch it passes through our server encrypted, so we can't read it, and it is deleted within 10 minutes. The one exception is scanning a prescription, which is optional and explained in section 4.</p>
+      <p><strong>In short:</strong> your medicine list lives on your watch and in your phone's browser. There are no accounts. When you send the list to your watch it passes through our server encrypted, so we can't read it, and it is deleted within 10 minutes. The same applies when the set-up page loads the list back from your watch. The one exception is scanning a prescription, which is optional and explained in section 4.</p>
 
       <h2>1. Who we are</h2>
       <p>Chan Digital ("we", "us", "our") operates the Pill Time! watch widget for Garmin and the website at <a href="https://chandigital.in/pilltime/">chandigital.in/pilltime/</a>. Contact us at <button type="button" class="copy-email-inline copy-email-btn" data-email="contact@chandigital.in" data-label="contact@chandigital.in">contact@chandigital.in</button>.</p>
@@ -120,14 +120,15 @@
       <ul>
         <li><strong>License checks</strong> - the claim code, to chandigital.in, to see whether the watch is unlocked.</li>
         <li><strong>Collecting your list</strong> - while the "Add or update meds" screen is open, the watch asks our server for an encrypted parcel stored under an id derived from the code it shows, then asks the server to delete it.</li>
+        <li><strong>Sharing your list with the set-up page</strong> - from version 1.0.6, while that screen is open the watch also places its own list on our server, encrypted with a key derived from the code it shows, so the set-up page can load it on a new phone or browser. It also tells the server how many medicines the list has. We cannot decrypt the list, and it is deleted after 10 minutes.</li>
         <li><strong>Allowing scans</strong> - when that screen opens, the watch tells our server that a scan may be made for the next 15 minutes, sending the same id and its claim code.</li>
       </ul>
       <p>These requests go through the Garmin Connect app on your phone. No medicine names, doses or dose history are ever sent by the watch.</p>
 
       <h2>4. The set-up page and prescription scanning</h2>
-      <p><strong>Your list.</strong> The set-up page at chandigital.in/pilltime/add keeps your list in your phone's browser storage. It is not sent to us unless you press Send. When you do, it is encrypted in the browser (AES) with a key derived from the code on your watch. Our server stores only the encrypted parcel, cannot decrypt it, and deletes it when your watch collects it or after 10 minutes, whichever is first.</p>
+      <p><strong>Your list.</strong> The set-up page at chandigital.in/pilltime/add keeps your list in your phone's browser storage. It is not sent to us unless you press Send. When you do, it is encrypted in the browser (AES) with a key derived from the code on your watch. Our server stores only the encrypted parcel, cannot decrypt it, and deletes it when your watch collects it or after 10 minutes, whichever is first. From version 1.0.6 of the app the page can also load the list your watch already holds, for example on a new phone: the watch encrypts it the same way, and it is decrypted only in your browser.</p>
       <p><strong>Scanning (optional).</strong> If you choose to scan a prescription, label or medicine box, the photo is reduced in size on your phone, which also removes its location data, and is then sent unencrypted to our server and on to Anthropic, whose Claude AI model reads it and returns the medicine details to the page. We do not store or log the photo or what was read from it. Anthropic processes it under its commercial terms, which do not allow using it to train its models; see <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noreferrer">Anthropic's privacy policy</a>. Nothing read from a photo is added to your list until you check and save it.</p>
-      <p>To limit misuse of scanning we keep, per scan session, the id described in section 3, the claim code and the number of scans, for up to 30 days. The number of scans each watch can make is limited, so we also keep, against the claim code, how many scans it has made and when it first and last scanned, until 3 years after its last scan. We keep a daily total of scans and of the processing they used, which is not tied to any watch. To limit misuse of the relay and scanning we also keep a count of requests per IP address for one hour.</p>
+      <p>To limit misuse of scanning we keep, per scan session, the id described in section 3, the claim code and the number of scans, for up to 30 days. The same record holds how many medicines the watch offered to the page and when the watch collected a list you sent, so the page can offer to load your list and tell you it arrived. The number of scans each watch can make is limited, so we also keep, against the claim code, how many scans it has made and when it first and last scanned, until 3 years after its last scan. We keep a daily total of scans and of the processing they used, which is not tied to any watch. To limit misuse of the relay and scanning we also keep a count of requests per IP address for one hour.</p>
 
       <h2>5. Data collected when you buy</h2>
       <p>When you purchase a license at chandigital.in/pilltime/, we collect:</p>
